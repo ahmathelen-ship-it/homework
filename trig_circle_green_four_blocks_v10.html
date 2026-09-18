@@ -1181,12 +1181,12 @@ function renderRootTasks(){
       <div class="answer-slot">
         <label>${j+1}-й корень</label>
         <div class="math-editor-wrap">
-          <div class="math-editor" id="editor_root_${i}_${j}" tabindex="0"
-               onclick="activateMathField('root_${i}_${j}', false)">
-            <div class="math-render" id="render_root_${i}_${j}"><span class="math-placeholder">введи значение</span></div>
-            <input class="math-raw math-entry" id="root_${i}_${j}" autocomplete="off" inputmode="text">
+          <div class="math-editor" id="editor_rootAnswer_${i}_${j}" tabindex="0"
+               onclick="activateMathField('rootAnswer_${i}_${j}', false)">
+            <div class="math-render" id="render_rootAnswer_${i}_${j}"><span class="math-placeholder">введи значение</span></div>
+            <input class="math-raw math-entry" id="rootAnswer_${i}_${j}" autocomplete="off" inputmode="text">
           </div>
-          <button class="kb-open" type="button" onclick="openMathKeyboard('root_${i}_${j}', event)">⌨️</button>
+          <button class="kb-open" type="button" onclick="openMathKeyboard('rootAnswer_${i}_${j}', event)">⌨️</button>
         </div>
       </div>`).join("");
 
@@ -1225,7 +1225,7 @@ renderRootTasks();
 
 function checkRootTask(i){
   const t=rootData[i],st=rootStates[i],fb=document.getElementById(`rootFb_${i}`);
-  const vals=Array.from({length:6},(_,j)=>document.getElementById(`root_${i}_${j}`).value.trim());
+  const vals=Array.from({length:6},(_,j)=>document.getElementById(`rootAnswer_${i}_${j}`).value.trim());
 
   let ok=true;
 
@@ -1254,7 +1254,7 @@ function checkRootTask(i){
 
 function resetRootTask(i){
   for(let j=0;j<6;j++){
-    const id=`root_${i}_${j}`;
+    const id=`rootAnswer_${i}_${j}`;
     document.getElementById(id).value="";
     updateMathRender(id);
   }
