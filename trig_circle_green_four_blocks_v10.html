@@ -1431,9 +1431,20 @@ function initMathEditors(){
     const editor=document.getElementById("editor_"+input.id);
     if(editor){
       editor.addEventListener("keydown",e=>{
-        // Если фокус попал на визуальный контейнер, переводим его в скрытый input.
-        if(e.key.length===1 || e.key==="Backspace"){
+        // Если фокус оказался на визуальном контейнере, не теряем первый символ:
+        // сразу переводим фокус в скрытый input и повторяем допустимое действие.
+        const isAllowedChar=/^[0-9+\\\-/()]$/.test(e.key) || e.key==="π" || e.key==="p" || e.key==="P";
+        if(e.key==="Backspace" || isAllowedChar){
+          e.preventDefault();
           activateMathField(input.id,false);
+
+          if(e.key==="Backspace"){
+            kbBackspace();
+          }else if(e.key==="p" || e.key==="P"){
+            kbInsert("π");
+          }else{
+            kbInsert(e.key);
+          }
         }
       });
     }
@@ -1480,6 +1491,18 @@ function goBlock(n){
   document.getElementById("block4").classList.toggle("open",n===4);
   setActiveNav(n);
   closeMathKeyboard();
+
+  // Блок 4 изначально скрыт. После его показа принудительно обновляем
+  // математические поля, чтобы первое поле сразу корректно принимало ввод
+  // без предварительного нажатия «Сбросить».
+  if(n===4){
+    requestAnimationFrame(()=>{
+      document.querySelectorAll("#block4 .math-entry").forEach(input=>{
+        updateMathRender(input.id);
+      });
+    });
+  }
+
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
