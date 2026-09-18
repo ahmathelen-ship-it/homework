@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тригонометрическая окружность — 3 блока</title>
+<style>
+:root{
+  --g1:#78c28a;--g2:#4c9f67;--g3:#2f7350;--g4:#245b3f;
+  --mint:#eef9f1;--mint2:#dff2e5;--line:#9bd0a8;--ink:#263a31;
+  --red:#c94d3f;--gold:#f2c85d;--gray:#6f8177;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;font-family:"Trebuchet MS",Arial,sans-serif;
+  color:var(--ink);background:linear-gradient(135deg,#eaf8ed,#f8fffa)
+}
+.page{
+  width:min(1060px,calc(100% - 24px));margin:18px auto 34px;
+  background:rgba(255,255,255,.97);border:4px solid #fff;border-radius:30px;
+  box-shadow:0 18px 55px rgba(41,99,67,.17);overflow:hidden;position:relative
+}
+.inner{padding:28px 30px 44px;position:relative;z-index:2}
+header{text-align:center;padding:4px 70px 10px}
+h1{margin:0;color:var(--g3);font-size:clamp(31px,5vw,54px);line-height:1.05}
+.subtitle{margin-top:8px;color:#668475;font-weight:700}
+.decor{
+  position:absolute;z-index:1;pointer-events:none;user-select:none;
+  filter:drop-shadow(0 6px 8px rgba(47,105,72,.12))
+}
+.d1{left:8px;top:18px;font-size:50px}.d2{right:8px;top:18px;font-size:46px}
+.d3{left:6px;top:210px;font-size:38px}.d4{right:6px;top:260px;font-size:39px}
+.d5{left:6px;top:360px;font-size:40px}.d6{right:6px;top:410px;font-size:39px}
+
+.progress{
+  position:fixed;top:16px;right:16px;z-index:1000;width:min(295px,calc(100vw - 32px));
+  background:rgba(249,255,250,.97);border:2px solid #8bc79b;border-radius:17px;
+  padding:10px 12px;box-shadow:0 10px 28px rgba(42,94,65,.17);backdrop-filter:blur(8px)
+}
+.prow{display:flex;justify-content:space-between;gap:8px;font-weight:900;font-size:14px;color:var(--g3)}
+.bar{height:12px;background:#dbeee0;border-radius:99px;overflow:hidden;margin-top:7px;border:1px solid #9fd0ab}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#8bd39b,#59ad70,#347d55);transition:.3s}
+
+.block-title{
+  width:max-content;max-width:94%;margin:20px auto 14px;padding:9px 28px;color:#fff;
+  font-size:clamp(21px,3vw,30px);font-weight:900;background:linear-gradient(#72bf86,#42965f);
+  border:2px solid #99d3a7;border-radius:11px;
+  box-shadow:0 6px 0 #2e704a,0 10px 20px rgba(47,103,72,.13)
+}
+.instructions,.attention{
+  max-width:880px;margin:0 auto 16px;padding:12px 15px;border-radius:16px;text-align:center;
+  line-height:1.45;font-weight:800
+}
+.instructions{background:var(--mint);border:1px solid #b2dcc0;color:#416e56}
+.attention{background:#fff7dc;border:1px solid #e9cf78;color:#775d13}
+.task{
+  max-width:880px;margin:0 auto 17px;border:2px dashed var(--line);border-radius:22px;
+  padding:17px;background:#fff
+}
+.taskhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.badge{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-weight:900;background:linear-gradient(#75c28a,#42955f)
+}
+.formula,.series-lines{
+  flex:1;min-width:245px;font-family:Georgia,"Times New Roman",serif;font-size:24px
+}
+.formula math,.series-lines math{font-size:26px}
+.series-lines{display:flex;flex-direction:column;gap:4px}
+.series-lines.one-line{display:block}
+.series-lines.one-line math{white-space:nowrap}
+.points{
+  margin-left:auto;padding:6px 10px;border-radius:12px;background:#e8f6ec;
+  border:1px dashed #8ac69b;color:#36724f;font-weight:900
+}
+.circle-wrap{
+  display:grid;place-items:center;background:linear-gradient(#fcfffd,#f2fbf4);
+  border:1px solid #c4e3cd;border-radius:18px;padding:10px;overflow:hidden
+}
+.arc-svg,.point-svg,.solve-svg{width:min(500px,100%);aspect-ratio:1/1;touch-action:none;user-select:none}
+.axis{stroke:#a1b2a8;stroke-width:1.25}.base-circle{fill:#fff;stroke:#587162;stroke-width:2.5}
+.hit-circle{fill:none;stroke:transparent;stroke-width:36;cursor:crosshair}
+.drawn-arc,.given-arc{
+  fill:none;stroke:#4a9c65;stroke-width:11;stroke-linecap:round;
+  filter:drop-shadow(0 3px 3px rgba(55,120,78,.20))
+}
+.given-arc{
+  stroke:#3f9d60;
+  stroke-width:13;
+}
+.startpoint{fill:#f0c85c;stroke:#fff;stroke-width:3}
+.endpoint{fill:#7ac68f;stroke:#fff;stroke-width:3}
+.centerpoint{fill:#577064}
+.ref-dot{fill:#6e7b74;stroke:#fff;stroke-width:2;cursor:pointer;transition:.15s}
+.ref-dot:hover{r:7.5}.ref-dot.selected{fill:#4a9c65;stroke:#235d3d;stroke-width:3.5}
+.root-dot{fill:#f0c85c;stroke:#fff;stroke-width:3;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(74,120,79,.22))}
+.root-dot.active{stroke:#2c6f49;stroke-width:5}
+.root-dot.done{fill:#72b981}
+.out-dot{fill:#fff;stroke:#8b9690;stroke-width:2}
+.cross{stroke:#cf5145;stroke-width:3.2;stroke-linecap:round}
+.template-label{font-size:12px;fill:#6f8177;font-family:Arial,sans-serif}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:11px}
+button{border:0;border-radius:11px;padding:9px 14px;font:inherit;font-weight:900;cursor:pointer}
+.check{color:#fff;background:linear-gradient(#72bf87,#42955f);box-shadow:0 3px 0 #2e704a}
+.reset,.backbtn{background:#e7f5eb;color:#3c7252;border:1px solid #acd5b7}
+.feedback{min-height:22px;margin-top:8px;text-align:center;font-weight:900}
+.ok{color:#4a8d37}.bad{color:var(--red)}
+.unlock{
+  display:none;max-width:880px;margin:22px auto 0;background:linear-gradient(#edf9f0,#dff2e5);
+  border:2px solid #95cfa5;border-radius:20px;padding:18px;text-align:center
+}
+.unlock.show{display:block}.unlock strong{display:block;color:var(--g3);font-size:21px;margin-bottom:10px}
+.block.hidden{display:none}.block2,.block3{display:none}.block2.open,.block3.open{display:block}
+.navfooter{max-width:880px;margin:20px auto 0;text-align:center}
+.solve-series{
+  margin:10px 0 12px;padding:10px 12px;border-radius:13px;background:#f2faf4;border:1px solid #c5e2cd
+}
+.solve-series b{color:#3b7251}
+.solve-series .series-lines{margin-top:6px}
+.point-answer-panel{
+  display:none;margin-top:12px;background:#f3faf5;border:1px solid #c7e1ce;border-radius:14px;padding:12px
+}
+.point-answer-panel.show{display:block}
+.selected-point-title{font-weight:900;color:#3c7252;margin-bottom:8px;text-align:center}
+.entry-row{display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap}
+.math-input{
+  min-width:210px;border:2px solid #a7d2b2;border-radius:10px;padding:9px 10px;
+  font:18px Georgia,"Times New Roman",serif;background:#fff;outline:none
+}
+.math-input:focus{border-color:#4a9c65;box-shadow:0 0 0 3px rgba(74,156,101,.12)}
+.fill-status{text-align:center;color:#6b8174;font-size:13px;margin-top:8px}
+.result{
+  max-width:880px;margin:22px auto 0;background:linear-gradient(#effaf2,#deefe3);
+  border:3px solid #8fc9a0;border-radius:20px;padding:16px;text-align:center
+}
+.score{font-size:25px;font-weight:900;color:var(--g3)}.small{font-size:13px;color:#728679;margin-top:5px}
+@media(max-width:760px){
+  .page{margin-top:84px}.inner{padding:24px 12px 34px}header{padding:0 50px}
+  .decor{font-size:39px}.d3,.d4{display:none}.progress{top:8px;left:8px;right:8px;width:auto}
+  .task{padding:13px}.formula,.series-lines{font-size:21px}.math-input{min-width:170px}
+}
+
+.block4{display:none}
+.block4.open{display:block}
+.root-task-box{
+  max-width:880px;margin:0 auto 17px;border:2px dashed var(--line);border-radius:22px;
+  padding:18px;background:#fff
+}
+.root-meta{
+  display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px
+}
+.root-row{
+  background:#f4fbf6;border:1px solid #c5e3ce;border-radius:13px;padding:11px 13px
+}
+.root-row b{color:#3c7252;margin-right:8px}
+.root-series{
+  font-family:Georgia,"Times New Roman",serif;font-size:23px;line-height:1.55
+}
+.root-series math{font-size:25px}
+.answer-slots{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px
+}
+.answer-slot{
+  background:#f8fcf9;border:1px solid #c5dfcc;border-radius:13px;padding:10px
+}
+.answer-slot label{
+  display:block;text-align:center;font-weight:900;color:#4a7558;font-size:13px;margin-bottom:6px
+}
+.answer-slot input{
+  width:100%;border:2px solid #a8d2b4;border-radius:10px;padding:9px 10px;
+  font:18px Georgia,"Times New Roman",serif;background:#fff;outline:none;text-align:center
+}
+.answer-slot input:focus{
+  border-color:#4a9c65;box-shadow:0 0 0 3px rgba(74,156,101,.12)
+}
+.root-note{
+  margin-top:10px;padding:9px 11px;border-radius:11px;background:#fff8df;
+  border:1px solid #ead27f;color:#745e1c;font-size:13px;font-weight:800;text-align:center
+}
+@media(max-width:700px){
+  .answer-slots{grid-template-columns:repeat(2,1fr)}
+}
+
+
+/* ---------- Быстрая навигация по блокам ---------- */
+.block-nav{
+  position:sticky;
+  top:14px;
+  z-index:50;
+  max-width:880px;
+  margin:12px auto 18px;
+  padding:9px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  background:rgba(248,255,250,.94);
+  backdrop-filter:blur(8px);
+  border:2px solid #9bcfaa;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(42,94,65,.12)
+}
+.block-nav button{
+  padding:9px 7px;
+  border:1px solid #a8d2b4;
+  background:#edf8f0;
+  color:#3b7250;
+  box-shadow:none;
+  font-size:14px
+}
+.block-nav button.active{
+  background:linear-gradient(#72bf87,#42955f);
+  color:#fff;
+  border-color:#42955f
+}
+
+/* ---------- Встроенная математическая клавиатура ---------- */
+.input-with-keyboard{
+  display:flex;
+  gap:7px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap
+}
+.kb-open{
+  width:42px;height:42px;padding:0;
+  display:grid;place-items:center;
+  border-radius:10px;
+  background:#e8f6ec;
+  color:#34734f;
+  border:1px solid #a6d0b1;
+  box-shadow:none;
+  font-size:19px
+}
+.math-keyboard{
+  display:none;
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:2000;
+  width:min(430px,calc(100vw - 24px));
+  padding:12px;
+  border:2px solid #86c299;
+  border-radius:18px;
+  background:rgba(248,255,250,.98);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 44px rgba(34,83,56,.24)
+}
+.math-keyboard.open{display:block}
+.kb-title{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  margin-bottom:9px;
+  color:#3b7250;
+  font-weight:900
+}
+.kb-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:7px
+}
+.kb-key{
+  min-height:42px;
+  padding:7px 5px;
+  border-radius:10px;
+  background:#edf8f0;
+  color:#2f6848;
+  border:1px solid #a8d2b4;
+  box-shadow:none;
+  font-size:18px
+}
+.kb-key.pi{
+  background:#dff2e5;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px
+}
+.kb-key.wide{grid-column:span 2}
+.kb-key.action{background:#f6fbf7;color:#617469}
+.kb-close{
+  padding:5px 9px;
+  border-radius:9px;
+  background:#e7f4ea;
+  color:#47745a;
+  border:1px solid #afd3b8;
+  box-shadow:none
+}
+@media(max-width:760px){
+  .block-nav{top:70px;grid-template-columns:repeat(2,1fr)}
+  .math-keyboard{bottom:8px}
+  .kb-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+
+.boundary-dot{
+  fill:#ffffff;
+  stroke:#2f7350;
+  stroke-width:4;
+  filter:drop-shadow(0 2px 3px rgba(47,115,80,.20));
+  pointer-events:none
+}
+.boundary-label{
+  fill:#245b3f;
+  font:700 14px Georgia,"Times New Roman",serif;
+  paint-order:stroke;
+  stroke:#ffffff;
+  stroke-width:4px;
+  stroke-linejoin:round;
+  pointer-events:none
+}
+
+
+.axis{stroke:#53685b;stroke-width:1.7}
+.axis-arrow{
+  fill:none;stroke:#53685b;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round
+}
+.math-editor-wrap{
+  display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap
+}
+.math-editor{
+  position:relative;
+  min-width:220px;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 12px;
+  border:2px solid #a8d2b4;
+  border-radius:11px;
+  background:#fff;
+  cursor:text;
+  outline:none
+}
+.math-editor:focus-within,.math-editor.active{
+  border-color:#4a9c65;
+  box-shadow:0 0 0 3px rgba(74,156,101,.12)
+}
+.math-render{
+  min-height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px;
+  color:#263a31;
+  pointer-events:none
+}
+.math-render math{font-size:25px}
+.math-placeholder{color:#8da095;font-size:15px;font-family:"Trebuchet MS",Arial,sans-serif}
+.math-raw{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  opacity:0!important;
+  left:50%!important;
+  bottom:2px!important;
+  padding:0!important;
+  border:0!important;
+  pointer-events:none!important;
+}
+.answer-slot .math-editor{min-width:0;width:100%}
+.answer-slot .kb-open{flex:0 0 42px}
+.answer-slot .math-editor-wrap{flex-wrap:nowrap}
+.fraction-key{
+  font-family:Georgia,"Times New Roman",serif;
+  line-height:1
+}
+.fraction-key .mini-frac{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:22px;font-size:14px
+}
+.fraction-key .mini-frac span:first-child{
+  border-bottom:1.5px solid currentColor;width:100%;padding-bottom:1px
+}
+.boundary-math{
+  width:120px;height:62px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:visible;
+  color:#245b3f;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:700;
+  text-shadow:
+    -2px -2px 0 #fff,2px -2px 0 #fff,
+    -2px 2px 0 #fff,2px 2px 0 #fff
+}
+.boundary-math math{font-size:21px}
+
+
+.root-series{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  line-height:1.2;
+}
+.root-series-line{
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  padding:6px 0;
+}
+.root-series-line + .root-series-line{
+  border-top:1px dashed #d7eadc;
+}
+.root-series-line math{
+  font-size:24px;
+}
+
+
+/* Блок 3: больше воздуха между отдельными сериями, особенно с дробями */
+.solve-series .series-lines{
+  gap:12px;
+  line-height:1.25;
+}
+.solve-series .series-lines > div{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  padding:4px 0;
+}
+.solve-series .series-lines > div + div{
+  border-top:1px dashed #d8eadc;
+  padding-top:10px;
+}
+.solve-series .series-lines math{
+  font-size:26px;
+}
+
+
+/* ---------- Финальное поздравление ---------- */
+.celebration-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(23,45,33,.42);
+  backdrop-filter:blur(4px);
+  z-index:3000;
+  padding:18px;
+}
+.celebration-overlay.show{display:flex}
+.celebration-card{
+  position:relative;
+  width:min(760px, calc(100vw - 24px));
+  background:linear-gradient(180deg,#fbfffc 0%, #eef8f0 100%);
+  border:3px solid #97cfaa;
+  border-radius:28px;
+  box-shadow:0 20px 60px rgba(34,83,56,.28);
+  padding:28px 22px 24px;
+  overflow:hidden;
+  text-align:center;
+}
+.celebration-title{
+  font-size:clamp(26px,4vw,38px);
+  font-weight:900;
+  color:#2f7350;
+  margin:14px 0 10px;
+}
+.celebration-text{
+  font-size:clamp(18px,2.2vw,24px);
+  line-height:1.45;
+  color:#2f4a3b;
+  max-width:620px;
+  margin:0 auto 10px;
+}
+.celebration-text b{color:#2d7d54}
+.celebration-sub{
+  margin-top:12px;
+  color:#557364;
+  font-weight:800;
+  font-size:15px;
+}
+.celebration-close{
+  margin-top:18px;
+  padding:11px 18px;
+  border-radius:12px;
+  border:0;
+  cursor:pointer;
+  color:#fff;
+  font:inherit;
+  font-weight:900;
+  background:linear-gradient(#72bf87,#42955f);
+  box-shadow:0 3px 0 #2e704a;
+}
+.trophy-badge{
+  width:94px;height:94px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:48px;
+  background:radial-gradient(circle at 30% 30%, #fff6d5, #f7d86d 58%, #ddb449 100%);
+  box-shadow:0 10px 22px rgba(212,177,72,.34);
+  border:4px solid #fff4c2;
+  position:relative;
+  z-index:2;
+}
+
+/* Confetti */
+.confetti-layer{
+  position:absolute; inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.confetti{
+  position:absolute;
+  width:10px;height:18px;
+  opacity:0;
+  top:-10%;
+  animation:fallConfetti 2.8s linear infinite;
+}
+.confetti.c1{background:#58b676}
+.confetti.c2{background:#f1c95b}
+.confetti.c3{background:#7db8ff}
+.confetti.c4{background:#ff8ea1}
+.confetti.c5{background:#94d6a5}
+@keyframes fallConfetti{
+  0%{transform:translateY(-30px) rotate(0deg); opacity:0}
+  10%{opacity:1}
+  100%{transform:translateY(120vh) rotate(540deg); opacity:0}
+}
+
+/* Fireworks / spark bursts */
+.firework{
+  position:absolute;
+  width:10px;height:10px;
+  border-radius:50%;
+  opacity:0;
+  pointer-events:none;
+  animation:burst 1.8s ease-out infinite;
+}
+.firework::before,
+.firework::after{
+  content:"";
+  position:absolute;
+  inset:-34px;
+  border-radius:50%;
+  border:3px dotted rgba(255,210,92,.95);
+}
+.firework::after{
+  inset:-22px;
+  border-color:rgba(97,187,119,.9);
+}
+@keyframes burst{
+  0%{transform:scale(.1); opacity:0}
+  15%{opacity:1}
+  70%{opacity:1}
+  100%{transform:scale(1.45); opacity:0}
+}
+.fw1{left:10%; top:22%; animation-delay:0s}
+.fw2{right:12%; top:18%; animation-delay:.45s}
+.fw3{left:18%; bottom:24%; animation-delay:.9s}
+.fw4{right:18%; bottom:22%; animation-delay:1.2s}
+
+@media(max-width:700px){
+  .celebration-card{padding:22px 14px 20px}
+  .celebration-title{margin-top:10px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="progress">
+  <div class="prow"><span>⭐ Общий прогресс</span><span id="progressText">0 / 37 · 0%</span></div>
+  <div class="bar"><div class="fill" id="progressFill"></div></div>
+</div>
+
+<div class="page">
+  <div class="decor d1">📚</div><div class="decor d2">✏️</div>
+  <div class="decor d3">📐</div><div class="decor d4">📈</div>
+  <div class="decor d5">π</div><div class="decor d6">🧭</div>
+
+  <div class="inner">
+    <header>
+      <h1>Тригонометрическая окружность</h1>
+      <div class="subtitle">Дуги • серии точек • отбор корней</div>
+    </header>
+
+    <div class="block-nav" id="blockNav">
+      <button id="nav1" class="active" onclick="goBlock(1)">1. Дуги</button>
+      <button id="nav2" onclick="goBlock(2)">2. Серии точек</button>
+      <button id="nav3" onclick="goBlock(3)">3. Значения точек</button>
+      <button id="nav4" onclick="goBlock(4)">4. Отбор корней</button>
+    </div>
+
+    <section class="block" id="block1">
+      <div class="block-title">1. НАРИСУЙ ДУГУ</div>
+      <div class="attention">
+        ⚠️ <b>Внимание:</b> рисуем дугу только в <b>ПОЛОЖИТЕЛЬНОМ</b> направлении
+        <b>(от меньшего значения к большему, в порядке, указанном в промежутке)</b>.
+      </div>
+      <div id="arcTasks"></div>
+      <div class="unlock" id="unlock2">
+        <strong>Блок 1 выполнен ✓</strong>
+        <button class="check" onclick="openBlock2()">Перейти к блоку 2</button>
+      </div>
+    </section>
+
+    <section class="block block2" id="block2">
+      <div class="block-title">2. ОТМЕТЬ ТОЧКИ НА ОКРУЖНОСТИ</div>
+      <div class="instructions">Отметь на тригонометрической окружности все точки, соответствующие указанным сериям.</div>
+      <div id="seriesTasks"></div>
+      <div class="unlock" id="unlock3">
+        <strong>Блок 2 выполнен ✓</strong>
+        <button class="check" onclick="openBlock3()">Перейти к блоку 3</button>
+      </div>
+      <div class="navfooter"><button class="backbtn" onclick="openBlock1()">← Вернуться к блоку 1</button></div>
+    </section>
+
+    <section class="block block3" id="block3">
+      <div class="block-title">3. ОПРЕДЕЛИ ЗНАЧЕНИЯ ТОЧЕК</div>
+      <div class="instructions">
+        Дуга и точки серий уже нанесены.
+        Нажимай на точки, лежащие на дуге, и вводи их точные значения.
+      </div>
+      <div id="solveTasks"></div>
+
+      <div class="unlock" id="unlock4">
+        <strong>Блок 3 выполнен ✓</strong>
+        <button class="check" onclick="openBlock4()">Перейти к блоку 4</button>
+      </div>
+
+      <div class="navfooter"><button class="backbtn" onclick="openBlock2()">← Вернуться к блоку 2</button></div>
+    </section>
+
+    <section class="block block4" id="block4">
+      <div class="block-title">4. ВЫПОЛНИ ОТБОР КОРНЕЙ САМОСТОЯТЕЛЬНО</div>
+
+      <div class="instructions">
+        А теперь выполни все действия из блоков 1–3 самостоятельно <b>(в тетради)</b>:
+        отметь серии, определи нужный промежуток и выполни отбор корней.
+        Сюда запиши только получившиеся корни.
+      </div>
+
+      <div class="attention">
+        ⚠️ Окошек специально больше, чем фактическое количество корней.
+        Заполняй ответы <b>по порядку</b>, а лишние окошки оставь пустыми.
+      </div>
+
+      <div id="rootTasks"></div>
+
+      <div class="navfooter"><button class="backbtn" onclick="openBlock3()">← Вернуться к блоку 3</button></div>
+
+      <div class="result">
+        <div class="score" id="scoreText">Результат: 0 / 37 баллов</div>
+        <div class="small">В четвёртом блоке проверяется и порядок ответов, и то, что лишние окошки оставлены пустыми.</div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const PI=Math.PI, STEP=PI/6, R=120, CX=150, CY=150;
+function norm2pi(a){let x=a%(2*PI);if(x<0)x+=2*PI;return x}
+function nearestStep(a){return Math.round(a/STEP)*STEP}
+function normDelta(d){while(d>PI)d-=2*PI;while(d<-PI)d+=2*PI;return d}
+function point(angle){return{x:CX+R*Math.cos(angle),y:CY-R*Math.sin(angle)}}
+function pointDeg(deg){return point(deg*PI/180)}
+function arcPath(start,sweep){
+  if(Math.abs(sweep)<1e-9)return "";
+  const p1=point(start),p2=point(start+sweep);
+  return `M ${p1.x} ${p1.y} A ${R} ${R} 0 ${Math.abs(sweep)>PI?1:0} ${sweep>0?0:1} ${p2.x} ${p2.y}`
+}
+function pointerAngle(ev,svg){
+  const r=svg.getBoundingClientRect();
+  const x=(ev.clientX-r.left)*(300/r.width),y=(ev.clientY-r.top)*(300/r.height);
+  return Math.atan2(CY-y,x-CX)
+}
+function snappedIndex(a){const x=norm2pi(nearestStep(a));return((Math.round(x/STEP)%12)+12)%12}
+function baseCircleMarkup(){
+  return `<circle class="base-circle" cx="150" cy="150" r="${R}"></circle>
+          <line class="axis" x1="-22" y1="150" x2="322" y2="150"></line>
+          <path class="axis-arrow" d="M322 150 L308 142 M322 150 L308 158"></path>
+          <line class="axis" x1="150" y1="322" x2="150" y2="-22"></line>
+          <path class="axis-arrow" d="M150 -22 L142 -8 M150 -22 L158 -8"></path>`
+}
+
+/* ---------- BLOCK 1 ---------- */
+const arcData=[
+ {label:`<math><mo>[</mo><mo>−</mo><mn>3</mn><mi>π</mi><mo>;</mo><mo>−</mo><mfrac><mrow><mn>3</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,a:-3*PI,b:-3*PI/2},
+ {label:`<math><mo>[</mo><mfrac><mrow><mn>13</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>;</mo><mfrac><mrow><mn>15</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,a:13*PI/2,b:15*PI/2},
+ {label:`<math><mo>[</mo><mo>−</mo><mi>π</mi><mo>;</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>]</mo></math>`,a:-PI,b:PI/2},
+ {label:`<math><mo>[</mo><mo>−</mo><mn>2</mn><mi>π</mi><mo>;</mo><mo>−</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>]</mo></math>`,a:-2*PI,b:-PI/2},
+ {label:`<math><mo>[</mo><mn>3</mn><mi>π</mi><mo>;</mo><mfrac><mrow><mn>9</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,a:3*PI,b:9*PI/2},
+ {label:`<math><mo>[</mo><mfrac><mrow><mn>17</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>;</mo><mn>10</mn><mi>π</mi><mo>]</mo></math>`,a:17*PI/2,b:10*PI},
+ {label:`<math><mo>[</mo><mo>−</mo><mn>8</mn><mi>π</mi><mo>;</mo><mo>−</mo><mfrac><mrow><mn>13</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,a:-8*PI,b:-13*PI/2}
+];
+const arcStates=arcData.map(()=>({drawing:false,prevRaw:0,accum:0,startSnap:0,sweepSnap:0,completed:false,awarded:false}));
+function renderArcTasks(){
+  const host=document.getElementById("arcTasks");
+  arcData.forEach((t,i)=>{
+    const el=document.createElement("section");el.className="task";
+    el.innerHTML=`
+      <div class="taskhead"><span class="badge">${i+1}</span><div class="formula">${t.label}</div><span class="points">⭐ 1 балл</span></div>
+      <div class="circle-wrap">
+        <svg class="arc-svg" id="asvg_${i}" viewBox="-40 -40 380 380">
+          ${baseCircleMarkup()}
+          <path class="drawn-arc" id="arc_${i}" d=""></path>
+          <circle class="startpoint" id="asp_${i}" cx="-20" cy="-20" r="7"></circle>
+          <circle class="endpoint" id="aep_${i}" cx="-20" cy="-20" r="7"></circle>
+          <circle class="hit-circle" cx="150" cy="150" r="${R}"></circle>
+        </svg>
+      </div>
+      <div class="controls"><button class="reset" onclick="resetArc(${i})">Сбросить</button><button class="check" onclick="checkArc(${i})">Проверить</button></div>
+      <div class="feedback" id="afb_${i}"></div>`;
+    host.appendChild(el);
+    const svg=el.querySelector(`#asvg_${i}`);
+    svg.addEventListener("pointerdown",e=>startArc(i,e,svg));
+    svg.addEventListener("pointermove",e=>moveArc(i,e,svg));
+    svg.addEventListener("pointerup",e=>endArc(i,e,svg));
+    svg.addEventListener("pointercancel",e=>endArc(i,e,svg));
+  })
+}
+renderArcTasks();
+function startArc(i,e,svg){
+  const st=arcStates[i],a=pointerAngle(e,svg);svg.setPointerCapture(e.pointerId);
+  st.drawing=true;st.prevRaw=a;st.accum=0;st.startSnap=nearestStep(a);st.sweepSnap=0;st.completed=false;drawArcState(i)
+}
+function moveArc(i,e,svg){
+  const st=arcStates[i];if(!st.drawing)return;
+  const a=pointerAngle(e,svg);st.accum+=normDelta(a-st.prevRaw);st.prevRaw=a;
+  st.accum=Math.max(-11*STEP,Math.min(11*STEP,st.accum));st.sweepSnap=Math.round(st.accum/STEP)*STEP;drawArcState(i)
+}
+function endArc(i,e,svg){
+  const st=arcStates[i];if(!st.drawing)return;st.drawing=false;
+  try{svg.releasePointerCapture(e.pointerId)}catch(err){}
+  st.sweepSnap=Math.round(st.accum/STEP)*STEP;st.completed=Math.abs(st.sweepSnap)>=STEP;drawArcState(i)
+}
+function drawArcState(i){
+  const st=arcStates[i],sp=document.getElementById(`asp_${i}`),ep=document.getElementById(`aep_${i}`);
+  document.getElementById(`arc_${i}`).setAttribute("d",arcPath(st.startSnap,st.sweepSnap));
+  const p1=point(st.startSnap);sp.setAttribute("cx",p1.x);sp.setAttribute("cy",p1.y);
+  if(Math.abs(st.sweepSnap)>1e-9){const p2=point(st.startSnap+st.sweepSnap);ep.setAttribute("cx",p2.x);ep.setAttribute("cy",p2.y)}
+  else{ep.setAttribute("cx",-20);ep.setAttribute("cy",-20)}
+}
+function checkArc(i){
+  const st=arcStates[i],t=arcData[i],fb=document.getElementById(`afb_${i}`);
+  if(!st.completed){fb.className="feedback bad";fb.textContent="Сначала нарисуй дугу.";return}
+  const ok=snappedIndex(st.startSnap)===snappedIndex(t.a) &&
+           Math.round(st.sweepSnap/STEP)===Math.round((t.b-t.a)/STEP);
+  if(ok){st.awarded=true;fb.className="feedback ok";fb.textContent="✓ Верно! +1 балл"}
+  else{fb.className="feedback bad";fb.textContent="✗ Есть ошибка. Проверь направление и границы дуги."}
+  updateAll()
+}
+function resetArc(i){
+  const st=arcStates[i];st.drawing=false;st.accum=0;st.sweepSnap=0;st.completed=false;
+  document.getElementById(`arc_${i}`).setAttribute("d","");
+  ["asp","aep"].forEach(k=>{document.getElementById(`${k}_${i}`).setAttribute("cx",-20);document.getElementById(`${k}_${i}`).setAttribute("cy",-20)});
+  const fb=document.getElementById(`afb_${i}`);fb.textContent="";fb.className="feedback"
+}
+
+/* ---------- BLOCK 2 ---------- */
+const ANGLES=[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+const seriesData=[
+ {lines:[`<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>3</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`],correct:[60]},
+ {lines:[`<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`],correct:[30,210]},
+ {lines:[
+   `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>7</mn><mi>π</mi></mrow><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+   `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>11</mn><mi>π</mi></mrow><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+ ],correct:[210,330]},
+ {lines:[
+   `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+   `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+   `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>5</mn><mi>π</mi></mrow><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+ ],correct:[30,90,150,270]},
+ {lines:[
+   `<math><mi>x</mi><mo>=</mo><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+   `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+ ],correct:[0,45,180,225]},
+ {lines:[
+   `<math><mi>x</mi><mo>=</mo><mo>±</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+ ],correct:[45,135,225,315],oneLine:true}
+];
+const seriesStates=seriesData.map(()=>({selected:new Set(),awarded:false}));
+function renderSeriesTasks(){
+  const host=document.getElementById("seriesTasks");
+  seriesData.forEach((t,i)=>{
+    const el=document.createElement("section");el.className="task";
+    el.innerHTML=`
+      <div class="taskhead"><span class="badge">${i+1}</span><div class="series-lines ${t.oneLine?"one-line":""}">${t.lines.map(x=>`<div>${x}</div>`).join("")}</div><span class="points">⭐ 1 балл</span></div>
+      <div class="circle-wrap">
+        <svg class="point-svg" viewBox="-40 -40 380 380">
+          ${baseCircleMarkup()}
+          <g id="dots_${i}"></g>
+        </svg>
+      </div>
+      <div class="controls"><button class="reset" onclick="resetSeries(${i})">Сбросить</button><button class="check" onclick="checkSeries(${i})">Проверить</button></div>
+      <div class="feedback" id="sfb_${i}"></div>`;
+    host.appendChild(el);
+    const g=el.querySelector(`#dots_${i}`);
+    ANGLES.forEach(deg=>{
+      const p=pointDeg(deg),c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx",p.x);c.setAttribute("cy",p.y);c.setAttribute("r",6);c.setAttribute("class","ref-dot");c.dataset.deg=deg;
+      c.addEventListener("click",()=>toggleSeriesPoint(i,deg,c));g.appendChild(c)
+    })
+  })
+}
+renderSeriesTasks();
+function toggleSeriesPoint(i,deg,c){
+  const st=seriesStates[i];
+  if(st.selected.has(deg)){st.selected.delete(deg);c.classList.remove("selected")}
+  else{st.selected.add(deg);c.classList.add("selected")}
+}
+function sameSet(set,arr){return set.size===arr.length&&arr.every(x=>set.has(x))}
+function checkSeries(i){
+  const st=seriesStates[i],fb=document.getElementById(`sfb_${i}`);
+  if(sameSet(st.selected,seriesData[i].correct)){st.awarded=true;fb.className="feedback ok";fb.textContent="✓ Верно! +1 балл"}
+  else{fb.className="feedback bad";fb.textContent="✗ Есть ошибка. Проверь отмеченные точки."}
+  updateAll()
+}
+function resetSeries(i){
+  seriesStates[i].selected.clear();
+  document.querySelectorAll(`#dots_${i} .ref-dot`).forEach(c=>c.classList.remove("selected"));
+  const fb=document.getElementById(`sfb_${i}`);fb.textContent="";fb.className="feedback"
+}
+
+/* ---------- BLOCK 3 ---------- */
+const solveData=[
+ {
+  interval:`<math><mo>[</mo><mo>−</mo><mi>π</mi><mo>;</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>]</mo></math>`,
+  a:-PI,b:PI/2,
+  series:[`<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`],
+  allAngles:[45], roots:[{deg:45,c:1,d:4}]
+ },
+ {
+  interval:`<math><mo>[</mo><mn>3</mn><mi>π</mi><mo>;</mo><mn>4</mn><mi>π</mi><mo>]</mo></math>`,
+  a:3*PI,b:4*PI,
+  series:[
+    `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+    `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+  ],
+  allAngles:[45,90,225,270], roots:[{deg:225,c:13,d:4},{deg:270,c:7,d:2}]
+ },
+ {
+  interval:`<math><mo>[</mo><mfrac><mrow><mn>13</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>;</mo><mfrac><mrow><mn>15</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,
+  a:13*PI/2,b:15*PI/2,
+  series:[
+    `<math><mi>x</mi><mo>=</mo><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+    `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+  ],
+  allAngles:[0,45,180,225], roots:[{deg:180,c:7,d:1},{deg:225,c:29,d:4}]
+ },
+ {
+  interval:`<math><mo>[</mo><mo>−</mo><mn>2</mn><mi>π</mi><mo>;</mo><mo>−</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>]</mo></math>`,
+  a:-2*PI,b:-PI/2,
+  series:[`<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`],
+  allAngles:[30,210], roots:[{deg:30,c:-11,d:6},{deg:210,c:-5,d:6}]
+ },
+ {
+  interval:`<math><mo>[</mo><mn>3</mn><mi>π</mi><mo>;</mo><mfrac><mrow><mn>9</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,
+  a:3*PI,b:9*PI/2,
+  series:[`<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`],
+  allAngles:[45,225], roots:[{deg:225,c:13,d:4},{deg:45,c:17,d:4}]
+ },
+ {
+  interval:`<math><mo>[</mo><mo>−</mo><mn>3</mn><mi>π</mi><mo>;</mo><mo>−</mo><mn>2</mn><mi>π</mi><mo>]</mo></math>`,
+  a:-3*PI,b:-2*PI,
+  series:[
+    `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>+</mo><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+    `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+    `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mn>5</mn><mi>π</mi></mrow><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+  ],
+  allAngles:[90,210,270,330], roots:[{deg:210,c:-17,d:6},{deg:270,c:-5,d:2},{deg:330,c:-13,d:6}]
+ },
+ {
+  interval:`<math><mo>[</mo><mfrac><mrow><mn>17</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>;</mo><mn>10</mn><mi>π</mi><mo>]</mo></math>`,
+  a:17*PI/2,b:10*PI,
+  series:[
+    `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+    `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mn>3</mn><mi>π</mi></mrow><mn>4</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+  ],
+  allAngles:[225,315], roots:[{deg:225,c:37,d:4},{deg:315,c:39,d:4}]
+ }
+];
+const solveStates=solveData.map(t=>({
+  values:Array(t.roots.length).fill(""),
+  selected:null,
+  awardedRoots:Array(t.roots.length).fill(false)
+}));
+
+function rootIndexAtDeg(task,deg){
+  return task.roots.findIndex(r=>r.deg===deg)
+}
+function renderCross(g,deg){
+  const p=pointDeg(deg);
+  const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  c.setAttribute("cx",p.x);c.setAttribute("cy",p.y);c.setAttribute("r",7);c.setAttribute("class","out-dot");g.appendChild(c);
+  [[-6,-6,6,6],[-6,6,6,-6]].forEach(v=>{
+    const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",p.x+v[0]);l.setAttribute("y1",p.y+v[1]);
+    l.setAttribute("x2",p.x+v[2]);l.setAttribute("y2",p.y+v[3]);l.setAttribute("class","cross");g.appendChild(l)
+  })
+}
+
+function gcdInt(a,b){
+  a=Math.abs(a); b=Math.abs(b);
+  while(b){const t=a%b;a=b;b=t}
+  return a||1
+}
+function angleFraction(value){
+  let den=12;
+  let num=Math.round((value/PI)*den);
+  const g=gcdInt(num,den);
+  return [num/g,den/g]
+}
+function piMathML(num,den){
+  const sign=num<0?`<mo>−</mo>`:"";
+  const n=Math.abs(num);
+
+  if(n===0){
+    return `<math><mn>0</mn></math>`;
+  }
+
+  const piPart=n===1
+    ? `<mi>π</mi>`
+    : `<mrow><mn>${n}</mn><mi>π</mi></mrow>`;
+
+  if(den===1){
+    return `<math><mrow>${sign}${piPart}</mrow></math>`;
+  }
+
+  return `<math><mrow>${sign}<mfrac>${piPart}<mn>${den}</mn></mfrac></mrow></math>`;
+}
+function addBoundaryLabel(group,angle,value){
+  const p=point(angle);
+  const ux=(p.x-CX)/R, uy=(p.y-CY)/R;
+  const [num,den]=angleFraction(value);
+
+  const dot=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  dot.setAttribute("cx",p.x);
+  dot.setAttribute("cy",p.y);
+  dot.setAttribute("r",7);
+  dot.setAttribute("class","boundary-dot");
+  group.appendChild(dot);
+
+  const fo=document.createElementNS("http://www.w3.org/2000/svg","foreignObject");
+  const w=118,h=58;
+
+  // Базовое положение: близко к окружности.
+  let x=p.x+ux*24-w/2;
+  let y=p.y+uy*24-h/2;
+
+  // Для верхних/нижних точек уводим подпись чуть правее от оси Oy,
+  // чтобы дробь не совпадала с вертикальной осью.
+  if(Math.abs(ux) < 0.18){
+    x += 22;
+    y += uy < 0 ? -2 : 2;
+  }
+
+  // Для левых/правых точек уводим подпись чуть выше/ниже оси Ox,
+  // чтобы подпись не ложилась прямо на горизонтальную ось.
+  if(Math.abs(uy) < 0.18){
+    y += ux > 0 ? 18 : -18;
+    x += ux < 0 ? -2 : 2;
+  }
+
+  if(ux>0.7)x+=4;
+  if(ux<-0.7)x-=4;
+  if(uy>0.7)y+=4;
+  if(uy<-0.7)y-=4;
+
+  fo.setAttribute("x",x);
+  fo.setAttribute("y",y);
+  fo.setAttribute("width",w);
+  fo.setAttribute("height",h);
+
+  const div=document.createElement("div");
+  div.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
+  div.setAttribute("class","boundary-math");
+  div.innerHTML=piMathML(num,den);
+  fo.appendChild(div);
+  group.appendChild(fo);
+}
+function renderSolveBoundaries(i,t){
+  const g=document.getElementById(`boundaries_${i}`);
+  addBoundaryLabel(g,norm2pi(t.a),t.a);
+  addBoundaryLabel(g,norm2pi(t.b),t.b);
+}
+
+function renderSolveTasks(){
+  const host=document.getElementById("solveTasks");
+  solveData.forEach((t,i)=>{
+    const el=document.createElement("section");el.className="task";
+    el.innerHTML=`
+      <div class="taskhead">
+        <span class="badge">${i+1}</span>
+        <div class="formula">${t.interval}</div>
+        <span class="points">⭐ ${t.roots.length} ${t.roots.length===1?"балл":t.roots.length<5?"балла":"баллов"}</span>
+      </div>
+      <div class="solve-series">
+        <b>А) Серии точек:</b>
+        <div class="series-lines">${t.series.map(x=>`<div>${x}</div>`).join("")}</div>
+      </div>
+      <div class="circle-wrap">
+        <svg class="solve-svg" viewBox="-40 -40 380 380">
+          ${baseCircleMarkup()}
+          <path class="given-arc" d="${arcPath(norm2pi(t.a),t.b-t.a)}"></path>
+          <g id="boundaries_${i}"></g>
+          <g id="solveDots_${i}"></g>
+        </svg>
+      </div>
+      <div class="point-answer-panel" id="panel_${i}">
+        <div class="selected-point-title">Б) Введи точное значение выбранной точки</div>
+        <div class="entry-row">
+          <div class="math-editor-wrap">
+            <div class="math-editor" id="editor_solveInput_${i}" tabindex="0"
+                 onclick="activateMathField('solveInput_${i}', false)">
+              <div class="math-render" id="render_solveInput_${i}"><span class="math-placeholder">введи значение</span></div>
+              <input class="math-raw math-entry" id="solveInput_${i}" autocomplete="off" inputmode="text">
+            </div>
+            <button class="kb-open" type="button" onclick="openMathKeyboard('solveInput_${i}', event)">⌨️</button>
+          </div>
+        </div>
+        <div class="fill-status" id="fillStatus_${i}"></div>
+      </div>
+      <div class="controls">
+        <button class="reset" onclick="resetSolve(${i})">Сбросить</button>
+        <button class="check" onclick="checkSolve(${i})">Проверить</button>
+      </div>
+      <div class="feedback" id="solveFb_${i}"></div>`;
+    host.appendChild(el);
+
+    renderSolveBoundaries(i,t);
+
+    const g=el.querySelector(`#solveDots_${i}`);
+    t.allAngles.forEach(deg=>{
+      const ri=rootIndexAtDeg(t,deg);
+      if(ri>=0){
+        const p=pointDeg(deg),c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        c.setAttribute("cx",p.x);c.setAttribute("cy",p.y);c.setAttribute("r",8);c.setAttribute("class","root-dot");
+        c.dataset.root=ri;c.id=`root_${i}_${ri}`;
+        c.addEventListener("click",()=>selectRoot(i,ri));g.appendChild(c)
+      }else{
+        renderCross(g,deg)
+      }
+    });
+
+    const inp=el.querySelector(`#solveInput_${i}`);
+    inp.addEventListener("input",()=>{
+      const st=solveStates[i];
+      if(st.selected!==null){st.values[st.selected]=inp.value;updateFillStatus(i)}
+    });
+    updateFillStatus(i)
+  })
+}
+renderSolveTasks();
+
+function selectRoot(i,ri){
+  const st=solveStates[i];
+  if(st.selected!==null){
+    const prev=document.getElementById(`root_${i}_${st.selected}`);
+    if(prev)prev.classList.remove("active")
+  }
+  st.selected=ri;
+  const dot=document.getElementById(`root_${i}_${ri}`);if(dot)dot.classList.add("active");
+  const panel=document.getElementById(`panel_${i}`);panel.classList.add("show");
+  const inp=document.getElementById(`solveInput_${i}`);
+  inp.value=st.values[ri]||"";
+  updateMathRender(inp.id);
+  activateMathField(inp.id,false);
+  updateFillStatus(i)
+}
+function updateFillStatus(i){
+  const st=solveStates[i],n=st.values.filter(v=>v.trim()!=="").length;
+  document.getElementById(`fillStatus_${i}`).textContent=`Заполнено: ${n} из ${st.values.length}`
+}
+function parsePiCoeff(raw){
+  let s=String(raw||"").toLowerCase().replace(/\s+/g,"").replace(/pi/g,"π").replace(/[·×*()]/g,"");
+  if(!s.includes("π"))return null;
+  const parts=s.split("π");if(parts.length!==2)return null;
+  let left=parts[0],right=parts[1];
+  let num;
+  if(left===""||left==="+")num=1;
+  else if(left==="-")num=-1;
+  else if(left.includes("/")){
+    const z=left.split("/");if(z.length!==2)return null;
+    const a=Number(z[0]),b=Number(z[1]);if(!Number.isFinite(a)||!Number.isFinite(b)||b===0)return null;
+    num=a/b
+  }else{
+    num=Number(left);if(!Number.isFinite(num))return null
+  }
+  if(right==="")return num;
+  if(/^\/-?\d+(\.\d+)?$/.test(right)){
+    const den=Number(right.slice(1));if(!Number.isFinite(den)||den===0)return null;
+    return num/den
+  }
+  return null
+}
+function checkSolve(i){
+  const t=solveData[i],st=solveStates[i],fb=document.getElementById(`solveFb_${i}`);
+
+  let correctNow=0;
+  let newlyAwarded=0;
+
+  t.roots.forEach((r,ri)=>{
+    const raw=st.values[ri].trim();
+    const val=parsePiCoeff(raw);
+    const ok=raw!=="" && val!==null && Math.abs(val-r.c/r.d)<=1e-9;
+
+    const d=document.getElementById(`root_${i}_${ri}`);
+
+    if(ok){
+      correctNow++;
+      if(!st.awardedRoots[ri]){
+        st.awardedRoots[ri]=true;
+        newlyAwarded++;
+      }
+      if(d)d.classList.add("done");
+    }else{
+      if(d)d.classList.remove("done");
+    }
+  });
+
+  if(correctNow===t.roots.length){
+    fb.className="feedback ok";
+    fb.textContent=newlyAwarded>0
+      ? `✓ Все значения верны! +${newlyAwarded} ${newlyAwarded===1?"балл":newlyAwarded<5?"балла":"баллов"}`
+      : "✓ Все значения верны!";
+  }else{
+    fb.className="feedback bad";
+    const earned = newlyAwarded>0
+      ? ` Новых баллов: +${newlyAwarded}.`
+      : "";
+    fb.textContent=`Верно ${correctNow} из ${t.roots.length}.${earned} Проверь остальные точки.`;
+  }
+
+  updateAll()
+}
+function resetSolve(i){
+  const t=solveData[i],st=solveStates[i];
+  st.values=Array(t.roots.length).fill("");
+  st.selected=null;
+  document.getElementById(`panel_${i}`).classList.remove("show");
+  document.getElementById(`solveInput_${i}`).value="";
+  updateMathRender(`solveInput_${i}`);
+  t.roots.forEach((r,ri)=>{const d=document.getElementById(`root_${i}_${ri}`);if(d)d.setAttribute("class","root-dot")});
+  const fb=document.getElementById(`solveFb_${i}`);fb.textContent="";fb.className="feedback";updateFillStatus(i)
+}
+
+
+/* ---------- BLOCK 4 ---------- */
+const rootData=[
+  {
+    interval:`<math><mo>[</mo><mo>−</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>;</mo><mi>π</mi><mo>]</mo></math>`,
+    series:[
+      `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+      `<math><mi>x</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mn>5</mn><mi>π</mi></mrow><mn>6</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+      `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>4</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+      `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>3</mn><mi>π</mi></mrow><mn>4</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+    ],
+    answers:[[-1,6],[1,4],[3,4]]
+  },
+  {
+    interval:`<math><mo>[</mo><mo>−</mo><mn>5</mn><mi>π</mi><mo>;</mo><mo>−</mo><mfrac><mrow><mn>7</mn><mi>π</mi></mrow><mn>2</mn></mfrac><mo>]</mo></math>`,
+    series:[
+      `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>4</mn><mi>π</mi></mrow><mn>3</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+      `<math><mi>x</mi><mo>=</mo><mfrac><mrow><mn>5</mn><mi>π</mi></mrow><mn>3</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo></math>`,
+      `<math><mi>x</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>+</mo><mn>2</mn><mi>π</mi><mi>k</mi><mo>;</mo><mspace width=".3em"/><mi>k</mi><mo>∈</mo><mi>ℤ</mi></math>`
+    ],
+    answers:[[-14,3],[-13,3],[-7,2]]
+  }
+];
+
+const rootStates=rootData.map(()=>({awarded:false}));
+
+function renderRootTasks(){
+  const host=document.getElementById("rootTasks");
+
+  rootData.forEach((t,i)=>{
+    const el=document.createElement("section");
+    el.className="root-task-box";
+
+    const series=t.series.map(s=>`<div class="root-series-line">${s}</div>`).join("");
+    const slots=Array.from({length:6},(_,j)=>`
+      <div class="answer-slot">
+        <label>${j+1}-й корень</label>
+        <div class="math-editor-wrap">
+          <div class="math-editor" id="editor_root_${i}_${j}" tabindex="0"
+               onclick="activateMathField('root_${i}_${j}', false)">
+            <div class="math-render" id="render_root_${i}_${j}"><span class="math-placeholder">введи значение</span></div>
+            <input class="math-raw math-entry" id="root_${i}_${j}" autocomplete="off" inputmode="text">
+          </div>
+          <button class="kb-open" type="button" onclick="openMathKeyboard('root_${i}_${j}', event)">⌨️</button>
+        </div>
+      </div>`).join("");
+
+    el.innerHTML=`
+      <div class="taskhead">
+        <span class="badge">${i+1}</span>
+        <div class="formula">${t.interval}</div>
+        <span class="points">⭐ 5 баллов</span>
+      </div>
+
+      <div class="root-meta">
+        <div class="root-row">
+          <b>Серия корней:</b>
+          <div class="root-series">${series}</div>
+        </div>
+        <div class="root-row">
+          <b>Промежуток:</b>
+          <span class="root-series">${t.interval}</span>
+        </div>
+      </div>
+
+      <div class="answer-slots">${slots}</div>
+      <div class="root-note">Некоторые окошки должны остаться пустыми.</div>
+
+      <div class="controls">
+        <button class="reset" onclick="resetRootTask(${i})">Сбросить</button>
+        <button class="check" onclick="checkRootTask(${i})">Проверить</button>
+      </div>
+      <div class="feedback" id="rootFb_${i}"></div>
+    `;
+
+    host.appendChild(el);
+  });
+}
+renderRootTasks();
+
+function checkRootTask(i){
+  const t=rootData[i],st=rootStates[i],fb=document.getElementById(`rootFb_${i}`);
+  const vals=Array.from({length:6},(_,j)=>document.getElementById(`root_${i}_${j}`).value.trim());
+
+  let ok=true;
+
+  // First N boxes must contain the roots in the given order.
+  t.answers.forEach((ans,j)=>{
+    const coeff=parsePiCoeff(vals[j]);
+    if(coeff===null || Math.abs(coeff-ans[0]/ans[1])>1e-9) ok=false;
+  });
+
+  // Remaining boxes must be empty.
+  for(let j=t.answers.length;j<6;j++){
+    if(vals[j]!=="" ) ok=false;
+  }
+
+  if(ok){
+    st.awarded=true;
+    fb.className="feedback ok";
+    fb.textContent="✓ Верно! +5 баллов";
+  }else{
+    fb.className="feedback bad";
+    fb.textContent="✗ Есть ошибка. Проверь корни, их порядок и лишние окошки.";
+  }
+
+  updateAll();
+}
+
+function resetRootTask(i){
+  for(let j=0;j<6;j++){
+    const id=`root_${i}_${j}`;
+    document.getElementById(id).value="";
+    updateMathRender(id);
+  }
+  const fb=document.getElementById(`rootFb_${i}`);
+  fb.textContent="";
+  fb.className="feedback";
+}
+
+
+/* ---------- МАТЕМАТИЧЕСКАЯ КЛАВИАТУРА ---------- */
+let activeMathInput=null;
+
+function normalizeMathRaw(s){
+  return String(s||"")
+    .replace(/pi/gi,"π")
+    .replace(/−/g,"-")
+    .replace(/\s+/g,"");
+}
+
+function rawToMathML(raw){
+  const s=normalizeMathRaw(raw);
+
+  if(!s){
+    return `<span class="math-placeholder">введи значение</span>`;
+  }
+
+  // Формы, необходимые в этих заданиях:
+  // π, -π, 13π, 13π/4, -11π/6 и промежуточные состояния ввода.
+  const m=s.match(/^([+-]?)(\d*)π(?:\/(\d*))?$/);
+
+  if(m){
+    const sign=m[1]==="-"?`<mo>−</mo>`:"";
+    const coeff=m[2];
+    const den=m[3];
+
+    const numerator=(coeff && coeff!=="1")
+      ? `<mrow><mn>${coeff}</mn><mi>π</mi></mrow>`
+      : `<mi>π</mi>`;
+
+    if(s.includes("/")){
+      const denominator=den
+        ? `<mn>${den}</mn>`
+        : `<mtext>□</mtext>`;
+      return `<math><mrow>${sign}<mfrac>${numerator}${denominator}</mfrac></mrow></math>`;
+    }
+
+    return `<math><mrow>${sign}${numerator}</mrow></math>`;
+  }
+
+  // Пока ученик ещё не ввёл π, показываем набираемые цифры/знак аккуратно.
+  if(/^[+-]?\d*$/.test(s)){
+    const sign=s.startsWith("-")?`<mo>−</mo>`:"";
+    const digits=s.replace(/^[+-]/,"");
+    return `<math><mrow>${sign}${digits?`<mn>${digits}</mn>`:`<mtext>□</mtext>`}</mrow></math>`;
+  }
+
+  // Не показываем слэш как "дробь": даже для частично введённого значения
+  // пытаемся визуально превратить конструкцию A/B в mfrac.
+  const slash=s.indexOf("/");
+  if(slash>=0){
+    const a=s.slice(0,slash) || "□";
+    const b=s.slice(slash+1) || "□";
+    const left=a.replace(/-/g,"−");
+    return `<math><mfrac><mtext>${left}</mtext><mtext>${b}</mtext></mfrac></math>`;
+  }
+
+  return `<math><mtext>${s.replace(/-/g,"−")}</mtext></math>`;
+}
+
+function updateMathRender(id){
+  const input=document.getElementById(id);
+  const render=document.getElementById("render_"+id);
+  if(!input||!render)return;
+  render.innerHTML=rawToMathML(input.value);
+}
+
+function activateMathField(id, openKeyboard=false){
+  const input=document.getElementById(id);
+  if(!input)return;
+
+  if(activeMathInput && activeMathInput!==input){
+    const oldEditor=document.getElementById("editor_"+activeMathInput.id);
+    if(oldEditor)oldEditor.classList.remove("active");
+  }
+
+  activeMathInput=input;
+  const editor=document.getElementById("editor_"+id);
+  if(editor)editor.classList.add("active");
+
+  input.focus({preventScroll:true});
+  const pos=input.value.length;
+  try{input.setSelectionRange(pos,pos)}catch(e){}
+
+  if(openKeyboard){
+    document.getElementById("mathKeyboard").classList.add("open");
+  }
+}
+
+function openMathKeyboard(id,event){
+  if(event){event.preventDefault();event.stopPropagation()}
+  activateMathField(id,true);
+}
+
+function closeMathKeyboard(){
+  document.getElementById("mathKeyboard").classList.remove("open");
+  if(activeMathInput){
+    const editor=document.getElementById("editor_"+activeMathInput.id);
+    if(editor)editor.classList.remove("active");
+  }
+}
+
+function kbInsert(text){
+  if(!activeMathInput)return;
+
+  const el=activeMathInput;
+  let start=el.selectionStart ?? el.value.length;
+  let end=el.selectionEnd ?? el.value.length;
+
+  // Fraction key: only one denominator separator is needed.
+  if(text==="/" && el.value.includes("/"))return;
+
+  const inserted=text==="−"?"-":text;
+  el.value=el.value.slice(0,start)+inserted+el.value.slice(end);
+
+  const pos=start+inserted.length;
+  el.focus({preventScroll:true});
+  try{el.setSelectionRange(pos,pos)}catch(e){}
+  el.dispatchEvent(new Event("input",{bubbles:true}));
+  updateMathRender(el.id);
+}
+
+function kbBackspace(){
+  if(!activeMathInput)return;
+  const el=activeMathInput;
+  let start=el.selectionStart ?? el.value.length;
+  let end=el.selectionEnd ?? el.value.length;
+
+  if(start===end && start>0)start--;
+  el.value=el.value.slice(0,start)+el.value.slice(end);
+  el.focus({preventScroll:true});
+  try{el.setSelectionRange(start,start)}catch(e){}
+  el.dispatchEvent(new Event("input",{bubbles:true}));
+  updateMathRender(el.id);
+}
+
+function kbClear(){
+  if(!activeMathInput)return;
+  activeMathInput.value="";
+  activeMathInput.focus({preventScroll:true});
+  activeMathInput.dispatchEvent(new Event("input",{bubbles:true}));
+  updateMathRender(activeMathInput.id);
+}
+
+// Поддерживаем и обычную клавиатуру: ученик может набирать 13π/4,
+// а на экране это сразу отображается нормальной математической дробью.
+document.addEventListener("input",e=>{
+  if(e.target.classList && e.target.classList.contains("math-entry")){
+    e.target.value=normalizeMathRaw(e.target.value);
+    updateMathRender(e.target.id);
+  }
+});
+
+document.addEventListener("keydown",e=>{
+  if(!activeMathInput)return;
+  if(document.activeElement!==activeMathInput)return;
+
+  // Разрешаем цифры, минус, плюс, слэш и букву p/P как быстрый ввод π.
+  if(e.key==="p"||e.key==="P"){
+    e.preventDefault();
+    kbInsert("π");
+  }
+});
+
+// Инициализация всех математических полей.
+function initMathEditors(){
+  document.querySelectorAll(".math-entry").forEach(input=>{
+    updateMathRender(input.id);
+    const editor=document.getElementById("editor_"+input.id);
+    if(editor){
+      editor.addEventListener("keydown",e=>{
+        // Если фокус попал на визуальный контейнер, переводим его в скрытый input.
+        if(e.key.length===1 || e.key==="Backspace"){
+          activateMathField(input.id,false);
+        }
+      });
+    }
+  });
+}
+
+/* ---------- ФИНАЛЬНОЕ ПОЗДРАВЛЕНИЕ ---------- */
+let celebrationShown = false;
+
+function showCelebration(){
+  const overlay=document.getElementById("celebrationOverlay");
+  if(!overlay) return;
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+}
+
+function closeCelebration(){
+  const overlay=document.getElementById("celebrationOverlay");
+  if(!overlay) return;
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden","true");
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeCelebration();
+});
+
+/* ---------- NAVIGATION + PROGRESS ---------- */
+
+let currentBlock=1;
+
+function setActiveNav(n){
+  for(let i=1;i<=4;i++){
+    const b=document.getElementById("nav"+i);
+    if(b)b.classList.toggle("active",i===n);
+  }
+}
+
+function goBlock(n){
+  currentBlock=n;
+  document.getElementById("block1").classList.toggle("hidden",n!==1);
+  document.getElementById("block2").classList.toggle("open",n===2);
+  document.getElementById("block3").classList.toggle("open",n===3);
+  document.getElementById("block4").classList.toggle("open",n===4);
+  setActiveNav(n);
+  closeMathKeyboard();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openBlock1(){goBlock(1)}
+function openBlock2(){goBlock(2)}
+function openBlock3(){goBlock(3)}
+function openBlock4(){goBlock(4)}
+
+function updateAll(){
+  const a=arcStates.filter(x=>x.awarded).length;                    // 1 балл за дугу
+  const s=seriesStates.filter(x=>x.awarded).length;                 // 1 балл за задание
+  const v=solveStates.reduce(
+    (sum,x)=>sum+x.awardedRoots.filter(Boolean).length,0
+  );                                                                // 1 балл за каждую точку
+  const r=rootStates.filter(x=>x.awarded).length*5;                 // 5 баллов за задание
+
+  const totalArc=arcData.length;
+  const totalSeries=seriesData.length;
+  const totalSolve=solveData.reduce((sum,t)=>sum+t.roots.length,0);
+  const totalRoots=rootData.length*5;
+  const total=totalArc+totalSeries+totalSolve+totalRoots;
+
+  const score=a+s+v+r;
+  const pct=Math.round(score/total*100);
+
+  document.getElementById("progressText").textContent=`${score} / ${total} · ${pct}%`;
+  document.getElementById("progressFill").style.width=pct+"%";
+
+  document.querySelectorAll("#scoreText").forEach(el=>{
+    el.textContent=`Результат: ${score} / ${total} баллов (${pct}%)`;
+  });
+
+  if(a===arcData.length)document.getElementById("unlock2").classList.add("show");
+  if(s===seriesData.length)document.getElementById("unlock3").classList.add("show");
+
+  const solvedPoints=solveStates.reduce(
+    (sum,x)=>sum+x.awardedRoots.filter(Boolean).length,0
+  );
+  if(solvedPoints===totalSolve)document.getElementById("unlock4").classList.add("show");
+
+  if(score===total && !celebrationShown){
+    celebrationShown = true;
+    showCelebration();
+  }
+}
+updateAll();
+setActiveNav(1);
+initMathEditors();
+</script>
+
+<div class="math-keyboard" id="mathKeyboard">
+  <div class="kb-title">
+    <span>Математическая клавиатура</span>
+    <button class="kb-close" type="button" onclick="closeMathKeyboard()">✕</button>
+  </div>
+  <div class="kb-grid">
+    <button class="kb-key" type="button" onclick="kbInsert('1')">1</button>
+    <button class="kb-key" type="button" onclick="kbInsert('2')">2</button>
+    <button class="kb-key" type="button" onclick="kbInsert('3')">3</button>
+    <button class="kb-key pi" type="button" onclick="kbInsert('π')">π</button>
+    <button class="kb-key fraction-key" type="button" onclick="kbInsert('/')"
+            aria-label="Дробь"><span class="mini-frac"><span>□</span><span>□</span></span></button>
+    <button class="kb-key" type="button" onclick="kbInsert('−')">−</button>
+
+    <button class="kb-key" type="button" onclick="kbInsert('4')">4</button>
+    <button class="kb-key" type="button" onclick="kbInsert('5')">5</button>
+    <button class="kb-key" type="button" onclick="kbInsert('6')">6</button>
+    <button class="kb-key" type="button" onclick="kbInsert('+')">+</button>
+    <button class="kb-key" type="button" onclick="kbInsert('(')">(</button>
+    <button class="kb-key" type="button" onclick="kbInsert(')')">)</button>
+
+    <button class="kb-key" type="button" onclick="kbInsert('7')">7</button>
+    <button class="kb-key" type="button" onclick="kbInsert('8')">8</button>
+    <button class="kb-key" type="button" onclick="kbInsert('9')">9</button>
+    <button class="kb-key" type="button" onclick="kbInsert('0')">0</button>
+    <button class="kb-key action wide" type="button" onclick="kbBackspace()">⌫</button>
+
+    <button class="kb-key action wide" type="button" onclick="kbClear()">Очистить</button>
+    <button class="kb-key action wide" type="button" onclick="closeMathKeyboard()">Готово</button>
+  </div>
+</div>
+
+
+<div class="celebration-overlay" id="celebrationOverlay" aria-hidden="true">
+  <div class="celebration-card">
+    <div class="confetti-layer">
+      <div class="confetti c1" style="left:6%; animation-delay:.1s;"></div>
+      <div class="confetti c2" style="left:14%; animation-delay:.5s;"></div>
+      <div class="confetti c3" style="left:22%; animation-delay:1.0s;"></div>
+      <div class="confetti c4" style="left:31%; animation-delay:.2s;"></div>
+      <div class="confetti c5" style="left:40%; animation-delay:1.3s;"></div>
+      <div class="confetti c1" style="left:49%; animation-delay:.8s;"></div>
+      <div class="confetti c2" style="left:58%; animation-delay:.15s;"></div>
+      <div class="confetti c3" style="left:67%; animation-delay:1.1s;"></div>
+      <div class="confetti c4" style="left:76%; animation-delay:.4s;"></div>
+      <div class="confetti c5" style="left:85%; animation-delay:1.5s;"></div>
+      <div class="confetti c2" style="left:93%; animation-delay:.9s;"></div>
+
+      <div class="firework fw1"></div>
+      <div class="firework fw2"></div>
+      <div class="firework fw3"></div>
+      <div class="firework fw4"></div>
+    </div>
+
+    <div class="trophy-badge">🏆</div>
+    <div class="celebration-title">Готово! Навык освоен.</div>
+    <div class="celebration-text">
+      Ты научился отмечать решения на окружности и выполнять
+      <b>отбор корней на промежутке</b>.<br>
+      <b>Это +1 балл по первичной шкале ЕГЭ.</b>
+    </div>
+    <div class="celebration-sub">Без звука — только праздничная анимация ✨</div>
+    <button class="celebration-close" type="button" onclick="closeCelebration()">Продолжить</button>
+  </div>
+</div>
+
+</body>
+</html>

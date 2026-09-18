@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Домашнее задание — выражения и задачи</title>
+<style>
+:root{
+  --orange:#4d8fd8;--orange2:#8ec8ff;--dark:#245f9e;--cream:#f3f9ff;--paper:#fbfdff;
+  --line:#9fcaf3;--green:#4f9428;--red:#c94c31;--ink:#263746;--gold:#dceeff;
+  --shadow:0 12px 28px rgba(43,96,150,.16)
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);
+  background:linear-gradient(135deg,#8ec8ff,#4d8fd8);min-height:100vh
+}
+.sheet{
+  width:min(1060px,calc(100% - 24px));margin:18px auto 34px;background:linear-gradient(#fbfdff,#eef7ff);
+  border:6px solid white;border-radius:32px;box-shadow:0 18px 60px rgba(35,82,128,.24);position:relative;overflow:hidden
+}
+.inner{padding:30px 34px 44px;position:relative;z-index:3}
+.sticker-blue{
+  position:absolute;z-index:2;pointer-events:none;user-select:none;
+  font-size:54px;filter:drop-shadow(0 4px 0 #fff) drop-shadow(0 5px 8px rgba(45,91,135,.15))
+}
+.sb1{left:15px;top:22px;transform:rotate(-8deg)}
+.sb2{right:18px;top:390px;transform:rotate(12deg)}
+.sb3{left:14px;bottom:70px;transform:rotate(-8deg)}
+.sb4{right:18px;bottom:18px;transform:rotate(7deg)}
+
+header{text-align:center;padding:6px 70px 10px}
+h1{margin:0;color:var(--dark);font-size:clamp(32px,5vw,58px);text-shadow:0 3px white;font-weight:900}
+.sub{margin-top:7px;color:#567a9c;font-weight:700}
+
+.progress{
+  position:fixed;right:16px;top:16px;z-index:999;width:250px;
+  background:rgba(248,252,255,.97);backdrop-filter:blur(8px);
+  border:2px solid #7db5e8;border-radius:18px;padding:11px 12px;box-shadow:0 10px 28px rgba(39,84,128,.20)
+}
+.prow{display:flex;justify-content:space-between;gap:10px;font-weight:900;font-size:14px}
+.bar{height:13px;background:#dceeff;border-radius:99px;overflow:hidden;margin-top:8px;border:1px solid #9dc8ef}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#6cb2ef,#4f92d8,#286aa9);transition:.3s}
+
+.ribbon{
+  width:max-content;max-width:94%;margin:22px auto 14px;padding:8px 28px;color:white;font-size:clamp(20px,3vw,28px);
+  font-weight:900;background:linear-gradient(#73b7ef,#3f86ca);border:2px solid #9ed0f8;border-radius:10px;
+  box-shadow:0 6px 0 #2b6ea9,0 9px 18px rgba(41,87,133,.14)
+}
+.card{
+  max-width:850px;margin:0 auto 18px;background:rgba(255,255,255,.76);border:2px dashed var(--line);
+  border-radius:22px;padding:18px;box-shadow:0 4px 12px rgba(145,79,20,.08)
+}
+.theory-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.theory{
+  background:white;border:2px solid #9fcaf3;border-radius:16px;padding:14px;text-align:center
+}
+.theory b{display:block;color:#2f6fae;margin-bottom:8px}
+.math{font-family:Georgia,"Times New Roman",serif;font-size:25px}
+.note{margin-top:12px;background:#eaf5ff;border-left:5px solid var(--orange);padding:11px 13px;border-radius:10px}
+.item{
+  border:1px solid #bfdcf5;border-radius:15px;background:#fff;padding:13px;margin:10px 0
+}
+.item-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num{
+  width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:white;font-weight:900;
+  background:linear-gradient(#6fb5ef,#3d82c4)
+}
+.expr{font-family:Georgia,"Times New Roman",serif;font-size:22px;flex:1}
+.pts{margin-left:auto;background:#dceeff;border:1px dashed #86b9e7;border-radius:12px;padding:5px 9px;font-weight:900;color:#2e689f}
+.answer{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+input[type=text]{
+  border:2px solid #9bc6ec;border-radius:11px;padding:9px 10px;font:inherit;min-width:145px;background:white;outline:none
+}
+input[type=text]:focus{border-color:#4d8fd8;box-shadow:0 0 0 3px rgba(77,143,216,.14)}
+button{
+  border:0;border-radius:11px;padding:9px 13px;font:inherit;font-weight:900;cursor:pointer
+}
+.check{color:white;background:linear-gradient(#6eb4ee,#3c83c8);box-shadow:0 3px 0 #2c6fa9}
+.secondary{background:#dceeff;color:#2f679d;border:1px solid #93bfe7}
+.feedback{min-height:21px;margin-top:8px;font-weight:900}
+.ok{color:var(--green)} .bad{color:var(--red)}
+
+.order-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.opchip{
+  background:#edf7ff;border:2px solid #9fcaf3;color:#355f84;padding:8px 10px;border-radius:11px;position:relative
+}
+.opchip.selected{background:#d4ebff;border-color:#4d8fd8}
+.rank{
+  display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#3f86ca;color:white;
+  font-size:12px;margin-left:5px
+}
+.sequence{font-size:13px;color:#60778c;margin-top:6px}
+
+.task-banner{
+  background:#eaf5ff;border:2px solid #91c1ea;border-radius:16px;padding:13px 15px;text-align:center;
+  font-weight:900;color:#2e6ba4;margin-bottom:16px
+}
+.scheme{margin:16px 0}
+.scheme-title{font-weight:900;text-align:center;margin:8px 0;color:#2f6fae}
+.box-grid{display:grid;gap:12px}
+.cols2{grid-template-columns:repeat(2,1fr)} .cols3{grid-template-columns:repeat(3,1fr)}
+.label{text-align:center;font-size:13px;color:#7b644f;font-weight:800;margin-bottom:5px}
+.bigbox{
+  height:78px;border:2px solid #9bc6ec;background:white;border-radius:14px;display:grid;place-items:center;
+  padding:9px;text-align:center
+}
+.bigbox input{width:100%;min-width:0;text-align:center;font-size:20px;font-family:Georgia,"Times New Roman",serif}
+.arrowrow{display:grid;gap:12px;margin:5px 0;color:#3f86ca;font-weight:900;text-align:center}
+.fixedx{font-family:Georgia,"Times New Roman",serif;font-size:29px;font-style:italic}
+.equation-preview{
+  background:#fff;border:1px solid #b8d8f2;border-radius:13px;padding:11px;text-align:center;margin:12px 0;
+  font-family:Georgia,"Times New Roman",serif;font-size:20px
+}
+.stage{margin-top:14px;padding-top:12px;border-top:1px dashed #aacfea}
+.stage-title{font-weight:900;color:#2f6fae;margin-bottom:8px}
+.answer-grid{display:grid;gap:10px}
+.final{background:linear-gradient(#edf7ff,#dceeff);border:3px solid #83b9e7}
+.scoreline{font-size:25px;font-weight:900;color:#245f9e;text-align:center}
+
+@media(max-width:900px){
+  .progress{top:8px;left:8px;right:8px;width:auto}
+  .sheet{margin-top:86px}
+  .inner{padding:26px 14px 38px}
+  .theory-grid{grid-template-columns:1fr}
+  header{padding:0 50px}
+  .sticker-blue{font-size:42px}.sb2{top:520px}
+}
+@media(max-width:600px){
+  .cols3{grid-template-columns:1fr}
+  .cols2{grid-template-columns:1fr}
+  .arrowrow{grid-template-columns:1fr!important}
+}
+
+/* ===== Карточки теории ===== */
+.flash-section{max-width:850px;margin:0 auto 18px}
+.flash-top{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-bottom:12px;font-weight:900;color:#2f6fae
+}
+.flash-count{
+  background:#e5f3ff;border:1px solid #9fcaf3;border-radius:12px;padding:7px 11px;color:#2e689f
+}
+.flash-stage{min-height:300px;display:grid;place-items:center}
+.flash-wrap{width:min(660px,100%);height:255px;perspective:1200px;cursor:pointer}
+.flash-card{
+  width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s ease
+}
+.flash-card.flipped{transform:rotateY(180deg)}
+.flash-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border:3px solid #8dbce7;border-radius:24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:24px;
+  background:linear-gradient(#fbfdff,#eaf5ff);box-shadow:0 12px 28px rgba(43,96,150,.16)
+}
+.flash-back{transform:rotateY(180deg);background:linear-gradient(#ffffff,#e3f2ff)}
+.flash-label{font-weight:900;color:#2d6ca6;font-size:19px;margin-bottom:14px}
+.flash-math math{font-size:36px}
+.flash-tap{font-size:13px;color:#6a8298;margin-top:18px}
+.selfcheck{
+  display:none;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px
+}
+.selfcheck.show{display:flex}
+.self-yes,.self-no{min-width:150px;color:white}
+.self-yes{background:linear-gradient(#69a9df,#3d83c5);box-shadow:0 3px 0 #2c6fa9}
+.self-no{background:linear-gradient(#7f9bb4,#587891);box-shadow:0 3px 0 #47647b}
+.flash-dots{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.flash-dot{width:12px;height:12px;border-radius:50%;background:#cfe7fb;border:1px solid #82b5e2}
+.flash-dot.done{background:#4e90cd}
+.flash-dot.current{box-shadow:0 0 0 3px rgba(77,143,216,.18)}
+.flash-finish{text-align:center;padding:34px 15px;color:#245f9e;font-weight:900;font-size:23px}
+
+/* ===== Порядок действий: drag & drop ===== */
+.order-instruction{
+  text-align:center;font-weight:900;color:#2e689f;margin:0 0 14px;
+  background:#eaf5ff;border:1px solid #afd2ef;border-radius:13px;padding:10px 12px
+}
+.order-expr-wrap{margin:13px 0 8px;overflow-x:auto;padding:5px 0 2px}
+.order-expression{
+  display:flex;align-items:flex-end;justify-content:center;gap:5px;
+  min-width:max-content;padding-top:45px;font-family:Georgia,"Times New Roman",serif
+}
+.math-token{display:inline-flex;align-items:center;font-size:26px;min-height:48px}
+.math-token math{font-size:27px}
+.op-stack{
+  width:44px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px
+}
+.drop-slot{
+  width:36px;height:36px;border:2px dashed #79addb;border-radius:9px;background:#f6fbff;
+  display:flex;align-items:center;justify-content:center;transition:.15s
+}
+.drop-slot.dragover{background:#dceeff;border-color:#3f86ca;transform:scale(1.05)}
+.op-sign{font-size:28px;line-height:1;height:35px;display:grid;place-items:center}
+.number-bank{
+  min-height:50px;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;
+  background:#edf7ff;border:1px solid #bfdcf5;border-radius:13px;padding:8px;margin:8px 0 10px
+}
+.drag-num{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:white;font-weight:900;
+  background:linear-gradient(#6fb5ef,#3d82c4);box-shadow:0 3px 0 #2c6fa9;cursor:grab;user-select:none
+}
+.drag-num:active{cursor:grabbing}
+.drag-num.selected{outline:4px solid rgba(77,143,216,.22)}
+.drop-slot .drag-num{box-shadow:none}
+.order-bottom{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.order-bottom input{max-width:190px}
+.order-status{text-align:center;font-size:13px;color:#60778c;margin-top:5px}
+
+.frac{
+  display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;
+  line-height:1.05;font-family:Georgia,"Times New Roman",serif;margin:0 2px
+}
+.frac .top{border-bottom:1.7px solid currentColor;padding:0 3px 2px}
+.frac .bottom{padding:2px 3px 0}
+.mix{display:inline-flex;align-items:center;gap:3px}
+
+@media(max-width:600px){
+  .flash-wrap{height:285px}
+  .flash-math math{font-size:31px}
+  .order-expression{justify-content:flex-start}
+}
+
+
+.flash-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.flash-points{
+  background:#dceeff;border:1px dashed #86b9e7;border-radius:12px;
+  padding:7px 10px;color:#2e689f;font-weight:900
+}
+.flash-answer-stack{
+  display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;width:100%
+}
+.flash-answer-stack .formula-line{
+  width:100%;display:flex;justify-content:center;align-items:center;
+  white-space:nowrap;overflow:visible
+}
+.flash-answer-stack .formula-line math{
+  display:inline-block !important;font-size:29px;white-space:nowrap
+}
+
+.x-note{
+  margin:10px auto 2px;max-width:760px;padding:10px 12px;border-radius:12px;
+  background:#eef7ff;border:1px solid #b7d7f1;color:#416783;font-size:14px;line-height:1.4
+}
+.order-check-row{
+  display:flex;justify-content:center;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px
+}
+
+</style>
+</head>
+<body>
+<div class="progress">
+  <div class="prow"><span>⭐ Прогресс</span><span id="ptext">0 / 37 · 0%</span></div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+</div>
+
+<div class="sheet">
+<div class="sticker-blue sb1">📘</div>
+<div class="sticker-blue sb2">✏️</div>
+<div class="sticker-blue sb3">📐</div>
+<div class="sticker-blue sb4">🧮</div>
+
+<div class="inner">
+<header>
+  <h1>Домашнее задание</h1>
+  <div class="sub">Преобразования выражений • порядок действий • задачи</div>
+</header>
+
+<div class="ribbon">📘 1. ПРИВЕДЕНИЕ ПОДОБНЫХ</div>
+<section class="card flash-section">
+  <div class="flash-top">
+    <span>ТЕОРИЯ — ответь устно и проверь себя</span>
+    <div class="flash-meta">
+      <span class="flash-points">⭐ 1 балл за карточку</span>
+      <span class="flash-count" id="flashCount">Карточка 1 из 5</span>
+    </div>
+  </div>
+
+  <div class="flash-stage" id="flashStage">
+    <div class="flash-wrap" onclick="flipTheoryCard()">
+      <div class="flash-card" id="theoryFlash">
+        <div class="flash-face">
+          <div class="flash-label" id="flashLabelFront"></div>
+          <div class="flash-math" id="flashQuestion"></div>
+          <div class="flash-tap">Нажми на карточку, чтобы проверить ответ</div>
+        </div>
+        <div class="flash-face flash-back">
+          <div class="flash-label" id="flashLabelBack"></div>
+          <div class="flash-math" id="flashAnswer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="selfcheck" id="theorySelfcheck">
+    <button class="self-yes" onclick="theorySelfCheck(true,event)">✓ Правильно</button>
+    <button class="self-no" onclick="theorySelfCheck(false,event)">✗ Неправильно</button>
+  </div>
+  <div class="flash-dots" id="flashDots"></div>
+</section>
+
+<section class="card">
+  <b>ЗАДАНИЕ. Упрости выражения.</b>
+  <div id="simplifyList"></div>
+</section>
+
+<div class="ribbon">🔢 2. ПОРЯДОК ДЕЙСТВИЙ</div>
+<section class="card">
+  <div class="order-instruction">Перетащи числа порядка действий в окошки над знаками.</div>
+  <div id="orderList"></div>
+</section>
+
+<div class="ribbon">🧩 3. ЗАДАЧИ</div>
+
+<section class="card" id="taskA">
+  <div class="item-head"><span class="num">А</span><b>Задача на два числа</b><span class="pts">⭐ 5 баллов</span></div>
+  <p>Представьте число <b>26</b> в виде суммы <b>двух чисел</b> так, чтобы после прибавления 3 к первому числу и вычитания 5 из второго полученные числа стали равными.</p>
+  <div class="task-banner">ЧИСЛА СТАЛИ РАВНЫМИ ПОСЛЕ ПРЕОБРАЗОВАНИЙ → за <i>x</i> берём числа ПОСЛЕ преобразований.</div>
+
+  <div class="scheme">
+    <div class="scheme-title">ДО</div>
+    <div class="box-grid cols2">
+      <div><div class="label">первое число</div><div class="bigbox"><input id="a_before1" placeholder="выражение через x"></div></div>
+      <div><div class="label">второе число</div><div class="bigbox"><input id="a_before2" placeholder="выражение через x"></div></div>
+    </div>
+
+    <div class="arrowrow cols2"><div>↓ +3</div><div>↓ −5</div></div>
+
+    <div class="scheme-title">ПОСЛЕ</div>
+    <div class="box-grid cols2">
+      <div class="bigbox fixedx"><math><mi>x</mi></math></div>
+      <div class="bigbox fixedx"><math><mi>x</mi></math></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <button class="check" onclick="checkSchemeA()">Проверить схему</button>
+    <div class="feedback" id="a_scheme_fb"></div>
+    <div class="equation-preview" id="a_eq">Сумма исходных чисел: □ + □ = 26</div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-title">Реши получившееся уравнение</div>
+    <div class="answer"><span><math><mi>x</mi><mo>=</mo></math></span><input id="a_x" inputmode="decimal"><button class="check" onclick="checkAX()">Проверить x</button></div>
+    <div class="feedback" id="a_x_fb"></div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-title">Запиши исходные числа</div>
+    <div class="answer-grid cols2">
+      <input id="a_ans1" inputmode="decimal" placeholder="первое число">
+      <input id="a_ans2" inputmode="decimal" placeholder="второе число">
+    </div>
+    <div class="answer"><button class="check" onclick="checkAAnswers()">Проверить ответ</button></div>
+    <div class="feedback" id="a_ans_fb"></div>
+  </div>
+</section>
+
+<section class="card" id="taskB">
+  <div class="item-head"><span class="num">Б</span><b>Задача на три числа</b><span class="pts">⭐ 7 баллов</span></div>
+  <p>Представьте число <b>26</b> в виде суммы <b>трёх чисел</b> так, чтобы после прибавления 2 к первому числу, вычитания 3 из второго и умножения третьего числа на 2 полученные числа стали равными.</p>
+  <div class="task-banner">ЧИСЛА СТАЛИ РАВНЫМИ ПОСЛЕ ПРЕОБРАЗОВАНИЙ → за <i>x</i> берём числа ПОСЛЕ преобразований.</div>
+
+  <div class="scheme">
+    <div class="scheme-title">ДО</div>
+    <div class="box-grid cols3">
+      <div><div class="label">первое число</div><div class="bigbox"><input id="b_before1" placeholder="выражение через x"></div></div>
+      <div><div class="label">второе число</div><div class="bigbox"><input id="b_before2" placeholder="выражение через x"></div></div>
+      <div><div class="label">третье число</div><div class="bigbox"><input id="b_before3" placeholder="выражение через x"></div></div>
+    </div>
+
+    <div class="arrowrow cols3"><div>↓ +2</div><div>↓ −3</div><div>↓ ·2</div></div>
+
+    <div class="scheme-title">ПОСЛЕ</div>
+    <div class="box-grid cols3">
+      <div class="bigbox fixedx"><math><mi>x</mi></math></div>
+      <div class="bigbox fixedx"><math><mi>x</mi></math></div>
+      <div class="bigbox fixedx"><math><mi>x</mi></math></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <button class="check" onclick="checkSchemeB()">Проверить схему</button>
+    <div class="feedback" id="b_scheme_fb"></div>
+    <div class="equation-preview" id="b_eq">Сумма исходных чисел: □ + □ + □ = 26</div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-title">Реши получившееся уравнение</div>
+    <div class="answer"><span><math><mi>x</mi><mo>=</mo></math></span><input id="b_x" inputmode="decimal"><button class="check" onclick="checkBX()">Проверить x</button></div>
+    <div class="feedback" id="b_x_fb"></div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-title">Запиши исходные числа</div>
+    <div class="answer-grid cols3">
+      <input id="b_ans1" inputmode="decimal" placeholder="первое число">
+      <input id="b_ans2" inputmode="decimal" placeholder="второе число">
+      <input id="b_ans3" inputmode="decimal" placeholder="третье число">
+    </div>
+    <div class="answer"><button class="check" onclick="checkBAnswers()">Проверить ответ</button></div>
+    <div class="feedback" id="b_ans_fb"></div>
+  </div>
+</section>
+
+<section class="card final">
+  <div class="scoreline" id="scoreline">Результат: 0 / 37 баллов</div>
+  <div class="actions" style="text-align:center;margin-top:12px"><button class="secondary" onclick="location.reload()">Начать заново</button></div>
+</section>
+</div>
+</div>
+
+<script>
+const awarded={};
+const TOTAL=37;
+function award(key){
+  if(!awarded[key]) awarded[key]=1;
+  updateProgress();
+}
+function score(){return Object.values(awarded).reduce((a,b)=>a+b,0)}
+function updateProgress(){
+  const s=score(),p=Math.round(s/TOTAL*100);
+  document.getElementById("ptext").textContent=`${s} / ${TOTAL} · ${p}%`;
+  document.getElementById("fill").style.width=p+"%";
+  document.getElementById("scoreline").textContent=`Результат: ${s} / ${TOTAL} баллов (${p}%)`;
+}
+function n(v){return Number(String(v).trim().replace(",", "."))}
+function eqn(a,b){return Number.isFinite(a)&&Math.abs(a-b)<1e-9}
+
+function parseLinear(raw){
+  let s=String(raw).toLowerCase().replace(/\s+/g,"").replace(/,/g,".").replace(/[·×*]/g,"");
+  s=s.replace(/:/g,"/");
+  if(!s) return null;
+  s=s.replace(/-/g,"+-");
+  if(s[0]==="+") s=s.slice(1);
+  const terms=s.split("+").filter(Boolean);
+  let c=0,k=0;
+  for(const term0 of terms){
+    const term=term0;
+    if(term.includes("x")){
+      let coeff;
+      if(/^[-]?x$/.test(term)) coeff=term[0]==="-"?-1:1;
+      else if(/^[-]?x\/\d+(\.\d+)?$/.test(term)){
+        const neg=term.startsWith("-")?-1:1;
+        const den=parseFloat(term.split("/")[1]); coeff=neg/den;
+      } else if(/^[-]?\d+(\.\d+)?\/\d+(\.\d+)?x$/.test(term)){
+        const m=term.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)x$/); coeff=parseFloat(m[1])/parseFloat(m[2]);
+      } else {
+        const m=term.match(/^(-?\d*(?:\.\d+)?)x$/);
+        if(!m) return null;
+        let a=m[1];
+        coeff=(a===""?1:(a==="-"?-1:parseFloat(a)));
+      }
+      c+=coeff;
+    } else {
+      const val=parseFloat(term);
+      if(!Number.isFinite(val)) return null;
+      k+=val;
+    }
+  }
+  return [c,k];
+}
+function sameLinear(raw,c,k){
+  const p=parseLinear(raw); return p&&eqn(p[0],c)&&eqn(p[1],k);
+}
+
+// Теория — 5 переворачивающихся карточек
+const theoryCards=[
+  {
+    label:"Складываем одинаковые буквенные части",
+    q:`<math display="block"><mn>5</mn><mi>x</mi><mo>+</mo><mn>4</mn><mi>x</mi><mo>=</mo><mo>?</mo></math>`,
+    a:`<math display="block"><mn>5</mn><mi>x</mi><mo>+</mo><mn>4</mn><mi>x</mi><mo>=</mo><mn>9</mn><mi>x</mi></math>`
+  },
+  {
+    label:"Вычитаем одинаковые буквенные части",
+    q:`<math display="block"><mn>12</mn><mi>x</mi><mo>−</mo><mn>5</mn><mi>x</mi><mo>=</mo><mo>?</mo></math>`,
+    a:`<math display="block"><mn>12</mn><mi>x</mi><mo>−</mo><mn>5</mn><mi>x</mi><mo>=</mo><mn>7</mn><mi>x</mi></math>`
+  },
+  {
+    label:"Умножаем",
+    q:`<math display="block"><mn>8</mn><mi>x</mi><mo>·</mo><mn>2</mn><mo>=</mo><mo>?</mo></math>`,
+    a:`<math display="block"><mn>8</mn><mi>x</mi><mo>·</mo><mn>2</mn><mo>=</mo><mn>16</mn><mi>x</mi></math>`
+  },
+  {
+    label:"Делим",
+    q:`<math display="block"><mn>8</mn><mi>x</mi><mo>:</mo><mn>2</mn><mo>=</mo><mo>?</mo></math>`,
+    a:`<math display="block"><mn>8</mn><mi>x</mi><mo>:</mo><mn>2</mn><mo>=</mo><mn>4</mn><mi>x</mi></math>`
+  },
+  {
+    label:"Числа и слагаемые с x",
+    q:`<math display="block"><mrow><mn>3</mn><mi>x</mi><mo>+</mo><mn>2</mn><mo>+</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>4</mn><mo>=</mo><mo>?</mo></mrow></math>`,
+    a:`<div class="flash-answer-stack">
+         <div class="formula-line">
+           <math><mrow><mn>3</mn><mi>x</mi><mo>+</mo><mn>2</mn><mi>x</mi><mo>=</mo><mn>5</mn><mi>x</mi></mrow></math>
+         </div>
+         <div class="formula-line">
+           <math><mrow><mn>2</mn><mo>+</mo><mn>4</mn><mo>=</mo><mn>6</mn></mrow></math>
+         </div>
+         <div class="formula-line">
+           <math><mrow><mn>3</mn><mi>x</mi><mo>+</mo><mn>2</mn><mo>+</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>4</mn><mo>=</mo><mn>5</mn><mi>x</mi><mo>+</mo><mn>6</mn></mrow></math>
+         </div>
+       </div>`
+  }
+];
+
+let theoryMainQueue=[0,1,2,3,4];
+let theoryRetryQueue=[];
+let theoryCurrent=theoryMainQueue.shift();
+let theoryFlipped=false;
+let theoryMastered=Array(theoryCards.length).fill(false);
+
+function renderTheoryCard(){
+  const stage=document.getElementById("flashStage");
+  const self=document.getElementById("theorySelfcheck");
+
+  if(theoryCurrent===undefined){
+    stage.innerHTML=`<div class="flash-finish">Все карточки пройдены ✓</div>`;
+    self.classList.remove("show");
+    document.getElementById("flashCount").textContent="5 из 5";
+    renderFlashDots();
+    return;
+  }
+
+  if(!document.getElementById("theoryFlash")){
+    stage.innerHTML=`
+      <div class="flash-wrap" onclick="flipTheoryCard()">
+        <div class="flash-card" id="theoryFlash">
+          <div class="flash-face">
+            <div class="flash-label" id="flashLabelFront"></div>
+            <div class="flash-math" id="flashQuestion"></div>
+            <div class="flash-tap">Нажми на карточку, чтобы проверить ответ</div>
+          </div>
+          <div class="flash-face flash-back">
+            <div class="flash-label" id="flashLabelBack"></div>
+            <div class="flash-math" id="flashAnswer"></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const c=theoryCards[theoryCurrent];
+  document.getElementById("flashLabelFront").textContent=c.label;
+  document.getElementById("flashLabelBack").textContent=c.label;
+  document.getElementById("flashQuestion").innerHTML=c.q;
+  document.getElementById("flashAnswer").innerHTML=c.a;
+  document.getElementById("theoryFlash").classList.remove("flipped");
+  self.classList.remove("show");
+  theoryFlipped=false;
+
+  const learned=theoryMastered.filter(Boolean).length;
+  document.getElementById("flashCount").textContent=`Выучено ${learned} из 5`;
+  renderFlashDots();
+}
+
+function flipTheoryCard(){
+  if(theoryCurrent===undefined || theoryFlipped) return;
+  document.getElementById("theoryFlash").classList.add("flipped");
+  theoryFlipped=true;
+  setTimeout(()=>document.getElementById("theorySelfcheck").classList.add("show"),260);
+}
+
+function theorySelfCheck(ok,event){
+  if(event) event.stopPropagation();
+  if(!theoryFlipped || theoryCurrent===undefined) return;
+
+  const cardId=theoryCurrent;
+
+  if(ok){
+    if(!theoryMastered[cardId]){
+      theoryMastered[cardId]=true;
+      award("theory"+cardId);
+    }
+  }else{
+    // Ошибочная карточка возвращается только после остальных карточек.
+    theoryRetryQueue.push(cardId);
+  }
+
+  if(theoryMainQueue.length>0){
+    theoryCurrent=theoryMainQueue.shift();
+  }else if(theoryRetryQueue.length>0){
+    theoryCurrent=theoryRetryQueue.shift();
+  }else{
+    theoryCurrent=undefined;
+  }
+
+  setTimeout(renderTheoryCard,180);
+}
+
+function renderFlashDots(){
+  const box=document.getElementById("flashDots");
+  box.innerHTML="";
+  theoryCards.forEach((_,i)=>{
+    const d=document.createElement("span");
+    d.className="flash-dot";
+    if(theoryMastered[i])d.classList.add("done");
+    if(i===theoryCurrent)d.classList.add("current");
+    box.appendChild(d);
+  });
+}
+renderTheoryCard();
+
+// Block 1
+const simp=[
+["А",`<math><mn>4</mn><mi>x</mi><mo>+</mo><mn>3</mn><mi>x</mi></math>`,7,0],
+["Б",`<math><mn>6</mn><mi>x</mi><mo>+</mo><mn>2</mn><mi>x</mi><mo>+</mo><mi>x</mi></math>`,9,0],
+["В",`<math><mn>12</mn><mi>x</mi><mo>−</mo><mn>5</mn><mi>x</mi></math>`,7,0],
+["Г",`<math><mn>5</mn><mi>x</mi><mo>+</mo><mn>3</mn><mo>+</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>4</mn></math>`,7,7],
+["Д",`<math><mn>4</mn><mi>x</mi><mo>+</mo><mn>6</mn><mo>+</mo><mn>3</mn><mi>x</mi><mo>+</mo><mn>2</mn></math>`,7,8],
+["Е",`<math><mn>3</mn><mo>·</mo><mn>2</mn><mi>x</mi></math>`,6,0],
+["Ж",`<math><mn>16</mn><mi>x</mi><mo>:</mo><mn>4</mn></math>`,4,0],
+["З",`<math><mn>5</mn><mo>·</mo><mn>3</mn><mi>x</mi></math>`,15,0],
+["И",`<math><mn>24</mn><mi>x</mi><mo>:</mo><mn>6</mn></math>`,4,0],
+["К",`<math><mn>2</mn><mo>·</mo><mn>4</mn><mi>x</mi><mo>+</mo><mn>3</mn><mi>x</mi></math>`,11,0]
+];
+const sl=document.getElementById("simplifyList");
+simp.forEach((q,i)=>{
+  const d=document.createElement("div"); d.className="item";
+  d.innerHTML=`<div class="item-head"><span class="num">${q[0]}</span><span class="expr">${q[1]}</span><span class="pts">1 балл</span></div>
+  <div class="answer"><input id="s${i}" placeholder="ответ"><button class="check" onclick="checkS(${i})">Проверить</button></div><div class="feedback" id="sf${i}"></div>`;
+  sl.appendChild(d);
+});
+function checkS(i){
+  const q=simp[i],ok=sameLinear(document.getElementById("s"+i).value,q[2],q[3]),fb=document.getElementById("sf"+i);
+  if(ok){award("s"+i);fb.className="feedback ok";fb.textContent="✓ Верно! +1 балл";}
+  else{fb.className="feedback bad";fb.textContent="✗ Проверь преобразование."}
+}
+
+// Block 2 — drag & drop, только порядок действий
+function fracMath(a,b){
+  return `<math><mfrac><mn>${a}</mn><mn>${b}</mn></mfrac></math>`;
+}
+function mixedMath(a,b,c){
+  return `<span class="math-token"><math><mn>${a}</mn><mfrac><mn>${b}</mn><mn>${c}</mn></mfrac></math></span>`;
+}
+function op(id,sign){
+  return `<span class="op-stack"><span class="drop-slot" data-slot="${id}"></span><span class="op-sign">${sign}</span></span>`;
+}
+
+const orders=[
+{
+ l:"А",n:2,
+ html:`<span class="math-token"><math><mn>28</mn></math></span>${op("a_minus","−")}<span class="math-token"><math><mn>12</mn></math></span>${op("a_div",":")}<span class="math-token"><math><mn>3</mn></math></span>`,
+ correct:{a_div:1,a_minus:2}
+},
+{
+ l:"Б",n:2,
+ html:`<span class="math-token"><math><mn>7</mn></math></span>${op("b_mul","·")}<span class="math-token"><math><mo>(</mo><mn>6</mn></math></span>${op("b_plus","+")}<span class="math-token"><math><mn>15</mn><mo>)</mo></math></span>`,
+ correct:{b_plus:1,b_mul:2}
+},
+{
+ l:"В",n:2,
+ html:`<span class="math-token"><math><mo>(</mo><mn>4.8</mn></math></span>${op("v_div",":")}<span class="math-token"><math><mn>0.6</mn><mo>)</mo></math></span>${op("v_minus","−")}<span class="math-token"><math><mn>1.5</mn></math></span>`,
+ correct:{v_div:1,v_minus:2}
+},
+{
+ l:"Г",n:3,
+ html:`<span class="math-token">${fracMath("3","4")}</span>${op("g_plus","+")}<span class="math-token"><math><mo>(</mo></math>${fracMath("2","3")}</span>${op("g_mul","·")}<span class="math-token">${fracMath("3","2")}</span>${op("g_minus","−")}<span class="math-token">${fracMath("1","4")}<math><mo>)</mo></math></span>`,
+ correct:{g_mul:1,g_minus:2,g_plus:3}
+},
+{
+ l:"Д",n:3,
+ html:`${mixedMath("2","1","2")}${op("d_minus","−")}<span class="math-token"><math><mo>(</mo></math>${fracMath("3","4")}</span>${op("d_plus","+")}<span class="math-token">${fracMath("1","2")}</span>${op("d_mul","·")}<span class="math-token"><math><mn>2</mn><mo>)</mo></math></span>`,
+ correct:{d_mul:1,d_plus:2,d_minus:3}
+},
+{
+ l:"Е",n:4,
+ html:`<span class="math-token"><math><mo>(</mo><mo>(</mo><mn>18</mn></math></span>${op("e_p1","+")}<span class="math-token"><math><mn>6</mn><mo>)</mo></math></span>${op("e_div",":")}<span class="math-token"><math><mn>3</mn></math></span>${op("e_p2","+")}<span class="math-token"><math><mn>5</mn><mo>)</mo></math></span>${op("e_mul","·")}<span class="math-token"><math><mn>2</mn></math></span>`,
+ correct:{e_p1:1,e_div:2,e_p2:3,e_mul:4}
+},
+{
+ l:"Ж",n:4,
+ html:`<span class="math-token"><math><mn>6.4</mn></math></span>${op("zh_minus_outer","−")}<span class="math-token"><math><mo>(</mo><mo>(</mo><mn>1.2</mn></math></span>${op("zh_plus","+")}<span class="math-token"><math><mn>0.8</mn><mo>)</mo></math></span>${op("zh_mul","·")}<span class="math-token"><math><mn>2</mn></math></span>${op("zh_minus_inner","−")}<span class="math-token"><math><mn>1</mn><mo>)</mo></math></span>`,
+ correct:{zh_plus:1,zh_mul:2,zh_minus_inner:3,zh_minus_outer:4}
+},
+{
+ l:"З",n:4,
+ html:`${mixedMath("1","1","2")}${op("z_plus_outer","+")}<span class="math-token"><math><mo>(</mo><mo>(</mo></math>${fracMath("3","4")}</span>${op("z_minus_inner","−")}<span class="math-token">${fracMath("1","4")}<math><mo>)</mo></math></span>${op("z_div",":")}<span class="math-token">${fracMath("1","2")}</span>${op("z_minus_last","−")}<span class="math-token"><math><mn>1</mn><mo>)</mo></math></span>`,
+ correct:{z_minus_inner:1,z_div:2,z_minus_last:3,z_plus_outer:4}
+},
+{
+ l:"И",n:3,xnote:true,
+ html:`<span class="math-token"><math><mn>48</mn></math></span>${op("i_div",":")}<span class="math-token"><math><mo>(</mo><mn>9</mn></math></span>${op("i_minus","−")}<span class="math-token"><math><mn>3</mn></math></span>${op("i_mul","·")}<span class="math-token"><math><mi>x</mi><mo>)</mo></math></span>`,
+ correct:{i_mul:1,i_minus:2,i_div:3}
+},
+{
+ l:"К",n:4,xnote:true,
+ html:`<span class="math-token"><math><mn>10</mn></math></span>${op("k_mul_outer","·")}<span class="math-token"><math><mo>(</mo><mn>9</mn></math></span>${op("k_minus","−")}<span class="math-token"><math><mo>(</mo><mi>x</mi></math></span>${op("k_plus","+")}<span class="math-token"><math><mn>6</mn><mo>)</mo></math></span>${op("k_div",":")}<span class="math-token"><math><mn>3</mn><mo>)</mo></math></span>`,
+ correct:{k_plus:1,k_div:2,k_minus:3,k_mul_outer:4}
+}
+];
+
+const ol=document.getElementById("orderList");
+let selectedDragToken=null;
+
+orders.forEach((q,i)=>{
+  const d=document.createElement("div");
+  d.className="item";
+  const nums=Array.from({length:q.n},(_,j)=>j+1)
+    .map(v=>`<div class="drag-num" draggable="true" data-value="${v}" id="dn_${i}_${v}">${v}</div>`).join("");
+
+  const note=q.xnote
+    ? `<div class="x-note">Чтобы правильно выполнить задание, представь, что <math><mi>x</mi></math> — это какое-то число. Как бы ты тогда выполнял действия?</div>`
+    : "";
+
+  d.innerHTML=`
+    <div class="item-head">
+      <span class="num">${q.l}</span>
+      <span style="font-weight:900;color:#2e689f">Расставь порядок действий</span>
+      <span class="pts">1 балл</span>
+    </div>
+    <div class="order-expr-wrap"><div class="order-expression" id="oe_${i}">${q.html}</div></div>
+    ${note}
+    <div class="number-bank" id="bank_${i}">${nums}</div>
+    <div class="order-check-row">
+      <button class="secondary" onclick="resetOrder(${i})">Сбросить</button>
+      <button class="check" onclick="checkOrder(${i})">Проверить</button>
+    </div>
+    <div class="feedback" id="of${i}"></div>`;
+  ol.appendChild(d);
+  setupDnD(i);
+});
+
+function setupDnD(i){
+  const root=document.getElementById("oe_"+i);
+  const bank=document.getElementById("bank_"+i);
+
+  bank.querySelectorAll(".drag-num").forEach(tok=>wireToken(tok));
+  root.querySelectorAll(".drop-slot").forEach(slot=>{
+    slot.addEventListener("dragover",e=>{e.preventDefault();slot.classList.add("dragover")});
+    slot.addEventListener("dragleave",()=>slot.classList.remove("dragover"));
+    slot.addEventListener("drop",e=>{
+      e.preventDefault();slot.classList.remove("dragover");
+      const id=e.dataTransfer.getData("text/plain");
+      const tok=document.getElementById(id);
+      if(tok) moveTokenToSlot(tok,slot,i);
+    });
+    slot.addEventListener("click",()=>{
+      if(selectedDragToken && selectedDragToken.closest("#bank_"+i+", #oe_"+i)){
+        moveTokenToSlot(selectedDragToken,slot,i);
+        clearSelectedToken();
+      }
+    });
+  });
+
+  bank.addEventListener("dragover",e=>e.preventDefault());
+  bank.addEventListener("drop",e=>{
+    e.preventDefault();
+    const id=e.dataTransfer.getData("text/plain");
+    const tok=document.getElementById(id);
+    if(tok){bank.appendChild(tok);sortBank(bank);}
+  });
+}
+
+function wireToken(tok){
+  tok.addEventListener("dragstart",e=>{
+    e.dataTransfer.setData("text/plain",tok.id);
+    e.dataTransfer.effectAllowed="move";
+  });
+  tok.addEventListener("click",e=>{
+    e.stopPropagation();
+    if(selectedDragToken===tok){clearSelectedToken();return;}
+    clearSelectedToken();
+    selectedDragToken=tok;
+    tok.classList.add("selected");
+  });
+}
+
+function clearSelectedToken(){
+  if(selectedDragToken) selectedDragToken.classList.remove("selected");
+  selectedDragToken=null;
+}
+
+function moveTokenToSlot(tok,slot,i){
+  const bank=document.getElementById("bank_"+i);
+  const old=slot.querySelector(".drag-num");
+  if(old) bank.appendChild(old);
+  slot.appendChild(tok);
+  sortBank(bank);
+}
+
+function sortBank(bank){
+  [...bank.querySelectorAll(".drag-num")]
+    .sort((a,b)=>Number(a.dataset.value)-Number(b.dataset.value))
+    .forEach(x=>bank.appendChild(x));
+}
+
+function resetOrder(i){
+  clearSelectedToken();
+  const bank=document.getElementById("bank_"+i);
+  document.querySelectorAll(`#oe_${i} .drag-num`).forEach(tok=>bank.appendChild(tok));
+  sortBank(bank);
+  const fb=document.getElementById("of"+i);
+  fb.textContent="";
+  fb.className="feedback";
+}
+
+function checkOrder(i){
+  const q=orders[i];
+  let ok=true;
+
+  for(const [slotId,expected] of Object.entries(q.correct)){
+    const slot=document.querySelector(`#oe_${i} [data-slot="${slotId}"]`);
+    const tok=slot ? slot.querySelector(".drag-num") : null;
+    if(!tok || Number(tok.dataset.value)!==expected){
+      ok=false;
+      break;
+    }
+  }
+
+  const fb=document.getElementById("of"+i);
+  if(ok){
+    award("o"+i);
+    fb.className="feedback ok";
+    fb.textContent="✓ Верно! +1 балл";
+  }else{
+    fb.className="feedback bad";
+    fb.textContent="✗ Есть ошибка. Проверь ещё раз.";
+  }
+}
+
+// Tasks
+function checkSchemeA(){
+  const v1=document.getElementById("a_before1").value,v2=document.getElementById("a_before2").value;
+  const o1=sameLinear(v1,1,-3),o2=sameLinear(v2,1,5);
+  if(o1) award("a1"); if(o2) award("a2");
+  const fb=document.getElementById("a_scheme_fb");
+  fb.className="feedback "+(o1&&o2?"ok":"bad");
+  fb.textContent=(o1&&o2)?"✓ Схема верна! +2 балла":`Верно: ${(o1?1:0)+(o2?1:0)} из 2.`;
+  document.getElementById("a_eq").textContent=`Сумма исходных чисел: ${v1||"□"} + ${v2||"□"} = 26`;
+}
+function checkAX(){
+  const ok=eqn(n(document.getElementById("a_x").value),12),fb=document.getElementById("a_x_fb");
+  if(ok){award("ax");fb.className="feedback ok";fb.textContent="✓ x найден верно! +1 балл";}
+  else{fb.className="feedback bad";fb.textContent="✗ Проверь решение уравнения.";}
+}
+function checkAAnswers(){
+  const o1=eqn(n(document.getElementById("a_ans1").value),9),o2=eqn(n(document.getElementById("a_ans2").value),17);
+  if(o1)award("aa1");if(o2)award("aa2");
+  const fb=document.getElementById("a_ans_fb");fb.className="feedback "+(o1&&o2?"ok":"bad");
+  fb.textContent=(o1&&o2)?"✓ Оба числа верны! +2 балла":`Верно: ${(o1?1:0)+(o2?1:0)} из 2.`;
+}
+
+function checkSchemeB(){
+  const v1=document.getElementById("b_before1").value,v2=document.getElementById("b_before2").value,v3=document.getElementById("b_before3").value;
+  const o1=sameLinear(v1,1,-2),o2=sameLinear(v2,1,3),o3=sameLinear(v3,.5,0);
+  if(o1)award("b1");if(o2)award("b2");if(o3)award("b3");
+  const fb=document.getElementById("b_scheme_fb");fb.className="feedback "+(o1&&o2&&o3?"ok":"bad");
+  fb.textContent=(o1&&o2&&o3)?"✓ Схема верна! +3 балла":`Верно: ${(o1?1:0)+(o2?1:0)+(o3?1:0)} из 3.`;
+  document.getElementById("b_eq").textContent=`Сумма исходных чисел: ${v1||"□"} + ${v2||"□"} + ${v3||"□"} = 26`;
+}
+function checkBX(){
+  const ok=eqn(n(document.getElementById("b_x").value),10),fb=document.getElementById("b_x_fb");
+  if(ok){award("bx");fb.className="feedback ok";fb.textContent="✓ x найден верно! +1 балл";}
+  else{fb.className="feedback bad";fb.textContent="✗ Проверь решение уравнения.";}
+}
+function checkBAnswers(){
+  const vals=[8,13,5],ids=["b_ans1","b_ans2","b_ans3"];let c=0;
+  ids.forEach((id,i)=>{if(eqn(n(document.getElementById(id).value),vals[i])){award("ba"+i);c++;}});
+  const fb=document.getElementById("b_ans_fb");fb.className="feedback "+(c===3?"ok":"bad");
+  fb.textContent=c===3?"✓ Все три числа верны! +3 балла":`Верно: ${c} из 3.`;
+}
+updateProgress();
+</script>
+</body>
+</html>
