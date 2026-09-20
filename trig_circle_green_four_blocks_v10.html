@@ -41,6 +41,21 @@ h1{margin:0;color:var(--g3);font-size:clamp(31px,5vw,54px);line-height:1.05}
 .bar{height:12px;background:#dbeee0;border-radius:99px;overflow:hidden;margin-top:7px;border:1px solid #9fd0ab}
 .fill{height:100%;width:0;background:linear-gradient(90deg,#8bd39b,#59ad70,#347d55);transition:.3s}
 
+.progress-reset{
+  width:100%;
+  margin-top:8px;
+  padding:6px 9px;
+  border:1px solid #b7d9c0;
+  border-radius:9px;
+  background:#f5fbf6;
+  color:#587264;
+  box-shadow:none;
+  font-size:12px;
+  font-weight:800;
+}
+.progress-reset:hover{background:#edf7ef}
+
+
 .block-title{
   width:max-content;max-width:94%;margin:20px auto 14px;padding:9px 28px;color:#fff;
   font-size:clamp(21px,3vw,30px);font-weight:900;background:linear-gradient(#72bf86,#42965f);
@@ -569,6 +584,7 @@ button{border:0;border-radius:11px;padding:9px 14px;font:inherit;font-weight:900
 <div class="progress">
   <div class="prow"><span>⭐ Общий прогресс</span><span id="progressText">0 / 37 · 0%</span></div>
   <div class="bar"><div class="fill" id="progressFill"></div></div>
+  <button type="button" id="resetAllProgressBtn" class="progress-reset">Сбросить весь прогресс</button>
 </div>
 
 <div class="page">
@@ -1552,6 +1568,157 @@ function updateAll(){
 updateAll();
 setActiveNav(1);
 initMathEditors();
+
+/* ---------- АВТОСОХРАНЕНИЕ ПРОГРЕССА ---------- */
+const PROGRESS_STORAGE_KEY="trig_circle_green_four_blocks_v10_progress_v1";
+let restoringProgress=false;
+
+function saveProgress(){
+  if(restoringProgress)return;
+  try{
+    const rootInputs={};
+    document.querySelectorAll('[id^="rootAnswer_"]').forEach(el=>{
+      rootInputs[el.id]=el.value;
+    });
+
+    const data={
+      currentBlock,
+      arcs:arcStates.map(st=>({
+        accum:st.accum,
+        startSnap:st.startSnap,
+        sweepSnap:st.sweepSnap,
+        completed:st.completed,
+        awarded:st.awarded
+      })),
+      series:seriesStates.map(st=>({
+        selected:Array.from(st.selected),
+        awarded:st.awarded
+      })),
+      solve:solveStates.map(st=>({
+        values:[...st.values],
+        selected:st.selected,
+        awardedRoots:[...st.awardedRoots]
+      })),
+      roots:rootStates.map(st=>({awarded:st.awarded})),
+      rootInputs
+    };
+    localStorage.setItem(PROGRESS_STORAGE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+
+function restoreProgress(){
+  let data=null;
+  try{
+    data=JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY)||"null");
+  }catch(e){
+    data=null;
+  }
+  if(!data)return;
+
+  restoringProgress=true;
+  try{
+    if(Array.isArray(data.arcs)){
+      data.arcs.forEach((saved,i)=>{
+        if(!arcStates[i])return;
+        Object.assign(arcStates[i],saved,{drawing:false,prevRaw:0});
+        drawArcState(i);
+        if(saved.awarded){
+          const fb=document.getElementById(`afb_${i}`);
+          if(fb){fb.className="feedback ok";fb.textContent="✓ Верно!";}
+        }
+      });
+    }
+
+    if(Array.isArray(data.series)){
+      data.series.forEach((saved,i)=>{
+        if(!seriesStates[i])return;
+        seriesStates[i].selected=new Set(saved.selected||[]);
+        seriesStates[i].awarded=!!saved.awarded;
+        document.querySelectorAll(`#dots_${i} .ref-dot`).forEach(dot=>{
+          dot.classList.toggle("selected",seriesStates[i].selected.has(Number(dot.dataset.deg)));
+        });
+        if(saved.awarded){
+          const fb=document.getElementById(`sfb_${i}`);
+          if(fb){fb.className="feedback ok";fb.textContent="✓ Верно!";}
+        }
+      });
+    }
+
+    if(Array.isArray(data.solve)){
+      data.solve.forEach((saved,i)=>{
+        if(!solveStates[i])return;
+        solveStates[i].values=Array.isArray(saved.values)?[...saved.values]:solveStates[i].values;
+        solveStates[i].selected=(saved.selected===null||Number.isInteger(saved.selected))?saved.selected:null;
+        solveStates[i].awardedRoots=Array.isArray(saved.awardedRoots)?[...saved.awardedRoots]:solveStates[i].awardedRoots;
+
+        solveStates[i].awardedRoots.forEach((ok,ri)=>{
+          const dot=document.getElementById(`root_${i}_${ri}`);
+          if(dot)dot.classList.toggle("done",!!ok);
+        });
+
+        if(solveStates[i].selected!==null){
+          const ri=solveStates[i].selected;
+          const panel=document.getElementById(`panel_${i}`);
+          const inp=document.getElementById(`solveInput_${i}`);
+          const dot=document.getElementById(`root_${i}_${ri}`);
+          if(panel)panel.classList.add("show");
+          if(dot)dot.classList.add("active");
+          if(inp){
+            inp.value=solveStates[i].values[ri]||"";
+            updateMathRender(inp.id);
+          }
+        }
+        updateFillStatus(i);
+      });
+    }
+
+    if(Array.isArray(data.roots)){
+      data.roots.forEach((saved,i)=>{
+        if(rootStates[i])rootStates[i].awarded=!!saved.awarded;
+        if(saved.awarded){
+          const fb=document.getElementById(`rootFb_${i}`);
+          if(fb){fb.className="feedback ok";fb.textContent="✓ Верно!";}
+        }
+      });
+    }
+
+    if(data.rootInputs && typeof data.rootInputs==="object"){
+      Object.entries(data.rootInputs).forEach(([id,value])=>{
+        const el=document.getElementById(id);
+        if(el){
+          el.value=String(value||"");
+          updateMathRender(id);
+        }
+      });
+    }
+
+    updateAll();
+
+    const block=Number(data.currentBlock);
+    if(block>=1 && block<=4)goBlock(block);
+  }finally{
+    restoringProgress=false;
+  }
+}
+
+function resetAllSavedProgress(){
+  if(!confirm("Сбросить весь сохранённый прогресс этой домашней работы?"))return;
+  try{localStorage.removeItem(PROGRESS_STORAGE_KEY)}catch(e){}
+  location.reload();
+}
+
+window.addEventListener("DOMContentLoaded",()=>{
+  restoreProgress();
+
+  const resetBtn=document.getElementById("resetAllProgressBtn");
+  if(resetBtn)resetBtn.addEventListener("click",resetAllSavedProgress);
+
+  ["click","input","change","pointerup"].forEach(type=>{
+    document.addEventListener(type,()=>setTimeout(saveProgress,0),true);
+  });
+  window.addEventListener("beforeunload",saveProgress);
+});
+
 </script>
 
 <div class="math-keyboard" id="mathKeyboard">
