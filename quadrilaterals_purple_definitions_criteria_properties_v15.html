@@ -89,6 +89,20 @@ h1{
   background:linear-gradient(90deg,#b89bed,#8b67d2,#6748b6);
   transition:.35s ease;
 }
+.progress-reset{
+  width:100%;
+  margin-top:8px;
+  padding:6px 9px;
+  border:1px solid #cfbdf2;
+  border-radius:9px;
+  background:#faf8ff;
+  color:#6a50a0;
+  box-shadow:none;
+  font-size:12px;
+  font-weight:800;
+}
+.progress-reset:hover{background:#f1ebfb}
+
 
 .block{
   margin-top:22px;
@@ -783,6 +797,7 @@ button{
     <span id="progressText">0 / 79</span>
   </div>
   <div class="p-bar"><div class="p-fill" id="progressFill"></div></div>
+  <button type="button" class="progress-reset" onclick="resetAllSavedProgress()">Сбросить весь прогресс</button>
 </div>
 
 <main class="wrap">
@@ -2157,6 +2172,114 @@ function updateProgress(){
   }
 }
 function closeFinish(){document.getElementById("finish").classList.remove("show")}
+
+
+/* ---------- АВТОСОХРАНЕНИЕ ПРОГРЕССА ---------- */
+const PROGRESS_STORAGE_KEY="quadrilaterals_v15_progress_v1";
+let restoringProgress=false;
+
+function cloneState(arr){
+  return arr.map(x=>JSON.parse(JSON.stringify(x)));
+}
+function applyState(target,saved){
+  if(!Array.isArray(saved))return;
+  saved.forEach((item,i)=>{
+    if(target[i] && item && typeof item==="object")Object.assign(target[i],item);
+  });
+}
+function collectInputs(){
+  const data={};
+  document.querySelectorAll("input[id]").forEach(el=>data[el.id]=el.value);
+  return data;
+}
+function collectFeedback(){
+  const data={};
+  document.querySelectorAll(".feedback[id],.qa-feedback[id]").forEach(el=>{
+    data[el.id]={text:el.textContent,className:el.className};
+  });
+  return data;
+}
+function saveProgress(){
+  if(restoringProgress)return;
+  try{
+    const data={
+      currentBlock,
+      finishShown,
+      concept:cloneState(conceptState),
+      criteria:cloneState(criteriaState),
+      property:cloneState(propertyState),
+      perimeter:cloneState(perimeterState),
+      angle:cloneState(angleState),
+      criterion:cloneState(criterionState),
+      trapezoid:cloneState(trapezoidState),
+      shape:cloneState(shapeState),
+      square:cloneState(squareState),
+      inputs:collectInputs(),
+      feedback:collectFeedback()
+    };
+    localStorage.setItem(PROGRESS_STORAGE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+function restoreProgress(){
+  let data=null;
+  try{data=JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY)||"null")}catch(e){}
+  if(!data)return;
+
+  restoringProgress=true;
+  try{
+    applyState(conceptState,data.concept);
+    applyState(criteriaState,data.criteria);
+    applyState(propertyState,data.property);
+    applyState(perimeterState,data.perimeter);
+    applyState(angleState,data.angle);
+    applyState(criterionState,data.criterion);
+    applyState(trapezoidState,data.trapezoid);
+    applyState(shapeState,data.shape);
+    applyState(squareState,data.square);
+    finishShown=!!data.finishShown;
+
+    updateConcepts();
+    updateCheckTable(criteriaState,"cr");
+    updateCheckTable(propertyState,"pr");
+    updatePerimeterUI();
+    updateAngleUI();
+    updateCriterionUI();
+    updateTrapezoidUI();
+    updateShapeUI();
+    updateSquareUI();
+
+    if(data.inputs){
+      Object.entries(data.inputs).forEach(([id,value])=>{
+        const el=document.getElementById(id);
+        if(el && !el.disabled)el.value=String(value??"");
+      });
+    }
+    if(data.feedback){
+      Object.entries(data.feedback).forEach(([id,s])=>{
+        const el=document.getElementById(id);
+        if(el){el.textContent=s.text||"";if(s.className)el.className=s.className;}
+      });
+    }
+
+    const block=Number(data.currentBlock);
+    showBlock(block>=1&&block<=8?block:1,false);
+    updateProgress();
+  }finally{
+    restoringProgress=false;
+  }
+}
+function resetAllSavedProgress(){
+  if(!confirm("Сбросить весь сохранённый прогресс этой домашней работы?"))return;
+  try{localStorage.removeItem(PROGRESS_STORAGE_KEY)}catch(e){}
+  location.reload();
+}
+window.addEventListener("DOMContentLoaded",()=>{
+  restoreProgress();
+  ["click","input","change","pointerup"].forEach(type=>{
+    document.addEventListener(type,()=>setTimeout(saveProgress,0),true);
+  });
+  window.addEventListener("beforeunload",saveProgress);
+});
 
 /* ---------- init ---------- */
 renderConcepts();
