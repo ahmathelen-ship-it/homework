@@ -41,6 +41,11 @@ h1{margin:0;color:var(--dark);font-size:clamp(32px,5vw,58px);text-shadow:0 3px w
 .prow{display:flex;justify-content:space-between;gap:10px;font-weight:900;font-size:14px}
 .bar{height:13px;background:#dceeff;border-radius:99px;overflow:hidden;margin-top:8px;border:1px solid #9dc8ef}
 .fill{height:100%;width:0;background:linear-gradient(90deg,#6cb2ef,#4f92d8,#286aa9);transition:.3s}
+.progress-reset{
+  width:100%;margin-top:8px;padding:6px 9px;border:1px solid #a9cdec;border-radius:9px;
+  background:#f5faff;color:#56748f;box-shadow:none;font-size:12px;font-weight:800
+}
+.progress-reset:hover{background:#edf7ff}
 
 .ribbon{
   width:max-content;max-width:94%;margin:22px auto 14px;padding:8px 28px;color:white;font-size:clamp(20px,3vw,28px);
@@ -251,6 +256,7 @@ button{
 <div class="progress">
   <div class="prow"><span>⭐ Прогресс</span><span id="ptext">0 / 37 · 0%</span></div>
   <div class="bar"><div class="fill" id="fill"></div></div>
+  <button type="button" class="progress-reset" onclick="resetAllSavedProgress()">Сбросить весь прогресс</button>
 </div>
 
 <div class="sheet">
@@ -404,7 +410,7 @@ button{
 
 <section class="card final">
   <div class="scoreline" id="scoreline">Результат: 0 / 37 баллов</div>
-  <div class="actions" style="text-align:center;margin-top:12px"><button class="secondary" onclick="location.reload()">Начать заново</button></div>
+  <div class="actions" style="text-align:center;margin-top:12px"><button class="secondary" onclick="resetAllSavedProgress()">Начать заново</button></div>
 </section>
 </div>
 </div>
@@ -858,6 +864,143 @@ function checkBAnswers(){
   const fb=document.getElementById("b_ans_fb");fb.className="feedback "+(c===3?"ok":"bad");
   fb.textContent=c===3?"✓ Все три числа верны! +3 балла":`Верно: ${c} из 3.`;
 }
+
+/* ---------- АВТОСОХРАНЕНИЕ ПРОГРЕССА ---------- */
+const PROGRESS_STORAGE_KEY="domashnee_vyrazheniya_i_zadachi_blue_v4_progress_v1";
+let restoringProgress=false;
+
+function collectFieldValues(){
+  const values={};
+  document.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{
+    values[el.id]=el.value;
+  });
+  return values;
+}
+
+function collectTokenLocations(){
+  const locations={};
+  document.querySelectorAll(".drag-num[id]").forEach(tok=>{
+    const slot=tok.closest(".drop-slot");
+    const bank=tok.closest(".number-bank");
+    locations[tok.id]={
+      slot:slot ? slot.dataset.slot : null,
+      bank:bank ? bank.id : null
+    };
+  });
+  return locations;
+}
+
+function collectFeedback(){
+  const data={};
+  document.querySelectorAll(".feedback[id]").forEach(el=>{
+    data[el.id]={text:el.textContent,className:el.className};
+  });
+  ["a_eq","b_eq"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)data[id]={text:el.textContent,className:el.className};
+  });
+  return data;
+}
+
+function saveProgress(){
+  if(restoringProgress)return;
+  try{
+    const data={
+      awarded:{...awarded},
+      theory:{
+        mainQueue:[...theoryMainQueue],
+        retryQueue:[...theoryRetryQueue],
+        current:theoryCurrent===undefined ? null : theoryCurrent,
+        flipped:theoryFlipped,
+        mastered:[...theoryMastered]
+      },
+      fields:collectFieldValues(),
+      tokens:collectTokenLocations(),
+      feedback:collectFeedback()
+    };
+    localStorage.setItem(PROGRESS_STORAGE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+
+function restoreProgress(){
+  let data=null;
+  try{data=JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY)||"null")}catch(e){}
+  if(!data)return;
+
+  restoringProgress=true;
+  try{
+    if(data.awarded && typeof data.awarded==="object"){
+      Object.keys(awarded).forEach(k=>delete awarded[k]);
+      Object.assign(awarded,data.awarded);
+    }
+
+    if(data.theory){
+      theoryMainQueue=Array.isArray(data.theory.mainQueue)?[...data.theory.mainQueue]:theoryMainQueue;
+      theoryRetryQueue=Array.isArray(data.theory.retryQueue)?[...data.theory.retryQueue]:theoryRetryQueue;
+      theoryCurrent=data.theory.current===null ? undefined : data.theory.current;
+      theoryMastered=Array.isArray(data.theory.mastered)?[...data.theory.mastered]:theoryMastered;
+      const wantFlipped=!!data.theory.flipped;
+      renderTheoryCard();
+      if(wantFlipped && theoryCurrent!==undefined){
+        const card=document.getElementById("theoryFlash");
+        const self=document.getElementById("theorySelfcheck");
+        if(card)card.classList.add("flipped");
+        if(self)self.classList.add("show");
+        theoryFlipped=true;
+      }
+    }
+
+    if(data.fields){
+      Object.entries(data.fields).forEach(([id,value])=>{
+        const el=document.getElementById(id);
+        if(el)el.value=String(value??"");
+      });
+    }
+
+    if(data.tokens){
+      Object.entries(data.tokens).forEach(([id,pos])=>{
+        const tok=document.getElementById(id);
+        if(!tok)return;
+        let target=null;
+        if(pos && pos.slot){
+          target=[...document.querySelectorAll(".drop-slot")].find(x=>x.dataset.slot===pos.slot) || null;
+        }
+        if(!target && pos && pos.bank)target=document.getElementById(pos.bank);
+        if(target)target.appendChild(tok);
+      });
+      document.querySelectorAll(".number-bank").forEach(sortBank);
+    }
+
+    if(data.feedback){
+      Object.entries(data.feedback).forEach(([id,saved])=>{
+        const el=document.getElementById(id);
+        if(!el)return;
+        el.textContent=saved.text||"";
+        if(saved.className)el.className=saved.className;
+      });
+    }
+
+    updateProgress();
+    renderFlashDots();
+  }finally{
+    restoringProgress=false;
+  }
+}
+
+function resetAllSavedProgress(){
+  if(!confirm("Сбросить весь сохранённый прогресс этой домашней работы?"))return;
+  try{localStorage.removeItem(PROGRESS_STORAGE_KEY)}catch(e){}
+  location.reload();
+}
+
+window.addEventListener("DOMContentLoaded",()=>{
+  restoreProgress();
+  ["click","input","change","drop","dragend","pointerup"].forEach(type=>{
+    document.addEventListener(type,()=>setTimeout(saveProgress,0),true);
+  });
+  window.addEventListener("beforeunload",saveProgress);
+});
+
 updateProgress();
 </script>
 </body>
