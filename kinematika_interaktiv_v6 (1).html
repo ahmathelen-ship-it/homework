@@ -98,6 +98,11 @@
     height:100%;width:0;background:linear-gradient(90deg,#69a52c,#f0b72d,#f27617);
     transition:width .35s ease
   }
+  .progress-reset{
+    width:100%;margin-top:8px;padding:6px 9px;border:1px solid #efbd70;border-radius:9px;
+    background:#fff8e8;color:#85582f;box-shadow:none;font-size:12px;font-weight:800
+  }
+  .progress-reset:hover{background:#fff1d5}
 
   .ribbon{
     width:max-content;max-width:95%;margin:22px auto 14px;padding:8px 30px;
@@ -362,6 +367,7 @@
         <span id="progressText">0 / 28 баллов · 0%</span>
       </div>
       <div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+      <button type="button" class="progress-reset" onclick="resetAllSavedProgress()">Сбросить весь прогресс</button>
     </div>
 
     <div class="ribbon">🔤 1. СООТНЕСИ ОБОЗНАЧЕНИЯ</div>
@@ -935,6 +941,7 @@ function resetDnD(){
 }
 
 function resetAll(){
+  try{localStorage.removeItem(PROGRESS_STORAGE_KEY)}catch(e){}
   Object.keys(awarded).forEach(k=>awarded[k]=0);
   mastered=Array(formulas.length).fill(false);
   queue=formulas.map((_,i)=>i);
@@ -955,6 +962,128 @@ function resetAll(){
   renderCard();
   window.scrollTo({top:0,behavior:"smooth"});
 }
+
+
+/* ---------- АВТОСОХРАНЕНИЕ ПРОГРЕССА ---------- */
+const PROGRESS_STORAGE_KEY="kinematika_interaktiv_v6_progress_v1";
+let restoringProgress=false;
+
+function collectFormValues(){
+  return [...document.querySelectorAll("input,select,textarea")].map(el=>({
+    id:el.id||null,
+    value:el.value
+  }));
+}
+function restoreFormValues(items){
+  if(!Array.isArray(items))return;
+  const all=[...document.querySelectorAll("input,select,textarea")];
+  items.forEach((saved,i)=>{
+    const el=saved.id ? document.getElementById(saved.id) : all[i];
+    if(el)el.value=String(saved.value??"");
+  });
+}
+
+function collectDnd(){
+  const data={};
+  document.querySelectorAll(".dnd-chip").forEach(chip=>{
+    const zone=chip.closest(".dropzone");
+    data[chip.dataset.value]=zone?zone.dataset.answer:null;
+  });
+  return data;
+}
+function restoreDnd(data){
+  if(!data||typeof data!=="object")return;
+  const bank=document.getElementById("dndBank");
+  Object.entries(data).forEach(([value,answer])=>{
+    const chip=getChip(value);
+    if(!chip)return;
+    if(answer){
+      const zone=document.querySelector(`.dropzone[data-answer="${answer}"]`);
+      if(zone)zone.appendChild(chip);
+      else if(bank)bank.appendChild(chip);
+    }else if(bank)bank.appendChild(chip);
+  });
+}
+
+function collectFeedback(){
+  const out={};
+  document.querySelectorAll(".feedback[id],.queue-note[id]").forEach(el=>{
+    out[el.id]={text:el.textContent,className:el.className};
+  });
+  return out;
+}
+
+function saveProgress(){
+  if(restoringProgress)return;
+  try{
+    const data={
+      awarded:{...awarded},
+      mastered:[...mastered],
+      queue:[...queue],
+      retryQueue:[...retryQueue],
+      currentCard:currentCard===undefined?null:currentCard,
+      cardIsFlipped,
+      formValues:collectFormValues(),
+      dnd:collectDnd(),
+      feedback:collectFeedback()
+    };
+    localStorage.setItem(PROGRESS_STORAGE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+
+function restoreProgress(){
+  let data=null;
+  try{data=JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY)||"null")}catch(e){}
+  if(!data)return;
+
+  restoringProgress=true;
+  try{
+    if(data.awarded)Object.assign(awarded,data.awarded);
+    if(Array.isArray(data.mastered))mastered=[...data.mastered];
+    if(Array.isArray(data.queue))queue=[...data.queue];
+    if(Array.isArray(data.retryQueue))retryQueue=[...data.retryQueue];
+    currentCard=data.currentCard===null?undefined:data.currentCard;
+    cardIsFlipped=!!data.cardIsFlipped;
+
+    renderCard();
+    if(cardIsFlipped && currentCard!==undefined){
+      const fc=document.getElementById("flashcard");
+      const self=document.getElementById("selfcheck");
+      if(fc)fc.classList.add("flipped");
+      if(self)self.classList.add("show");
+    }
+
+    restoreFormValues(data.formValues);
+    restoreDnd(data.dnd);
+
+    if(data.feedback){
+      Object.entries(data.feedback).forEach(([id,s])=>{
+        const el=document.getElementById(id);
+        if(el){el.textContent=s.text||"";if(s.className)el.className=s.className;}
+      });
+    }
+
+    updateProgress();
+    updateDeckStatus();
+    updateDots();
+  }finally{
+    restoringProgress=false;
+  }
+}
+
+function resetAllSavedProgress(){
+  if(!confirm("Сбросить весь сохранённый прогресс этой домашней работы?"))return;
+  try{localStorage.removeItem(PROGRESS_STORAGE_KEY)}catch(e){}
+  location.reload();
+}
+
+window.addEventListener("DOMContentLoaded",()=>{
+  restoreProgress();
+  ["click","input","change","drop","dragend","pointerup"].forEach(type=>{
+    document.addEventListener(type,()=>setTimeout(saveProgress,0),true);
+  });
+  window.addEventListener("beforeunload",saveProgress);
+});
 
 updateProgress();
 updateDeckStatus();
