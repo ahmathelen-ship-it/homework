@@ -114,6 +114,152 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
   .geo-decor{display:none}.figure svg{max-height:150px}.drop{font-size:13px;min-height:42px}
   .chip{min-height:40px}.bank-wrap{top:4px}
 }
+
+/* red + purple geometry theme */
+:root{
+  --ink:#352d38;--muted:#756979;--line:#ead2dc;--soft:#fff7f7;
+  --accent:#8f3bc6;--accent2:#ed4c45;--accentDark:#a9294a;
+  --ok:#7b35c8;--bad:#d84c4c;--chip:#fff0f1;--chipline:#efa6ad;
+}
+body{
+  background:
+    radial-gradient(circle at 8% 7%,rgba(235,67,62,.10),transparent 22%),
+    radial-gradient(circle at 92% 24%,rgba(137,56,196,.09),transparent 22%),
+    #fff;
+}
+.hero{
+  border-color:#edb4bd;
+  background:linear-gradient(135deg,#fff9f9 0%,#fff0ee 52%,#f8efff 100%);
+}
+.geo-decor{
+  color:#cf2e45;opacity:.9;font-size:21px;gap:7px 12px;
+}
+.geo-decor .emoji{font-size:25px}
+.quote{color:#9d2949;font-size:15px}
+.progress{border-color:#ecc3cb;background:#fff8f8}
+.bar{background:#f4dce1}
+.fill{background:linear-gradient(90deg,#ee5c4e,#b447a8,#7c3bc4)}
+.reset-all{border-color:#e8bcc6;background:#fff;color:#7f5867}
+.bank-wrap{
+  border-color:#e48996;background:rgba(255,247,248,.98);
+  box-shadow:0 4px 14px rgba(150,37,64,.09)
+}
+.chip{
+  background:#fff0f1;border-color:#eca1aa;color:#a42c48;
+}
+.chip.selected{outline-color:#c993ea;background:#fff}
+.chip.locked{
+  background:#f4eaff;border-color:#ba82df;color:#7031a3
+}
+.card{position:relative;border-color:#ecd8de}
+.card.correct{border-color:#a760d3;background:#fcf8ff}
+.card.wrong{border-color:#e47c7c;background:#fff5f5}
+.card.correct::after,.solve-card.correct::after{
+  content:"✓";position:absolute;right:8px;top:8px;z-index:5;
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:linear-gradient(135deg,#a64bd7,#6e31b4);
+  font-size:20px;font-weight:1000;box-shadow:0 3px 9px rgba(91,39,135,.22)
+}
+.drop.dragover,.drop.target{border-color:#c84672;background:#fff2f5;color:#9b3152}
+.primary{
+  background:linear-gradient(#f06b5e,#d53f49);color:#fff;box-shadow:0 3px 0 #a82e3a
+}
+.secondary{border-color:#e6c4cc;background:#fff;color:#765964}
+svg .sector{fill:#e9c8f7;fill-opacity:.78;stroke:#a85ed0}
+svg .angle-fill{fill:#ef7469;fill-opacity:.50;stroke:#c83d45}
+
+/* block 2 */
+.second-block{
+  position:relative;margin-top:24px;padding-top:6px;
+}
+.second-block::before{
+  content:"∠   π   √   sin α   △";
+  display:block;margin:0 0 6px;text-align:center;
+  color:#d5454d;font:900 20px/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:5px
+}
+.proof-note{
+  background:linear-gradient(135deg,#fff3f1,#fbf2ff);
+  border-color:#e8aab6;color:#5e4d59
+}
+.proof-note strong{color:#b3334d}
+.motivation{
+  background:#fff9fb;border-color:#d88ab1;color:#8d315d
+}
+.solve-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;margin-top:14px
+}
+.solve-card{
+  position:relative;min-width:0;border:2px solid #ead7de;border-radius:17px;
+  background:#fff;padding:11px;transition:.2s border-color,.2s background
+}
+.solve-card.correct{border-color:#a760d3;background:#fcf8ff}
+.solve-card.wrong{border-color:#e07c7c;background:#fff6f6}
+.solve-head{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px
+}
+.solve-num{
+  display:grid;place-items:center;width:32px;height:32px;border-radius:50%;
+  color:#fff;font-weight:950;background:linear-gradient(135deg,#ee594c,#a33bc0)
+}
+.solve-points{font-size:13px;font-weight:900;color:#90405b}
+.solve-figure{
+  display:grid;place-items:center;min-height:210px;padding:4px;border-radius:12px;
+  background:#fff
+}
+.solve-figure svg{display:block;width:100%;max-width:310px;height:auto}
+.solve-figure .circ{fill:#fff;stroke:#171717;stroke-width:2.6}
+.solve-figure .ln{stroke:#171717;stroke-width:2.6;fill:none;stroke-linecap:round}
+.solve-figure .hi{stroke:#d94747;stroke-width:3.2;fill:none;stroke-linecap:round}
+.solve-figure .dot{fill:#111}
+.solve-figure .tick{stroke:#111;stroke-width:2.2}
+.solve-figure text{
+  font-family:Georgia,"Times New Roman",serif;fill:#111;font-size:19px;font-weight:700
+}
+.solve-figure .xlab{font-size:20px;font-style:italic}
+.solve-figure .given{font-size:17px}
+.proof-badge{
+  display:inline-flex;margin:2px 0 8px;padding:6px 9px;border-radius:10px;
+  background:#f2e7ff;border:1px solid #caa3ea;color:#71349f;
+  font-size:13px;font-weight:900
+}
+.answer-wrap{margin-top:8px}
+.answer-label{font-weight:900;margin-bottom:5px}
+.answer-row{display:flex;align-items:center;gap:7px}
+.math-input{
+  min-width:0;flex:1;min-height:43px;border:1.5px solid #d9b8c5;border-radius:11px;
+  padding:8px 10px;font-size:18px;font-weight:800;color:#3d3040;background:#fff
+}
+.math-input:focus{outline:3px solid #edd6fa;border-color:#9e52cb}
+.math-input:disabled{background:#f9f3fc;color:#63328c}
+.kb-toggle{
+  width:43px;height:43px;border:1px solid #d5b6df;border-radius:11px;
+  background:#fbf5ff;cursor:pointer;font-size:20px
+}
+.math-keyboard{
+  display:none;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;margin-top:7px
+}
+.math-keyboard.open{display:grid}
+.math-keyboard button{
+  min-width:0;min-height:34px;border:1px solid #e2c7d7;border-radius:8px;
+  background:#fff8fa;color:#6f3550;font-weight:900;cursor:pointer;padding:4px
+}
+.math-keyboard button.special{background:#f5eaff;color:#6d35a5;border-color:#d7b5ec}
+.solve-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.solve-check{
+  min-height:39px;border:0;border-radius:10px;padding:8px 14px;cursor:pointer;
+  background:linear-gradient(#f06b5e,#d5414c);color:#fff;font-weight:900;
+  box-shadow:0 3px 0 #aa313d
+}
+.solve-feedback{min-height:23px;margin-top:6px;font-weight:900;text-align:center}
+.solve-feedback.ok{color:#7d38b7}.solve-feedback.bad{color:#cf4747}
+.kb-help{margin-top:5px;color:#8b7a84;font-size:12px}
+@media(max-width:700px){
+  .solve-grid{grid-template-columns:1fr}
+  .solve-figure{min-height:180px}
+  .math-keyboard{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
@@ -121,7 +267,7 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
   <section class="hero">
     <div class="geo-decor" aria-hidden="true">
       <span>πr²</span><span>sin α</span><span>∠ABC</span>
-      <span class="emoji">📐</span><span class="emoji">📏</span><span>2πr</span>
+      <span class="emoji">📐</span><span class="emoji">📏</span><span>√a</span>
     </div>
     <h1>Окружность — подготовка к планиметрии второй части</h1>
     <p>Блок 1. Узнаём основные элементы окружности по рисунку.</p>
@@ -129,7 +275,7 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
   </section>
 
   <div class="progress">
-    <div class="prow"><span>⭐ Прогресс</span><span id="progressText">0 / 9 · 0%</span></div>
+    <div class="prow"><span>⭐ Прогресс</span><span id="progressText">0 / 17 · 0%</span></div>
     <div class="bar"><div class="fill" id="progressFill"></div></div>
     <button class="reset-all" type="button" id="resetAll">Сбросить весь прогресс</button>
   </div>
@@ -155,13 +301,14 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
   <div class="small">За каждое правильно сопоставленное понятие — 1 балл.</div>
 
   <section class="second-block">
-    <div class="block-title">2. Решение задач</div>
+    <div class="block-title">2. Найди x</div>
     <div class="proof-note">
-      <strong>Важно:</strong> мало получить ответ — проговаривай, <b>почему</b> он такой:
+      <strong>Важно:</strong> после ответа проговори себе, <b>почему</b> он такой:
       какое свойство или теорему ты используешь и откуда берётся каждый угол.
-      Если с доказательством сложно — сделай скрин задания и отправь мне, разберём на уроке.
+      Если доказательство не получается — сделай скрин задания и отправь мне, разберём на уроке.
     </div>
-    <div class="motivation">Геометрия становится проще, когда каждый шаг ты можешь объяснить самому себе.</div>
+    <div class="motivation">Вторая часть становится проще, когда каждый шаг решения можно объяснить.</div>
+    <div class="solve-grid" id="solveGrid"></div>
   </section>
 </div>
 
@@ -245,7 +392,49 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
     </svg>`}
   ];
 
-  const state={placed:{},earned:{},selected:null};
+  const solveTasks=[
+    {
+      answer:60,
+      svg:'<svg viewBox="0 0 280 235" role="img" aria-label="Задача 1"><circle class="circ" cx="118" cy="139" r="70"/><line class="ln" x1="14" y1="133" x2="250" y2="-31"/><line class="ln" x1="118" y1="139" x2="179" y2="18"/><line class="ln" x1="118" y1="139" x2="78" y2="82"/><circle class="dot" cx="78" cy="82" r="3.5"/><circle class="dot" cx="118" cy="139" r="3.5"/><circle class="dot" cx="179" cy="18" r="3.5"/><text x="61" y="76">Q</text><text x="112" y="161">H</text><text x="187" y="19">A</text><text x="159" y="49" class="given">150°</text><text x="115" y="116" class="xlab">x</text></svg>'
+    },
+    {
+      answer:30,
+      svg:'<svg viewBox="0 0 280 215" role="img" aria-label="Задача 2"><circle class="circ" cx="91" cy="112" r="61"/><line class="ln" x1="91" y1="112" x2="207" y2="70"/><line class="ln" x1="91" y1="112" x2="137" y2="151"/><line class="ln" x1="137" y1="151" x2="207" y2="70"/><circle class="dot" cx="91" cy="112" r="3.4"/><circle class="dot" cx="148" cy="91" r="3.4"/><circle class="dot" cx="137" cy="151" r="3.4"/><circle class="dot" cx="207" cy="70" r="3.4"/><line class="tick" x1="119" y1="96" x2="124" y2="108"/><line class="tick" x1="174" y1="80" x2="178" y2="92"/><line class="tick" x1="111" y1="128" x2="103" y2="137"/><text x="71" y="105">N</text><text x="148" y="79">P</text><text x="130" y="174">K</text><text x="214" y="72">L</text><text x="185" y="104" class="xlab">x</text></svg>'
+    },
+    {
+      answer:55,
+      proof:true,
+      svg:'<svg viewBox="0 0 300 220" role="img" aria-label="Задача 3"><circle class="circ" cx="150" cy="136" r="73"/><line class="ln" x1="39" y1="62" x2="261" y2="62"/><line class="ln" x1="39" y1="62" x2="150" y2="136"/><line class="ln" x1="261" y1="62" x2="150" y2="136"/><line class="ln" x1="150" y1="62" x2="150" y2="136"/><line class="tick" x1="93" y1="56" x2="93" y2="69"/><line class="tick" x1="207" y1="56" x2="207" y2="69"/><circle class="dot" cx="39" cy="62" r="3.5"/><circle class="dot" cx="150" cy="62" r="3.5"/><circle class="dot" cx="261" cy="62" r="3.5"/><circle class="dot" cx="150" cy="136" r="3.5"/><text x="24" y="53">N</text><text x="143" y="51">K</text><text x="267" y="53">T</text><text x="135" y="158">P</text><text x="50" y="52" class="given">35°</text><text x="226" y="52" class="given">35°</text><text x="125" y="116" class="xlab">x</text></svg>'
+    },
+    {
+      answer:140,
+      svg:'<svg viewBox="0 0 280 220" role="img" aria-label="Задача 4"><circle class="circ" cx="104" cy="105" r="65"/><line class="ln" x1="104" y1="105" x2="111" y2="170"/><line class="ln" x1="104" y1="105" x2="165" y2="84"/><line class="ln" x1="111" y1="170" x2="225" y2="178"/><line class="ln" x1="165" y1="84" x2="225" y2="178"/><circle class="dot" cx="104" cy="105" r="3.5"/><circle class="dot" cx="111" cy="170" r="3.5"/><circle class="dot" cx="165" cy="84" r="3.5"/><circle class="dot" cx="225" cy="178" r="3.5"/><text x="88" y="98">O</text><text x="102" y="193">D</text><text x="170" y="80">E</text><text x="231" y="185">F</text><text x="190" y="160" class="given">40°</text><text x="125" y="112" class="xlab">x</text></svg>'
+    },
+    {
+      answer:70,
+      svg:'<svg viewBox="0 0 270 220" role="img" aria-label="Задача 5"><circle class="circ" cx="91" cy="118" r="65"/><line class="ln" x1="91" y1="118" x2="97" y2="55"/><line class="ln" x1="91" y1="118" x2="156" y2="150"/><line class="ln" x1="91" y1="118" x2="222" y2="59"/><line class="ln" x1="97" y1="55" x2="222" y2="59"/><line class="ln" x1="156" y1="150" x2="222" y2="59"/><line class="ln" x1="97" y1="55" x2="156" y2="150"/><circle class="dot" cx="91" cy="118" r="3.5"/><circle class="dot" cx="97" cy="55" r="3.5"/><circle class="dot" cx="156" cy="150" r="3.5"/><circle class="dot" cx="222" cy="59" r="3.5"/><text x="76" y="130">L</text><text x="92" y="43">E</text><text x="157" y="171">F</text><text x="229" y="62">K</text><text x="189" y="75" class="given">40°</text><text x="101" y="93" class="xlab">x</text></svg>'
+    },
+    {
+      answer:65,
+      svg:'<svg viewBox="0 0 280 215" role="img" aria-label="Задача 6"><circle class="circ" cx="103" cy="119" r="64"/><line class="ln" x1="103" y1="119" x2="96" y2="57"/><line class="ln" x1="103" y1="119" x2="160" y2="147"/><line class="ln" x1="103" y1="119" x2="219" y2="54"/><line class="ln" x1="96" y1="57" x2="219" y2="54"/><line class="ln" x1="160" y1="147" x2="219" y2="54"/><circle class="dot" cx="103" cy="119" r="3.5"/><circle class="dot" cx="96" cy="57" r="3.5"/><circle class="dot" cx="160" cy="147" r="3.5"/><circle class="dot" cx="219" cy="54" r="3.5"/><text x="88" y="141">O</text><text x="88" y="47">S</text><text x="161" y="168">R</text><text x="226" y="55">Q</text><text x="185" y="72" class="given">50°</text><text x="113" y="111" class="xlab">x</text></svg>'
+    },
+    {
+      answer:2,
+      svg:'<svg viewBox="0 0 315 220" role="img" aria-label="Задача 7"><text x="8" y="22" class="given">NM = 1,   MT = √3,   NT = x</text><circle class="circ" cx="115" cy="127" r="58"/><line class="ln" x1="115" y1="127" x2="166" y2="88"/><line class="ln" x1="166" y1="88" x2="246" y2="149"/><line class="ln" x1="115" y1="127" x2="246" y2="149"/><line class="ln" x1="157" y1="70" x2="247" y2="152"/><circle class="dot" cx="115" cy="127" r="3.5"/><circle class="dot" cx="166" cy="88" r="3.5"/><circle class="dot" cx="246" cy="149" r="3.5"/><text x="95" y="121">N</text><text x="171" y="79">M</text><text x="252" y="155">T</text></svg>'
+    },
+    {
+      answer:6,
+      svg:'<svg viewBox="0 0 290 225" role="img" aria-label="Задача 8"><text x="9" y="23" class="given">P△ABK = 20</text><circle class="circ" cx="177" cy="128" r="62"/><line class="ln" x1="72" y1="54" x2="181" y2="62"/><line class="ln" x1="72" y1="54" x2="116" y2="160"/><line class="ln" x1="116" y1="160" x2="181" y2="62"/><line class="ln" x1="99" y1="190" x2="129" y2="139"/><circle class="dot" cx="72" cy="54" r="3.5"/><circle class="dot" cx="181" cy="62" r="3.5"/><circle class="dot" cx="116" cy="160" r="3.5"/><text x="53" y="70">K</text><text x="188" y="57">B</text><text x="98" y="182">A</text><text x="89" y="119" class="xlab">x</text><text x="140" y="111" class="given">8</text></svg>'
+    }
+  ];
+
+  const state={
+    placed:{},
+    earned:{},
+    selected:null,
+    taskAnswers:Array(solveTasks.length).fill(""),
+    taskEarned:Array(solveTasks.length).fill(false)
+  };
   let transientWrong=null;
 
   function shuffle(arr){
@@ -266,6 +455,10 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
       if(d && d.placed && d.earned){
         state.placed=d.placed;
         state.earned=d.earned;
+        if(Array.isArray(d.taskAnswers)) state.taskAnswers=d.taskAnswers.slice(0,solveTasks.length);
+        if(Array.isArray(d.taskEarned)) state.taskEarned=d.taskEarned.slice(0,solveTasks.length).map(Boolean);
+        while(state.taskAnswers.length<solveTasks.length) state.taskAnswers.push("");
+        while(state.taskEarned.length<solveTasks.length) state.taskEarned.push(false);
       }
     }catch(e){}
   }
@@ -397,9 +590,12 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
   }
 
   function updateProgress(){
-    const score=figures.filter(f=>state.earned[f.id]).length;
-    const pct=Math.round(score/figures.length*100);
-    document.getElementById("progressText").textContent=`${score} / 9 · ${pct}%`;
+    const matchScore=figures.filter(f=>state.earned[f.id]).length;
+    const solveScore=state.taskEarned.filter(Boolean).length;
+    const score=matchScore+solveScore;
+    const total=figures.length+solveTasks.length;
+    const pct=Math.round(score/total*100);
+    document.getElementById("progressText").textContent=score+" / "+total+" · "+pct+"%";
     document.getElementById("progressFill").style.width=pct+"%";
   }
 
@@ -423,6 +619,182 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
     save();render();
   });
 
+
+  function parseMathValue(raw){
+    let s=String(raw||"").trim().replace(/\s+/g,"").replace(/,/g,".").replace(/−/g,"-").replace(/°/g,"");
+    if(!s) return NaN;
+
+    let m=s.match(/^(-?\d+(?:\.\d+)?)$/);
+    if(m) return Number(m[1]);
+
+    m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    if(m){
+      const b=Number(m[2]);
+      return b===0?NaN:Number(m[1])/b;
+    }
+
+    m=s.match(/^√\(?(-?\d+(?:\.\d+)?)\)?$/);
+    if(m){
+      const v=Number(m[1]);
+      return v<0?NaN:Math.sqrt(v);
+    }
+
+    m=s.match(/^(-?\d+(?:\.\d+)?)?√\(?(-?\d+(?:\.\d+)?)\)?$/);
+    if(m){
+      const coef=(m[1]===undefined||m[1]==="")?1:Number(m[1]);
+      const v=Number(m[2]);
+      return v<0?NaN:coef*Math.sqrt(v);
+    }
+    return NaN;
+  }
+
+  function keyboardKeys(){
+    return ["7","8","9","4","5","6","1","2","3","0","√","/","−","(",")","⌫","C"];
+  }
+
+  function applyKey(i,key){
+    if(state.taskEarned[i]) return;
+    const input=document.getElementById("solveInput_"+i);
+    if(!input) return;
+
+    if(key==="C") input.value="";
+    else if(key==="⌫") input.value=input.value.slice(0,-1);
+    else input.value += (key==="−"?"-":key);
+
+    state.taskAnswers[i]=input.value;
+    save();
+    input.focus();
+  }
+
+  function renderSolveTasks(){
+    const host=document.getElementById("solveGrid");
+    if(!host) return;
+    host.innerHTML="";
+
+    solveTasks.forEach((task,i)=>{
+      const card=document.createElement("article");
+      card.className="solve-card"+(state.taskEarned[i]?" correct":"");
+      card.id="solveCard_"+i;
+
+      const head=document.createElement("div");
+      head.className="solve-head";
+      head.innerHTML='<span class="solve-num">'+(i+1)+'</span><span class="solve-points">⭐ 1 балл</span>';
+      card.appendChild(head);
+
+      const fig=document.createElement("div");
+      fig.className="solve-figure";
+      fig.innerHTML=task.svg;
+      card.appendChild(fig);
+
+      if(task.proof){
+        const badge=document.createElement("div");
+        badge.className="proof-badge";
+        badge.textContent="✍️ Реши в тетради с доказательством";
+        card.appendChild(badge);
+      }
+
+      const wrap=document.createElement("div");
+      wrap.className="answer-wrap";
+
+      const label=document.createElement("div");
+      label.className="answer-label";
+      label.textContent="x =";
+      wrap.appendChild(label);
+
+      const row=document.createElement("div");
+      row.className="answer-row";
+
+      const input=document.createElement("input");
+      input.className="math-input";
+      input.id="solveInput_"+i;
+      input.value=state.taskAnswers[i]||"";
+      input.placeholder="введи ответ";
+      input.autocomplete="off";
+      input.inputMode="text";
+      input.disabled=!!state.taskEarned[i];
+      input.addEventListener("input",()=>{
+        state.taskAnswers[i]=input.value;
+        save();
+      });
+      row.appendChild(input);
+
+      const toggle=document.createElement("button");
+      toggle.type="button";
+      toggle.className="kb-toggle";
+      toggle.textContent="⌨️";
+      toggle.title="Математическая клавиатура";
+      toggle.addEventListener("click",()=>{
+        const kb=document.getElementById("solveKb_"+i);
+        if(kb) kb.classList.toggle("open");
+      });
+      row.appendChild(toggle);
+      wrap.appendChild(row);
+
+      const kb=document.createElement("div");
+      kb.className="math-keyboard";
+      kb.id="solveKb_"+i;
+      keyboardKeys().forEach(key=>{
+        const b=document.createElement("button");
+        b.type="button";
+        b.textContent=key;
+        if(["√","/","−","(",")","⌫","C"].includes(key)) b.classList.add("special");
+        b.addEventListener("click",()=>applyKey(i,key));
+        kb.appendChild(b);
+      });
+      wrap.appendChild(kb);
+
+      const hint=document.createElement("div");
+      hint.className="kb-help";
+      hint.textContent="Дробь: через / · корень: √";
+      wrap.appendChild(hint);
+
+      const actions=document.createElement("div");
+      actions.className="solve-actions";
+      const check=document.createElement("button");
+      check.type="button";
+      check.className="solve-check";
+      check.textContent=state.taskEarned[i]?"Верно ✓":"Проверить";
+      check.disabled=!!state.taskEarned[i];
+      check.addEventListener("click",()=>checkSolveTask(i));
+      actions.appendChild(check);
+      wrap.appendChild(actions);
+
+      const fb=document.createElement("div");
+      fb.className="solve-feedback"+(state.taskEarned[i]?" ok":"");
+      fb.id="solveFb_"+i;
+      if(state.taskEarned[i]) fb.textContent="✓ Верно!";
+      wrap.appendChild(fb);
+
+      card.appendChild(wrap);
+      host.appendChild(card);
+    });
+  }
+
+  function checkSolveTask(i){
+    if(state.taskEarned[i]) return;
+    const input=document.getElementById("solveInput_"+i);
+    const card=document.getElementById("solveCard_"+i);
+    const fb=document.getElementById("solveFb_"+i);
+    const value=parseMathValue(input.value);
+
+    if(Number.isFinite(value) && Math.abs(value-solveTasks[i].answer)<1e-9){
+      state.taskAnswers[i]=input.value;
+      state.taskEarned[i]=true;
+      card.classList.remove("wrong");
+      card.classList.add("correct");
+      fb.className="solve-feedback ok";
+      fb.textContent="✓ Верно!";
+      input.disabled=true;
+      save();
+      updateProgress();
+      renderSolveTasks();
+    }else{
+      card.classList.add("wrong");
+      fb.className="solve-feedback bad";
+      fb.textContent="Пока неверно. Проверь решение.";
+    }
+  }
+
   document.getElementById("resetAll").addEventListener("click",()=>{
     if(!confirm("Сбросить весь сохранённый прогресс этой домашней работы?"))return;
     try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
@@ -439,6 +811,8 @@ svg .angle-fill{fill:#f0c64f;fill-opacity:.55;stroke:#d1990d;stroke-width:2}
 
   load();
   render();
+  renderSolveTasks();
+  updateProgress();
 })();
 </script>
 </body>
