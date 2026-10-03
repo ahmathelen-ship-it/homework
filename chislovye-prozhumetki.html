@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Числовые промежутки ☀</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #FFF9C4;
+            color: #3E2723;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 90px;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные математические фоновые элементы */
+        .math-bg-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+            overflow: hidden;
+        }
+
+        .decor-item {
+            position: absolute;
+            font-weight: 900;
+            color: #E65100;
+            font-family: 'Courier New', monospace;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(255, 179, 0, 0.25);
+            border: 4px solid #FFC107;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Навигация */
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 2px dashed #FFE082;
+        }
+
+        .nav-btn {
+            background: #FFF8E1;
+            border: 2px solid #FFE082;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #8D6E63;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: #FFC107;
+            border-color: #FFA000;
+            color: #3E2723;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #E65100;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #6D4C41;
+            margin-top: 2px;
+        }
+
+        /* Общий прогресс-бар */
+        .progress-card {
+            background: #FFFDE7;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 2px solid #FFE082;
+            margin-bottom: 14px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 13px;
+            color: #E65100;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-bg {
+            background: #FFE082;
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #4CAF50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* БЛОК 1 */
+        .pool-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #E65100;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .cards-pool {
+            background: #FFFDE7;
+            border: 2px dashed #FFCA28;
+            border-radius: 16px;
+            padding: 10px;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-item {
+            background: #FFECB3;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #4E342E;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.1s ease;
+        }
+
+        .card-item.selected {
+            border-color: #E65100;
+            background: #FFE082;
+            box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.3);
+        }
+
+        .card-item.correct {
+            background: #C8E6C9 !important;
+            border-color: #4CAF50 !important;
+            color: #1B5E20 !important;
+            cursor: default;
+        }
+
+        .columns-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .col-target {
+            background: #FFF8E1;
+            border: 3px solid #FFCA28;
+            border-radius: 16px;
+            padding: 8px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .col-header {
+            text-align: center;
+            border-bottom: 2px solid #FFE082;
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+        }
+
+        .col-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #E65100;
+            text-transform: uppercase;
+        }
+
+        svg.col-svg {
+            width: 100%;
+            height: 35px;
+        }
+
+        /* БЛОК 2 */
+        .instruction-card {
+            background: #FFF8E1;
+            border: 2px solid #FFE082;
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin: 12px 0 16px 0;
+            font-size: 12px;
+            color: #4E342E;
+            line-height: 1.5;
+        }
+
+        .instruction-card h3 {
+            color: #E65100;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .tasks-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .task-card {
+            background: #FFFDE7;
+            border: 2px solid #FFE082;
+            border-radius: 16px;
+            padding: 14px;
+        }
+
+        .task-header {
+            font-size: 14px;
+            font-weight: 800;
+            color: #E65100;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .svg-container {
+            background: #FFF;
+            border: 2px solid #FFD54F;
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        svg.line-svg {
+            width: 100%;
+            height: auto;
+            max-height: 85px;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+
+        .sub-task {
+            margin-top: 10px;
+        }
+
+        .sub-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #5D4037;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .math-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #FFE082;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #3E2723;
+            outline: none;
+            background: #FFF;
+        }
+
+        .math-input:focus {
+            border-color: #FF9800;
+        }
+
+        .math-input.correct {
+            background: #E8F5E9;
+            border-color: #81C784;
+            color: #2E7D32;
+        }
+
+        .math-input.wrong {
+            background: #FFEBEE;
+            border-color: #E57373;
+        }
+
+        /* Виртуальная клавиатура */
+        .virtual-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FFF8E1;
+            border-top: 3px solid #FFC107;
+            padding: 8px;
+            display: none;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .key-btn {
+            background: #FFFFFF;
+            border: 2px solid #FFE082;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #E65100;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .key-btn:active {
+            background: #FFE082;
+            transform: scale(0.95);
+        }
+
+        /* Кнопки и фидбек */
+        .check-btn {
+            width: 100%;
+            background: #FF9800;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #FFFFFF;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-sub-check {
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-draw-check {
+            background: #FFA000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 4px;
+            width: 100%;
+        }
+
+        .feedback-box {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            min-height: 18px;
+        }
+
+        .fb-good { color: #2E7D32; }
+        .fb-bad { color: #C62828; }
+
+        .reset-btn {
+            background: transparent;
+            border: none;
+            color: #BCAAA4;
+            font-size: 11px;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Модальное окно завершения */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+
+        .modal-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 4px solid #FFC107;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-card h2 {
+            color: #E65100;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .modal-card p {
+            color: #5D4037;
+            font-size: 14px;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .modal-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="math-bg-decor">
+    <div class="decor-item" style="top: 5%; left: 4%; font-size: 28px;">[a; b]</div>
+    <div class="decor-item" style="top: 15%; right: 6%; font-size: 32px;">x ≥ 5</div>
+    <div class="decor-item" style="top: 30%; left: 8%; font-size: 36px;">📐</div>
+    <div class="decor-item" style="top: 45%; right: 5%; font-size: 30px;">(-∞; 3)</div>
+    <div class="decor-item" style="top: 60%; left: 3%; font-size: 34px;">📊</div>
+    <div class="decor-item" style="top: 75%; right: 7%; font-size: 32px;">🧮</div>
+    <div class="decor-item" style="top: 88%; left: 6%; font-size: 26px;">x &lt; 0</div>
+    <div class="decor-item" style="top: 22%; left: 85%; font-size: 28px;">≤</div>
+    <div class="decor-item" style="top: 68%; left: 82%; font-size: 30px;">∞</div>
+</div>
+
+<div class="container">
+    <nav class="nav-menu">
+        <button class="nav-btn active" id="btn-block1" onclick="switchBlock(1)">📍 Блок 1: Опрос</button>
+        <button class="nav-btn" id="btn-block2" onclick="switchBlock(2)">✏️ Блок 2: Запись</button>
+    </nav>
+
+    <header>
+        <h1 id="block-title">Опрос по числовым промежуткам 🎯</h1>
+        <div class="subtitle" id="block-subtitle">Перетащи карточки или нажми на карточку, а затем на столбик!</div>
+    </header>
+
+    <div class="progress-card">
+        <div class="progress-header">
+            <span>Общий прогресс: <span id="score">0</span> / 18 баллов</span>
+            <span id="percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- СОДЕРЖИМОЕ БЛОКА 1 -->
+    <div id="block1-content">
+        <div class="pool-title">Карточки для распределения:</div>
+        <div class="cards-pool" id="pool" ondragover="allowDrop(event)" ondrop="dropToPool(event)"></div>
+
+        <div class="columns-grid">
+            <div class="col-target" id="col-filled" ondragover="allowDrop(event)" ondrop="dropToCol(event, 'filled')" onclick="tapColumn('filled')">
+                <div class="col-header">
+                    <div class="col-title">Закрашенная •</div>
+                    <svg class="col-svg" viewBox="0 0 100 30">
+                        <line x1="10" y1="15" x2="90" y2="15" stroke="#E65100" stroke-width="4"/>
+                        <circle cx="50" cy="15" r="6" fill="#E65100" stroke="#3E2723" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col-target" id="col-hollow" ondragover="allowDrop(event)" ondrop="dropToCol(event, 'hollow')" onclick="tapColumn('hollow')">
+                <div class="col-header">
+                    <div class="col-title">Выколотая ◦</div>
+                    <svg class="col-svg" viewBox="0 0 100 30">
+                        <line x1="10" y1="15" x2="90" y2="15" stroke="#E65100" stroke-width="4"/>
+                        <circle cx="50" cy="15" r="6" fill="#FFFFFF" stroke="#E65100" stroke-width="3"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <button class="check-btn" onclick="checkBlock1()">Проверить варианты 🚀</button>
+        <div class="feedback-box" id="fb-block1"></div>
+    </div>
+
+    <!-- СОДЕРЖИМОЕ БЛОКА 2 -->
+    <div id="block2-content" style="display: none;">
+        <div class="tasks-grid" id="tasks-block2"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">Сбросить весь прогресс (для учителя)</button>
+</div>
+
+<!-- Математическая клавиатура -->
+<div class="virtual-keyboard" id="virt-keyboard">
+    <button class="key-btn" onclick="insertKey('[')">[</button>
+    <button class="key-btn" onclick="insertKey(']')">]</button>
+    <button class="key-btn" onclick="insertKey('(')">(</button>
+    <button class="key-btn" onclick="insertKey(')')">)</button>
+    <button class="key-btn" onclick="insertKey(';')">;</button>
+    <button class="key-btn" onclick="insertKey('≤')">≤</button>
+    <button class="key-btn" onclick="insertKey('≥')">≥</button>
+    <button class="key-btn" onclick="insertKey('<')">&lt;</button>
+    <button class="key-btn" onclick="insertKey('>')">&gt;</button>
+    <button class="key-btn" onclick="insertKey('∞')">∞</button>
+    <button class="key-btn" onclick="insertKey('-∞')">-∞</button>
+    <button class="key-btn" onclick="insertKey('x')">x</button>
+</div>
+
+<!-- Модальное окно завершения -->
+<div class="modal-overlay" id="finish-modal">
+    <div class="modal-card">
+        <h2>🎉 Поздравляем!</h2>
+        <p>Вы успешно выполнили все задания и набрали <b id="modal-score">18</b> из 18 баллов!</p>
+        <button class="modal-btn" onclick="closeModal()">Отлично! 🌟</button>
+    </div>
+</div>
+
+<script>
+    const b1BaseItems = [
+        { id: 'b1_1', text: 'Точка входит в промежуток', target: 'filled' },
+        { id: 'b1_2', text: 'Точка не входит в промежуток', target: 'hollow' },
+        { id: 'b1_3', text: 'Квадратная скобка [ ]', target: 'filled' },
+        { id: 'b1_4', text: 'Круглая скобка ( )', target: 'hollow' },
+        { id: 'b1_5', text: 'Нестрогий знак (≥ или ≤)', target: 'filled' },
+        { id: 'b1_6', text: 'Строгий знак (> или <)', target: 'hollow' }
+    ];
+
+    const b2Tasks = [
+        {
+            id: 't1', title: 'Задание 1 ⭐⭐',
+            type: 'read_ray',
+            drawData: { type: 'ray', start: 2, hollow: false, dir: 'right' },
+            answers: { interval: ['[2;+∞)', '[2;∞)', '[2; +∞)'], inequality: ['x>=2', 'x≥2'] }
+        },
+        {
+            id: 't2', title: 'Задание 2 ⭐⭐',
+            type: 'read_segment',
+            drawData: { type: 'seg', min: -3, max: 4, minHollow: true, maxHollow: false },
+            answers: { interval: ['(-3;4]', '(-3; 4]'], inequality: ['-3<x<=4', '-3<x≤4'] }
+        },
+        {
+            id: 't3', title: 'Задание 3 ⭐⭐',
+            type: 'draw_interval',
+            givens: { text: 'Дано неравенство: x < -1' },
+            drawTarget: { points: { '-1': 'hollow' }, rayLeft: true, rayRight: false },
+            answers: { interval: ['(-∞;-1)', '(-∞; -1)'] }
+        },
+        {
+            id: 't4', title: 'Задание 4 ⭐⭐',
+            type: 'draw_inequality',
+            givens: { text: 'Дан промежуток: [-5; 1]' },
+            drawTarget: { points: { '-5': 'filled', '1': 'filled' }, rayLeft: false, rayRight: false },
+            answers: { inequality: ['-5<=x<=1', '-5≤x≤1'] }
+        },
+        {
+            id: 't5', title: 'Задание 5 ⭐⭐',
+            type: 'draw_interval',
+            givens: { text: 'Дано неравенство: -2 ≤ x < 5' },
+            drawTarget: { points: { '-2': 'filled', '5': 'hollow' }, rayLeft: false, rayRight: false },
+            answers: { interval: ['[-2;5)', '[-2; 5)'] }
+        },
+        {
+            id: 't6', title: 'Задание 6 ⭐⭐',
+            type: 'draw_inequality',
+            givens: { text: 'Дан промежуток: (0; +∞)' },
+            drawTarget: { points: { '0': 'hollow' }, rayLeft: false, rayRight: true },
+            answers: { inequality: ['x>0'] }
+        }
+    ];
+
+    let state = JSON.parse(localStorage.getItem('math_intervals_full_v4')) || {
+        b1: { positions: {}, solved: {}, scores: {}, shuffledOrder: null },
+        b2: { userDraws: {}, userInputs: {}, solvedSub: {}, scores: {} }
+    };
+
+    let selectedCardId = null;
+    let activeInput = null;
+
+    function saveState() {
+        localStorage.setItem('math_intervals_full_v4', JSON.stringify(state));
+    }
+
+    function shuffle(arr) {
+        let array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function switchBlock(num) {
+        document.getElementById('block1-content').style.display = num === 1 ? 'block' : 'none';
+        document.getElementById('block2-content').style.display = num === 2 ? 'block' : 'none';
+        document.getElementById('virt-keyboard').style.display = num === 2 ? 'flex' : 'none';
+
+        document.getElementById('btn-block1').className = `nav-btn ${num === 1 ? 'active' : ''}`;
+        document.getElementById('btn-block2').className = `nav-btn ${num === 2 ? 'active' : ''}`;
+
+        document.getElementById('block-title').innerText = num === 1 ? 'Опрос по числовым промежуткам 🎯' : 'Математическая запись промежутков ✏️';
+        document.getElementById('block-subtitle').innerText = num === 1 ? 'Перетащи карточки или нажми на карточку, а затем на столбик!' : 'Запиши варианты и нарисуй промежутки на прямой.';
+    }
+
+    function updateProgress() {
+        let total = 0;
+        b1BaseItems.forEach(i => total += (state.b1.scores[i.id] || 0));
+        b2Tasks.forEach(t => {
+            if (t.type.startsWith('read')) {
+                total += (state.b2.scores[`${t.id}_a`] || 0);
+                total += (state.b2.scores[`${t.id}_b`] || 0);
+            } else {
+                total += (state.b2.scores[`${t.id}_text`] || 0);
+                total += (state.b2.scores[`${t.id}_draw`] || 0);
+            }
+        });
+
+        document.getElementById('score').innerText = total;
+        const percent = Math.round((total / 18) * 100);
+        document.getElementById('percent').innerText = percent + '%';
+        document.getElementById('progress-fill').style.width = percent + '%';
+
+        if (total === 18) {
+            document.getElementById('modal-score').innerText = total;
+            document.getElementById('finish-modal').style.display = 'flex';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('finish-modal').style.display = 'none';
+    }
+
+    function initBlock1() {
+        if (!state.b1.shuffledOrder) {
+            state.b1.shuffledOrder = shuffle(b1BaseItems.map(i => i.id));
+            saveState();
+        }
+        b1BaseItems.forEach(item => {
+            if (!state.b1.positions[item.id]) state.b1.positions[item.id] = 'pool';
+        });
+        renderBlock1();
+    }
+
+    function renderBlock1() {
+        const pool = document.getElementById('pool');
+        const colFilled = document.getElementById('col-filled');
+        const colHollow = document.getElementById('col-hollow');
+
+        pool.innerHTML = '';
+        Array.from(colFilled.querySelectorAll('.card-item')).forEach(el => el.remove());
+        Array.from(colHollow.querySelectorAll('.card-item')).forEach(el => el.remove());
+
+        const itemsMap = {};
+        b1BaseItems.forEach(i => itemsMap[i.id] = i);
+
+        state.b1.shuffledOrder.forEach(id => {
+            const item = itemsMap[id];
+            const card = document.createElement('div');
+            card.className = 'card-item';
+            card.id = item.id;
+            card.innerText = item.text;
+
+            if (state.b1.solved[item.id]) {
+                card.classList.add('correct');
+                card.innerText += ' ✅';
+            } else {
+                card.draggable = true;
+                card.ondragstart = (e) => e.dataTransfer.setData('text/plain', item.id);
+                card.onclick = (e) => { e.stopPropagation(); selectCard(item.id); };
+            }
+
+            if (selectedCardId === item.id) card.classList.add('selected');
+
+            const pos = state.b1.positions[item.id];
+            if (pos === 'filled') colFilled.appendChild(card);
+            else if (pos === 'hollow') colHollow.appendChild(card);
+            else pool.appendChild(card);
+        });
+
+        updateProgress();
+    }
+
+    function selectCard(id) {
+        if (state.b1.solved[id]) return;
+        selectedCardId = (selectedCardId === id) ? null : id;
+        renderBlock1();
+    }
+
+    function tapColumn(colType) {
+        if (selectedCardId) {
+            state.b1.positions[selectedCardId] = colType;
+            selectedCardId = null;
+            saveState();
+            renderBlock1();
+        }
+    }
+
+    function allowDrop(e) { e.preventDefault(); }
+    function dropToCol(e, colType) {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        if (id && !state.b1.solved[id]) {
+            state.b1.positions[id] = colType;
+            saveState();
+            renderBlock1();
+        }
+    }
+    function dropToPool(e) {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        if (id && !state.b1.solved[id]) {
+            state.b1.positions[id] = 'pool';
+            saveState();
+            renderBlock1();
+        }
+    }
+
+    function checkBlock1() {
+        const fb = document.getElementById('fb-block1');
+        let correctCount = 0;
+
+        b1BaseItems.forEach(item => {
+            if (state.b1.positions[item.id] === item.target) {
+                state.b1.solved[item.id] = true;
+                state.b1.scores[item.id] = 1;
+                correctCount++;
+            }
+        });
+
+        saveState();
+        renderBlock1();
+
+        if (correctCount === b1BaseItems.length) {
+            fb.className = 'feedback-box fb-good';
+            fb.innerText = 'Отлично! Все карточки верны! 🎉';
+        } else {
+            fb.className = 'feedback-box fb-bad';
+            fb.innerText = `Верно распределено: ${correctCount} из ${b1BaseItems.length}. Исправь остальные!`;
+        }
+    }
+
+    function renderBlock2() {
+        const container = document.getElementById('tasks-block2');
+        container.innerHTML = '';
+
+        b2Tasks.forEach((task, idx) => {
+            if (idx === 2) {
+                const instrCard = document.createElement('div');
+                instrCard.className = 'instruction-card';
+                instrCard.innerHTML = `
+                    <h3>💡 Инструкция по рисованию на прямой:</h3>
+                    <p>1. <b>Клик по числу (риске):</b> 1-й клик = закрашенная точка (●), 2-й клик = выколотая (○), 3-й клик = удаление точки.</p>
+                    <p>2. <b>Клик по левой / правой стрелке:</b> рисует бесконечный луч влево или вправо.</p>
+                `;
+                container.appendChild(instrCard);
+            }
+
+            const card = document.createElement('div');
+            card.className = 'task-card';
+
+            let html = `<div class="task-header"><span>${task.title}</span></div>`;
+
+            if (task.givens) {
+                html += `<div style="font-weight:bold; color:#3E2723; margin-bottom:8px;">${task.givens.text}</div>`;
+            }
+
+            html += `<div class="svg-container">${generateSVG(task)}</div>`;
+
+            if (!task.type.startsWith('read')) {
+                const drawDone = state.b2.solvedSub[`${task.id}_draw`];
+                html += `
+                    <button class="btn-draw-check" onclick="checkB2Draw('${task.id}')" ${drawDone ? 'disabled style="background:#81C784;"' : ''}>
+                        ${drawDone ? 'Рисунок верен ✅' : 'Проверить рисунок 🎨'}
+                    </button>
+                `;
+            }
+
+            if (task.type === 'read_ray' || task.type === 'read_segment') {
+                html += renderInputSubTask(task.id, 'a', 'а) Запись в виде промежутка:');
+                html += renderInputSubTask(task.id, 'b', 'б) Запись в виде неравенства:');
+            } else if (task.type === 'draw_interval') {
+                html += renderInputSubTask(task.id, 'text', 'Запись в виде промежутка:');
+            } else if (task.type === 'draw_inequality') {
+                html += renderInputSubTask(task.id, 'text', 'Запись в виде неравенства:');
+            }
+
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+
+        updateProgress();
+    }
+
+    function renderInputSubTask(taskId, subKey, labelText) {
+        const fullKey = `${taskId}_${subKey}`;
+        const isSolved = state.b2.solvedSub[fullKey];
+
+        return `
+            <div class="sub-task">
+                <div class="sub-label">
+                    <span>${labelText}</span>
+                    ${isSolved ? '<span style="color:#2E7D32;">✅</span>' : ''}
+                </div>
+                <div class="input-row">
+                    <input type="text" class="math-input ${isSolved ? 'correct' : ''}" id="inp_${fullKey}" 
+                           onfocus="activeInput=this" 
+                           value="${state.b2.userInputs[fullKey] || ''}" 
+                           ${isSolved ? 'disabled' : ''}>
+                    <button class="btn-sub-check" onclick="checkB2Text('${taskId}', '${subKey}')" ${isSolved ? 'disabled style="background:#81C784;"' : ''}>✓</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function generateSVG(task) {
+        const userDraw = state.b2.userDraws[task.id] || { points: {}, rayLeft: false, rayRight: false };
+
+        let svg = `<svg class="line-svg" viewBox="0 0 320 60" onclick="handleSvgClick(event, '${task.id}')">`;
+        svg += `<line x1="10" y1="30" x2="310" y2="30" stroke="#424242" stroke-width="2"/>`;
+        svg += `<polygon points="310,26 318,30 310,34" fill="#424242"/>`;
+        svg += `<text x="310" y="18" font-size="11" font-weight="bold" fill="#424242">x</text>`;
+
+        for (let i = -6; i <= 6; i++) {
+            let x = 20 + (i + 6) * 22.5;
+            svg += `<line x1="${x}" y1="26" x2="${x}" y2="34" stroke="#757575" stroke-width="1.5"/>`;
+            svg += `<text x="${x}" y="48" font-size="9" text-anchor="middle" fill="#424242">${i}</text>`;
+        }
+
+        let activePoints = {};
+        let drawRayL = false, drawRayR = false;
+
+        if (task.type.startsWith('read')) {
+            if (task.drawData.type === 'ray') {
+                let startX = 20 + (task.drawData.start + 6) * 22.5;
+                let endX = task.drawData.dir === 'right' ? 305 : 15;
+                svg += `<line x1="${startX}" y1="30" x2="${endX}" y2="30" stroke="#F57F17" stroke-width="5"/>`;
+                activePoints[task.drawData.start] = task.drawData.hollow ? 'hollow' : 'filled';
+            } else {
+                let minX = 20 + (task.drawData.min + 6) * 22.5;
+                let maxX = 20 + (task.drawData.max + 6) * 22.5;
+                svg += `<line x1="${minX}" y1="30" x2="${maxX}" y2="30" stroke="#F57F17" stroke-width="5"/>`;
+                activePoints[task.drawData.min] = task.drawData.minHollow ? 'hollow' : 'filled';
+                activePoints[task.drawData.max] = task.drawData.maxHollow ? 'hollow' : 'filled';
+            }
+        } else {
+            activePoints = userDraw.points || {};
+            drawRayL = userDraw.rayLeft;
+            drawRayR = userDraw.rayRight;
+
+            let pts = Object.keys(activePoints).map(Number).sort((a,b)=>a-b);
+            if (pts.length >= 2) {
+                let x1 = 20 + (pts[0] + 6) * 22.5;
+                let x2 = 20 + (pts[pts.length-1] + 6) * 22.5;
+                svg += `<line x1="${x1}" y1="30" x2="${x2}" y2="30" stroke="#F57F17" stroke-width="5"/>`;
+            }
+            if (drawRayL && pts.length > 0) {
+                let x = 20 + (pts[0] + 6) * 22.5;
+                svg += `<line x1="15" y1="30" x2="${x}" y2="30" stroke="#F57F17" stroke-width="5"/>`;
+            }
+            if (drawRayR && pts.length > 0) {
+                let x = 20 + (pts[pts.length-1] + 6) * 22.5;
+                svg += `<line x1="${x}" y1="30" x2="305" y2="30" stroke="#F57F17" stroke-width="5"/>`;
+            }
+        }
+
+        for (let val in activePoints) {
+            let x = 20 + (Number(val) + 6) * 22.5;
+            let type = activePoints[val];
+            if (type === 'filled') {
+                svg += `<circle cx="${x}" cy="30" r="5.5" fill="#F57F17" stroke="#3E2723" stroke-width="1.5"/>`;
+            } else if (type === 'hollow') {
+                svg += `<circle cx="${x}" cy="30" r="5.5" fill="#FFFFFF" stroke="#F57F17" stroke-width="2.5"/>`;
+            }
+        }
+
+        svg += `</svg>`;
+        return svg;
+    }
+
+    function handleSvgClick(e, taskId) {
+        const task = b2Tasks.find(t => t.id === taskId);
+        if (task.type.startsWith('read')) return;
+
+        const svgEl = e.currentTarget;
+        let pt = svgEl.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        let svgP = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+        let clickX = svgP.x;
+
+        if (!state.b2.userDraws[taskId]) {
+            state.b2.userDraws[taskId] = { points: {}, rayLeft: false, rayRight: false };
+        }
+        let uDraw = state.b2.userDraws[taskId];
+
+        if (clickX < 15) {
+            uDraw.rayLeft = !uDraw.rayLeft;
+            saveState(); renderBlock2(); return;
+        }
+        if (clickX > 305) {
+            uDraw.rayRight = !uDraw.rayRight;
+            saveState(); renderBlock2(); return;
+        }
+
+        let val = Math.round((clickX - 20) / 22.5) - 6;
+        if (val >= -6 && val <= 6) {
+            let targetX = 20 + (val + 6) * 22.5;
+            if (Math.abs(clickX - targetX) <= 12) {
+                let currentType = uDraw.points[val];
+                if (!currentType) {
+                    uDraw.points[val] = 'filled';
+                } else if (currentType === 'filled') {
+                    uDraw.points[val] = 'hollow';
+                } else {
+                    delete uDraw.points[val];
+                }
+                saveState();
+                renderBlock2();
+            }
+        }
+    }
+
+    function checkB2Text(taskId, subKey) {
+        const task = b2Tasks.find(t => t.id === taskId);
+        const fullKey = `${taskId}_${subKey}`;
+        const inputEl = document.getElementById(`inp_${fullKey}`);
+        if (!inputEl) return;
+
+        const userVal = inputEl.value.replace(/\s+/g, '').toLowerCase();
+        let allowed = [];
+
+        if (subKey === 'a') allowed = task.answers.interval;
+        else if (subKey === 'b') allowed = task.answers.inequality;
+        else if (subKey === 'text') allowed = task.answers.interval || task.answers.inequality;
+
+        let isCorrect = allowed.some(ans => ans.replace(/\s+/g, '').toLowerCase() === userVal);
+        state.b2.userInputs[fullKey] = inputEl.value;
+
+        if (isCorrect) {
+            state.b2.solvedSub[fullKey] = true;
+            state.b2.scores[fullKey] = 1;
+            inputEl.className = 'math-input correct';
+            inputEl.disabled = true;
+        } else {
+            inputEl.className = 'math-input wrong';
+            setTimeout(() => inputEl.className = 'math-input', 1200);
+        }
+
+        saveState();
+        renderBlock2();
+    }
+
+    function checkB2Draw(taskId) {
+        const task = b2Tasks.find(t => t.id === taskId);
+        const uDraw = state.b2.userDraws[taskId] || { points: {}, rayLeft: false, rayRight: false };
+        const target = task.drawTarget;
+
+        let isCorrect = true;
+        let userPts = uDraw.points || {};
+        let targetPts = target.points || {};
+
+        let uKeys = Object.keys(userPts);
+        let tKeys = Object.keys(targetPts);
+
+        if (uKeys.length !== tKeys.length) isCorrect = false;
+        else {
+            for (let k of tKeys) {
+                if (userPts[k] !== targetPts[k]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+        }
+
+        if (Boolean(uDraw.rayLeft) !== Boolean(target.rayLeft)) isCorrect = false;
+        if (Boolean(uDraw.rayRight) !== Boolean(target.rayRight)) isCorrect = false;
+
+        if (isCorrect) {
+            state.b2.solvedSub[`${taskId}_draw`] = true;
+            state.b2.scores[`${taskId}_draw`] = 1;
+        } else {
+            alert('В рисунке есть ошибка. Проверь точки и направление!');
+        }
+
+        saveState();
+        renderBlock2();
+    }
+
+    function insertKey(char) {
+        if (activeInput && !activeInput.disabled) {
+            let start = activeInput.selectionStart;
+            let end = activeInput.selectionEnd;
+            let val = activeInput.value;
+            activeInput.value = val.substring(0, start) + char + val.substring(end);
+            activeInput.focus();
+            activeInput.selectionStart = activeInput.selectionEnd = start + char.length;
+        }
+    }
+
+    function resetAll() {
+        localStorage.removeItem('math_intervals_full_v4');
+        state = {
+            b1: { positions: {}, solved: {}, scores: {}, shuffledOrder: null },
+            b2: { userDraws: {}, userInputs: {}, solvedSub: {}, scores: {} }
+        };
+        initBlock1();
+        renderBlock2();
+    }
+
+    initBlock1();
+    renderBlock2();
+</script>
+</body>
+</html>
