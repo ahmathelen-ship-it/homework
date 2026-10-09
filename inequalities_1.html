@@ -45,7 +45,8 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,5vw,2.2re
 .num{font-family:var(--f-display);font-weight:800;background:var(--azure);color:var(--card);min-width:36px;height:36px;border-radius:12px;display:grid;place-items:center;padding:0 8px}
 .kind{font-family:var(--f-display);font-weight:700;color:var(--azure-deep);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
 .check{margin-left:auto;font-size:1.5rem;color:var(--ok);font-weight:800}
-.math{font-size:1.15rem;min-height:2.4em;overflow-x:auto;padding:4px 2px;display:flex;align-items:center}
+.math{flex-wrap:wrap;gap:6px 10px;font-size:1.15rem;min-height:2.4em;overflow-x:auto;padding:4px 2px;display:flex;align-items:center}
+.math .q{font-family:var(--f-body);font-weight:700;font-size:1rem;flex-basis:100%}
 .math i{font-style:italic}
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px}
 .frac>span{padding:0 4px;white-space:nowrap}
@@ -86,7 +87,7 @@ button:focus-visible{outline:3px solid var(--azure-deep);outline-offset:2px}
   <h1>🌊 Неравенства</h1>
   <p class="sub">Домашнее задание · от простого к сложному</p>
   <div class="bar"><i id="barFill"></i></div>
-  <div class="score"><span id="pts">0 из 33 баллов</span><span id="pct">0%</span></div>
+  <div class="score"><span id="pts">0 из 40 баллов</span><span id="pct">0%</span></div>
 </header>
 
 <div class="rules">
@@ -105,7 +106,7 @@ button:focus-visible{outline:3px solid var(--azure-deep);outline-offset:2px}
 <script>
 (function(){
 function M(t){return '\\(\\displaystyle '+t+'\\)'}
-var W=[1,2,2,2,3,3,3,3,3,3,4,4];
+var W=[1,2,2,2,3,3,3,3,3,3,4,4,3,4];
 var T=[
  M('5-3x\\ge 2x-10'),
  M('\\begin{cases}3x-7<2x+1\\\\ 5-2x\\le 11\\\\ 4(x+1)>3x+2\\end{cases}'),
@@ -118,9 +119,11 @@ var T=[
  M('\\frac{7-2x}{x+13}>0'),
  M('(x^2-2x-3)(10-2x)\\ge 0'),
  M('\\begin{cases}x^2-x-12\\le 0\\\\ \\dfrac{(x-2)^2(x+1)}{x-3}\\ge 0\\end{cases}'),
- M('\\left[\\begin{array}{l}x^2-4x-5\\le 0\\\\ \\dfrac{x-7}{x+2}>0\\end{array}\\right.')
+ M('\\left[\\begin{array}{l}x^2-4x-5\\le 0\\\\ \\dfrac{x-7}{x+2}>0\\end{array}\\right.'),
+ '<span class="q">Найдите область определения функции</span>'+M('y=\\log_3\\left(4x-x^2\\right)'),
+ '<span class="q">Найдите область определения функции</span>'+M('y=\\log_{x-1}\\frac{x+3}{5-x}')
 ];
-var A=JSON.parse(atob('WyIoLUk7M10iLCIoLTI7OCkiLCIoLUk7LTQpVVszOytJKSIsIigtNTswKVUoMTsrSSkiLCIoLUk7LTEpVSgwOzEpVSg5OytJKSIsIigtSTsxLzJdVXs1LzJ9IiwiKC1JOy0xNClVKC0xMzswKVUoMTM7K0kpIiwiWzEvMjszLzJdVVs3OytJKSIsIigtMTM7Ny8yKSIsIigtSTstMV1VWzM7NV0iLCJbLTM7LTFdVXsyfVUoMzs0XSIsIigtSTstMilVWy0xOzVdVSg3OytJKSJd'));
+var A=JSON.parse(atob('WyIoLUk7M10iLCIoLTI7OCkiLCIoLUk7LTQpVVszOytJKSIsIigtNTswKVUoMTsrSSkiLCIoLUk7LTEpVSgwOzEpVSg5OytJKSIsIigtSTsxLzJdVXs1LzJ9IiwiKC1JOy0xNClVKC0xMzswKVUoMTM7K0kpIiwiWzEvMjszLzJdVVs3OytJKSIsIigtMTM7Ny8yKSIsIigtSTstMV1VWzM7NV0iLCJbLTM7LTFdVXsyfVUoMzs0XSIsIigtSTstMilVWy0xOzVdVSg3OytJKSIsIigwOzQpIiwiKDE7MilVKDI7NSkiXQ=='));
 
 // ---------- разбор ответа ----------
 function num(s){
