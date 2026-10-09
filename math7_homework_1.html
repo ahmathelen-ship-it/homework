@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Домашнее задание Киры</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Unbounded:wght@600;700&display=swap">
+<style>
+/* Layout: одна колонка карточек-заданий на сиреневом фоне, сверху прогресс и меню блоков */
+:root{
+  color-scheme: light;
+  --bg:#f3ecff;
+  --card:#ffffff;
+  --line:#dccbf7;
+  --lilac:#a78bfa;
+  --violet:#7c3aed;
+  --deep:#3b1873;
+  --ink:#2b1d40;
+  --muted:#6e5a8c;
+  --pink:#db2777;
+  --teal:#0891b2;
+  --ok:#15803d;
+  --ok-bg:#dcfce7;
+  --warn:#9d174d;
+  --warn-bg:#fdeaf3;
+  --info-bg:#efe7fd;
+  --grid:#e9defb;
+  --font-display:"Unbounded","Trebuchet MS",sans-serif;
+  --font-body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;color:var(--deep)}
+h1{font-size:1.35rem}
+h2{font-size:1.1rem}
+h3{font-size:1rem}
+.top{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.top p{margin:0;color:var(--muted)}
+.bar{height:16px;border-radius:99px;background:var(--grid);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--lilac),var(--violet),var(--pink));transition:width .5s ease}
+.score{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:800;color:var(--deep);font-variant-numeric:tabular-nums}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{flex:1 1 180px;border:2px solid var(--line);background:var(--card);color:var(--deep);font:800 .95rem var(--font-body);padding:10px 12px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tab small{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
+.tab[aria-selected="true"] small{color:#ede4ff}
+.tab:focus-visible,.btn:focus-visible,.pick:focus-visible,input:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.block{display:flex;flex-direction:column;gap:16px}
+.sub{margin-top:6px;display:flex;flex-direction:column;gap:4px}
+.sub p{margin:0;color:var(--muted)}
+.task{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.task.is-done{border-color:#86efac}
+.task-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{font-size:.8rem;font-weight:800;color:var(--violet);background:var(--info-bg);padding:2px 10px;border-radius:99px}
+.done-mark{margin-left:auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ok);color:#fff;font-weight:800;opacity:0;transform:scale(.4);transition:all .3s}
+.is-done .done-mark{opacity:1;transform:none}
+.cond{margin:0;font-weight:700}
+.hint{margin:0;color:var(--muted);font-size:.9rem}
+.plane{display:block;width:100%;max-width:400px;margin:0 auto;background:var(--card);border-radius:12px;user-select:none;-webkit-user-select:none}
+.plane.interactive{touch-action:none;cursor:crosshair}
+.plane .gl{stroke:var(--grid);stroke-width:1}
+.plane .ax{stroke:var(--ink);stroke-width:1.6}
+.plane .arrow{fill:var(--ink)}
+.plane text{font-family:var(--font-body);fill:var(--ink)}
+.plane .num{font-size:10px;font-weight:700;fill:var(--muted);paint-order:stroke;stroke:var(--card);stroke-width:3px}
+.plane .axl{font-size:14px;font-weight:800;font-style:italic}
+.plane .plbl{font-size:15px;font-weight:800;paint-order:stroke;stroke:var(--card);stroke-width:4px}
+.coords{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center}
+.coord-row{display:flex;align-items:center;gap:4px;font-weight:800;font-size:1.15rem;color:var(--deep)}
+.coord-row input{width:58px;font:800 1.05rem var(--font-body);text-align:center;padding:8px 4px;border:2px solid var(--line);border-radius:10px;color:var(--ink);background:var(--card)}
+.coord-row input:disabled{background:var(--ok-bg);border-color:#86efac;color:var(--ok)}
+.picks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pick{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:6px 12px;font:800 1rem var(--font-body);color:var(--deep);cursor:pointer;font-variant-numeric:tabular-nums}
+.pick.active{border-color:var(--violet);background:var(--info-bg)}
+.pick .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{flex:1 1 160px;border:0;border-radius:14px;padding:12px 16px;font:800 1rem var(--font-body);cursor:pointer;background:var(--violet);color:#fff}
+.btn.ghost{background:var(--info-bg);color:var(--deep)}
+.btn:disabled{opacity:.45;cursor:default}
+.fb{border-radius:12px;padding:10px 12px;font-weight:700}
+.fb:empty{display:none}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.bad{background:var(--warn-bg);color:var(--warn)}
+.fb.info{background:var(--info-bg);color:var(--deep)}
+.steps{display:flex;flex-wrap:wrap;gap:8px}
+.step{border-radius:99px;padding:4px 12px;font-weight:800;background:var(--grid);color:var(--muted);font-variant-numeric:tabular-nums}
+.step.cur{background:var(--violet);color:#fff}
+.step.ok{background:var(--ok-bg);color:var(--ok)}
+.soon{background:var(--card);border:2px dashed var(--line);border-radius:20px;padding:28px 16px;text-align:center;color:var(--muted);font-weight:700}
+.memo{background:var(--info-bg);border:2px solid var(--lilac);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.memo p{margin:0}
+.memo ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.sort-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border:2px dashed var(--lilac);border-radius:14px}
+.scard{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:8px 12px;font:800 .95rem var(--font-body);color:var(--deep);cursor:pointer;text-align:left}
+.scard.active{border-color:var(--violet);background:var(--info-bg);box-shadow:0 0 0 3px var(--lilac)}
+.scard.in{display:block;cursor:default;background:var(--ok-bg);border-color:#86efac;color:var(--ok);font-size:.9rem}
+.sort-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sort-box{border:2px solid var(--lilac);background:var(--card);border-radius:16px;padding:12px;min-height:150px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;font-family:var(--font-body)}
+.sb-title{font:700 .85rem var(--font-display);color:var(--violet);text-transform:uppercase;letter-spacing:.04em}
+.sb-list{display:flex;flex-direction:column;gap:6px;width:100%}
+.mini{width:110px;height:24px}
+.nline{display:block;width:100%;max-width:520px;margin:0 auto;user-select:none;-webkit-user-select:none}
+.nline.interactive{touch-action:none;cursor:pointer}
+.nline .ax{stroke:var(--ink);stroke-width:1.6}
+.nline .arrow{fill:var(--ink)}
+.nline text{font-family:var(--font-body);fill:var(--ink)}
+.nline .num{font-size:13px;font-weight:700;fill:var(--muted)}
+.nline .axl{font-size:14px;font-weight:800;font-style:italic}
+.part{margin:4px 0 0;font-weight:800;color:var(--deep)}
+.btn.on{background:var(--violet);color:#fff}
+.wr{width:100%;font:800 1.15rem var(--font-body);padding:10px 12px;border:2px solid var(--line);border-radius:12px;color:var(--ink);background:var(--card)}
+.wr:disabled{background:var(--ok-bg);border-color:#86efac;color:var(--ok)}
+.kbd{display:flex;flex-wrap:wrap;gap:6px}
+.kbd button{min-width:44px;border:2px solid var(--line);background:var(--info-bg);border-radius:10px;padding:6px 10px;font:800 1.1rem var(--font-body);color:var(--deep);cursor:pointer}
+.sample-btn{flex:none;align-self:flex-start}
+.sample{background:#fff4fa;border:2px dashed var(--pink);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.sample p{margin:0}
+.geo-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.geo{width:100%;max-width:380px}
+.geo .glbl{font-family:var(--font-body);font-size:16px;font-weight:800;fill:var(--deep)}
+.geo .it{font-style:italic;font-size:19px}
+.note{font-size:.8rem;color:var(--muted)}
+.coord-row input.wide{width:80px}
+.sym-list{display:flex;flex-direction:column;gap:8px}
+.sym-row{display:flex;align-items:center;gap:12px;padding:6px 10px;border:2px solid var(--line);border-radius:12px}
+.sym-row.ok{background:var(--ok-bg);border-color:#86efac}
+.sym{font-size:1.6rem;font-weight:800;color:var(--deep);width:40px;text-align:center}
+.sym-row select{flex:1;min-width:0;font:700 1rem var(--font-body);padding:8px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.reset{display:flex;flex-direction:column;gap:8px}
+.reset>.btn{flex:none;align-self:flex-start;font-size:.85rem;padding:8px 14px}
+.reset-ask{background:var(--warn-bg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.reset-ask p{margin:0;color:var(--warn);font-weight:700}
+.btn.danger{background:var(--warn);color:#fff}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <section class="top">
+    <h1>Домашнее задание 🌸</h1>
+    <p>Решай задания и нажимай «Проверить». С первой попытки — полный балл, со второй — половина.</p>
+    <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+    <div class="score"><span id="scoreText">0 из 0 баллов</span><span id="pctText">0%</span></div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <div class="reset">
+      <button class="btn ghost" type="button" id="resetBtn">↺ Сбросить прогресс</button>
+      <div class="reset-ask" id="resetAsk" hidden>
+        <p>Точно сбросить все ответы и баллы? Это нельзя отменить.</p>
+        <div class="row"><button class="btn danger" type="button" id="resetYes">Да, сбросить</button><button class="btn ghost" type="button" id="resetNo">Отмена</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="b1" role="tabpanel">
+    <div class="sub"><h2>Определи координаты</h2><p>Запиши координаты отмеченных точек.</p></div>
+    <div id="b1a"></div>
+    <div class="sub"><h2>Отметь точки</h2><p>Выбери точку и нажми на нужный узел сетки. Нажмёшь ещё раз — точка переедет.</p></div>
+    <div id="b1b"></div>
+  </section>
+
+  <section class="block" id="b1g" role="tabpanel" hidden>
+    <div class="sub"><h2>Графики</h2><p>Строй прямые и отвечай на вопросы. Задания можно делать в любом порядке.</p></div>
+    <div id="b1c"></div>
+  </section>
+
+  <section class="block" id="b2" role="tabpanel" hidden>
+    <aside class="memo">
+      <h2>Памятка 📌 Каждая чёрточка важна!</h2>
+      <p>Внимательно смотри, какая скобка — круглая или квадратная, какой знак — строгий или нестрогий, и какая точка — закрашенная или выколотая. Ошибка в одной чёрточке или скобке — и задание не засчитается.</p>
+    </aside>
+    <div id="b2a"></div>
+    <div class="sub"><h2>Нарисуй и запиши</h2><p>Если не помнишь, как оформлять, открой образец — там пример с другими числами.</p></div>
+    <div id="b2b"></div>
+  </section>
+
+  <section class="block" id="b3" role="tabpanel" hidden>
+    <div class="sub"><h2>Смежные и вертикальные углы</h2><p>Ответы пиши числом, знак градуса можно не ставить.</p></div>
+    <div id="b3a"></div>
+  </section>
+
+  <section class="block" id="b4" role="tabpanel" hidden>
+    <div class="sub"><h2>Обозначения</h2><p>Небольшой практикум: вспомни, что значит каждый знак.</p></div>
+    <div id="b3b"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+const KEY = 'math7_homework_1_v8';
+let st = {tab:'b1', t:{}};
+try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); if (o && o.t) st = Object.assign(st, o); } } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} }
+
+const BLOCKS = [
+  {id:'b1', name:'📍 Координаты точек'},
+  {id:'b1g', name:'📈 Графики'},
+  {id:'b2', name:'📏 Числовые промежутки'},
+  {id:'b3', name:'📐 Геометрия'},
+  {id:'b4', name:'🔣 Обозначения'}
+];
+const TASKS = [];
+function T(id){ return st.t[id] || (st.t[id] = {att:0, done:false, pts:0}); }
+
+function fmt(n){ return String(n).replace('.', ',').replace('-', '−'); }
+function ptsWord(n){
+  if (!Number.isInteger(n)) return 'балла';
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return 'балл';
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return 'балла';
+  return 'баллов';
+}
+const PRAISE = ['Верно!', 'Отлично!', 'Супер!', 'Так держать!', 'Прекрасно!'];
+function okMsg(s){
+  const p = PRAISE[Math.floor(Math.random() * PRAISE.length)];
+  return s.pts > 0 ? p + ' +' + fmt(s.pts) + ' ' + ptsWord(s.pts) + ' 🎉' : p + ' Задание выполнено ✅';
+}
+function setFb(el, kind, text){ el.className = 'fb ' + kind; el.textContent = text; }
+
+/* попытка: correct -> задание закрывается, баллы по номеру попытки */
+function attempt(id, max, correct){
+  const s = T(id); s.att++;
+  if (correct) { s.done = true; s.pts = s.att === 1 ? max : (s.att === 2 ? max / 2 : 0); s.msg = okMsg(s); }
+  save(); updateProgress(); return s;
+}
+function wrongMsg(hints){
+  return 'Пока не получилось. ' + (hints.length ? hints.join('; ') + '. ' : '') + 'Попробуй ещё раз 💪';
+}
+
+/* ---------- меню и прогресс ---------- */
+const tabsEl = document.getElementById('tabs');
+BLOCKS.forEach(b => {
+  const btn = document.createElement('button');
+  btn.className = 'tab'; btn.type = 'button'; btn.setAttribute('role', 'tab'); btn.id = 'tab-' + b.id;
+  btn.innerHTML = '<span>' + b.name + '</span><small></small>';
+  btn.addEventListener('click', () => showTab(b.id));
+  tabsEl.appendChild(btn);
+});
+function showTab(id){
+  st.tab = id; save();
+  BLOCKS.forEach(b => {
+    document.getElementById(b.id).hidden = b.id !== id;
+    document.getElementById('tab-' + b.id).setAttribute('aria-selected', b.id === id ? 'true' : 'false');
+  });
+}
+function updateProgress(){
+  let got = 0, max = 0;
+  const per = {};
+  TASKS.forEach(t => {
+    const s = T(t.id); got += s.pts; max += t.max;
+    per[t.block] = per[t.block] || {got:0, max:0};
+    per[t.block].got += s.pts; per[t.block].max += t.max;
+  });
+  const pct = max ? Math.round(got / max * 100) : 0;
+  document.getElementById('barFill').style.width = pct + '%';
+  document.getElementById('scoreText').textContent = fmt(got) + ' из ' + fmt(max) + ' ' + ((max % 10 === 1 && max % 100 !== 11) ? 'балла' : 'баллов');
+  document.getElementById('pctText').textContent = pct + '%';
+  BLOCKS.forEach(b => {
+    const p = per[b.id];
+    document.querySelector('#tab-' + b.id + ' small').textContent = p ? fmt(p.got) + '/' + fmt(p.max) : '';
+  });
+}
+
+/* ---------- карточка задания ---------- */
+let taskNum = 0;
+function card(container, block, title, chipMax){
+  taskNum++;
+  const a = document.createElement('article');
+  a.className = 'task';
+  a.innerHTML = '<header class="task-head"><h3>Задание ' + taskNum + '</h3><span class="chip">' +
+    fmt(chipMax) + ' ' + ptsWord(chipMax) + '</span><span class="done-mark" aria-hidden="true">✓</span></header>' +
+    '<p class="cond"></p><div class="body"></div><div class="fb" role="status"></div>';
+  a.querySelector('.cond').innerHTML = title;
+  container.appendChild(a);
+  return {el:a, body:a.querySelector('.body'), fb:a.querySelector('.fb')};
+}
+
+/* ---------- координатная плоскость ---------- */
+const NS = 'http://www.w3.org/2000/svg', R = 6, S = 28, PAD = 26, W = PAD * 2 + S * 2 * R;
+const PX = x => PAD + (x + R) * S, PY = y => PAD + (R - y) * S;
+function makePlane(interactive){
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + W);
+  svg.setAttribute('class', 'plane' + (interactive ? ' interactive' : ''));
+  let g = '';
+  for (let i = -R; i <= R; i++) {
+    g += '<line class="gl" x1="' + PX(i) + '" y1="' + PY(R) + '" x2="' + PX(i) + '" y2="' + PY(-R) + '"/>';
+    g += '<line class="gl" x1="' + PX(-R) + '" y1="' + PY(i) + '" x2="' + PX(R) + '" y2="' + PY(i) + '"/>';
+  }
+  const ex = PX(R) + 16, ey = PY(R) - 16;
+  g += '<line class="ax" x1="' + (PX(-R) - 8) + '" y1="' + PY(0) + '" x2="' + ex + '" y2="' + PY(0) + '"/>';
+  g += '<line class="ax" x1="' + PX(0) + '" y1="' + (PY(-R) + 8) + '" x2="' + PX(0) + '" y2="' + ey + '"/>';
+  g += '<polygon class="arrow" points="' + (ex + 2) + ',' + PY(0) + ' ' + (ex - 8) + ',' + (PY(0) - 5) + ' ' + (ex - 8) + ',' + (PY(0) + 5) + '"/>';
+  g += '<polygon class="arrow" points="' + PX(0) + ',' + (ey - 2) + ' ' + (PX(0) - 5) + ',' + (ey + 8) + ' ' + (PX(0) + 5) + ',' + (ey + 8) + '"/>';
+  g += '<text class="axl" x="' + (ex - 4) + '" y="' + (PY(0) - 9) + '">x</text>';
+  g += '<text class="axl" x="' + (PX(0) + 9) + '" y="' + (ey + 6) + '">y</text>';
+  for (let i = -R; i <= R; i++) {
+    if (i === 0) continue;
+    g += '<text class="num" text-anchor="middle" x="' + PX(i) + '" y="' + (PY(0) + 15) + '">' + fmt(i) + '</text>';
+    g += '<text class="num" text-anchor="end" x="' + (PX(0) - 5) + '" y="' + (PY(i) + 4) + '">' + fmt(i) + '</text>';
+  }
+  g += '<text class="num" text-anchor="end" x="' + (PX(0) - 5) + '" y="' + (PY(0) + 15) + '">0</text>';
+  g += '<g class="dyn"></g>';
+  svg.innerHTML = g;
+  return {svg, dyn: svg.querySelector('.dyn')};
+}
+function snap(svg, e){
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  const q = p.matrixTransform(svg.getScreenCTM().inverse());
+  const cl = v => Math.max(-R, Math.min(R, v));
+  return {x: cl(Math.round((q.x - PAD) / S - R)), y: cl(Math.round(R - (q.y - PAD) / S))};
+}
+function dotSVG(x, y, color, label){
+  let s = '<circle cx="' + PX(x) + '" cy="' + PY(y) + '" r="6" fill="' + color + '" stroke="#ffffff" stroke-width="2"/>';
+  if (label) s += '<text class="plbl" x="' + (PX(x) + 8) + '" y="' + (PY(y) - 8) + '" fill="' + color + '">' + label + '</text>';
+  return s;
+}
+function parseIntIn(v){
+  const s = String(v || '').replace(/[−–—]/g, '-').replace(/\s+/g, '');
+  return /^[+-]?\d+$/.test(s) ? parseInt(s, 10) : null;
+}
+function pointHint(name, a, b, x, y){
+  if (a === x && b === y) return null;
+  if (a === y && b === x) return 'у точки ' + name + ' x и y поменялись местами';
+  if (Math.abs(a) === Math.abs(x) && Math.abs(b) === Math.abs(y)) return 'у точки ' + name + ' проверь знаки';
+  return 'точка ' + name + ' пока неверно';
+}
+const COLORS = ['#7c3aed', '#db2777', '#0891b2'];
+
+/* --- задания 1–2: точки (по 1 баллу за каждую точку) --- */
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function ptMsg(name, s){ return s.pts > 0 ? 'Точка ' + name + ' — верно! +' + fmt(s.pts) + ' ' + ptsWord(s.pts) + ' 🎉' : 'Точка ' + name + ' — верно ✅'; }
+function pointsTask(container, task, mode){
+  task.pts.forEach(p => TASKS.push({id:task.id + p[0], block:'b1', max:1}));
+  const P = name => T(task.id + name);
+  const list = task.pts.map(p => p[0] + '(' + fmt(p[1]) + '; ' + fmt(p[2]) + ')').join(' и ');
+  const title = mode === 'read'
+    ? 'Запиши координаты точек ' + task.pts.map(p => p[0]).join(' и ') + '.'
+    : 'Отметь точки ' + list + '.';
+  const c = card(container, 'b1', title, task.pts.length);
+  c.el.querySelector('.chip').textContent += ' · по 1 за точку';
+  const store = T(task.id); store.v = store.v || {};
+  let active = 0, pl, picks, box;
+
+  if (mode === 'read') {
+    pl = makePlane(false);
+    pl.dyn.innerHTML = task.pts.map((p, i) => dotSVG(p[1], p[2], COLORS[i], p[0])).join('');
+    c.body.appendChild(pl.svg);
+    box = document.createElement('div'); box.className = 'coords';
+    task.pts.forEach(p => {
+      const row = document.createElement('div'); row.className = 'coord-row';
+      row.innerHTML = '<span>' + p[0] + '(</span><input id="' + task.id + p[0] + 'x" aria-label="' + p[0] + ', координата x" autocomplete="off"><span>;</span><input id="' + task.id + p[0] + 'y" aria-label="' + p[0] + ', координата y" autocomplete="off"><span>)</span>';
+      box.appendChild(row);
+    });
+    c.body.appendChild(box);
+    box.querySelectorAll('input').forEach(inp => {
+      if (store.v[inp.id] != null) inp.value = store.v[inp.id];
+      inp.addEventListener('input', () => { store.v[inp.id] = inp.value; save(); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+    });
+  } else {
+    picks = document.createElement('div'); picks.className = 'picks';
+    task.pts.forEach((p, i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'pick';
+      b.innerHTML = '<span class="dot" style="background:' + COLORS[i] + '"></span>' + p[0] + '(' + fmt(p[1]) + '; ' + fmt(p[2]) + ')';
+      b.addEventListener('click', () => { if (!P(p[0]).done) { active = i; render(); } });
+      picks.appendChild(b);
+    });
+    c.body.appendChild(picks);
+    pl = makePlane(true);
+    c.body.appendChild(pl.svg);
+    pl.svg.addEventListener('pointerup', e => {
+      const name = task.pts[active][0];
+      if (P(name).done) return;
+      store.v[name] = snap(pl.svg, e); save();
+      const next = task.pts.findIndex(p => !store.v[p[0]] && !P(p[0]).done);
+      if (next !== -1) active = next;
+      render();
+    });
+  }
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button>';
+  c.body.appendChild(row);
+  const btn = row.querySelector('button');
+
+  function allDone(){ return task.pts.every(p => P(p[0]).done); }
+  function render(){
+    if (mode === 'read') {
+      task.pts.forEach(p => {
+        const d = P(p[0]).done;
+        document.getElementById(task.id + p[0] + 'x').disabled = d;
+        document.getElementById(task.id + p[0] + 'y').disabled = d;
+      });
+    } else {
+      if (P(task.pts[active][0]).done) { const n = task.pts.findIndex(p => !P(p[0]).done); if (n !== -1) active = n; }
+      pl.dyn.innerHTML = task.pts.map((p, i) => store.v[p[0]] ? dotSVG(store.v[p[0]].x, store.v[p[0]].y, COLORS[i], p[0] + (P(p[0]).done ? ' ✓' : '')) : '').join('');
+      Array.from(picks.children).forEach((b, i) => {
+        const d = P(task.pts[i][0]).done;
+        b.disabled = d; b.classList.toggle('active', i === active && !d);
+        b.style.opacity = d ? '.55' : '';
+      });
+      if (allDone()) pl.svg.classList.remove('interactive');
+    }
+    if (allDone()) {
+      c.el.classList.add('is-done'); btn.disabled = true;
+      setFb(c.fb, 'ok', task.pts.map(p => P(p[0]).msg).join(' '));
+    }
+  }
+  function check(){
+    const pending = task.pts.filter(p => !P(p[0]).done);
+    if (!pending.length) return;
+    const vals = {};
+    for (const p of pending) {
+      let v;
+      if (mode === 'read') {
+        v = {x:parseIntIn(document.getElementById(task.id + p[0] + 'x').value), y:parseIntIn(document.getElementById(task.id + p[0] + 'y').value)};
+        if (v.x === null || v.y === null) { setFb(c.fb, 'info', 'Заполни все окошки целыми числами.'); return; }
+      } else {
+        v = store.v[p[0]];
+        if (!v) { setFb(c.fb, 'info', 'Сначала отметь все точки.'); return; }
+      }
+      vals[p[0]] = v;
+    }
+    const parts = [];
+    pending.forEach(p => {
+      const v = vals[p[0]];
+      const h = pointHint(p[0], v.x, v.y, p[1], p[2]);
+      const r = attempt(task.id + p[0], 1, !h);
+      if (r.done) { r.msg = ptMsg(p[0], r); save(); parts.push(r.msg); }
+      else parts.push(cap(h) + '.');
+    });
+    if (allDone()) render();
+    else { setFb(c.fb, 'bad', parts.join(' ') + ' Исправь и проверь ещё раз 💪'); render(); }
+  }
+  btn.addEventListener('click', check);
+  render();
+}
+pointsTask(document.getElementById('b1a'), {id:'r1', pts:[['M', 3, -4], ['N', -2, 5]]}, 'read');
+pointsTask(document.getElementById('b1b'), {id:'p1', pts:[['M', -3, 2], ['N', 4, -5]]}, 'place');
+
+/* --- блок «Графики»: каждое задание отдельной карточкой --- */
+const eqL = L => L.axis + ' = ' + fmt(L.v);
+function segSVG(a, b, color, label, dashed){
+  let s = '<line x1="' + PX(a.x) + '" y1="' + PY(a.y) + '" x2="' + PX(b.x) + '" y2="' + PY(b.y) +
+    '" stroke="' + color + '" stroke-width="3.5" stroke-linecap="round"' + (dashed ? ' stroke-dasharray="7 6" opacity=".8"' : '') + '/>';
+  if (label) {
+    const v = a.x === b.x;
+    const lx = v ? PX(a.x) + 6 : PX(Math.max(a.x, b.x)) - 4;
+    const ly = v ? PY(Math.max(a.y, b.y)) + 14 : PY(a.y) - 7;
+    s += '<text class="plbl" x="' + lx + '" y="' + ly + '" fill="' + color + '" text-anchor="' + (v ? 'start' : 'end') + '">' + label + '</text>';
+  }
+  return s;
+}
+function lineCard(L){
+  TASKS.push({id:L.id, block:'b1g', max:1});
+  const c = card(document.getElementById('b1c'), 'b1g', 'Построй прямую <b>' + eqL(L) + '</b>.', 1);
+  const t = T(L.id); t.cur = t.cur || {a:null, b:null};
+  const hint = document.createElement('p'); hint.className = 'hint';
+  hint.textContent = 'Нажми на узел сетки — появится первая точка. Веди пальцем или мышкой — линия тянется следом. Отпусти или нажми второй раз — линия закрепится.';
+  c.body.appendChild(hint);
+  const pl = makePlane(true); c.body.appendChild(pl.svg);
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button><button class="btn ghost" type="button">Стереть и построить заново</button>';
+  c.body.appendChild(row);
+  const [btnCheck, btnReset] = row.querySelectorAll('button');
+  let preview = null;
+  function draw(){
+    let s = '';
+    if (t.done && t.line) s = segSVG(t.line.a, t.line.b, L.color, eqL(L));
+    else {
+      const a = t.cur.a, b = t.cur.b || preview;
+      if (a && b && (a.x !== b.x || a.y !== b.y)) s += segSVG(a, b, L.color, '', !t.cur.b);
+      if (a) s += dotSVG(a.x, a.y, L.color, '');
+      if (t.cur.b) s += dotSVG(t.cur.b.x, t.cur.b.y, L.color, '');
+      else if (preview && a) s += '<circle cx="' + PX(preview.x) + '" cy="' + PY(preview.y) + '" r="5" fill="none" stroke="' + L.color + '" stroke-width="2"/>';
+    }
+    pl.dyn.innerHTML = s;
+    if (t.done) { hint.hidden = true; row.hidden = true; pl.svg.classList.remove('interactive'); c.el.classList.add('is-done'); setFb(c.fb, 'ok', t.msg); }
+  }
+  pl.svg.addEventListener('pointerdown', e => { if (!t.done) e.preventDefault(); });
+  pl.svg.addEventListener('pointermove', e => { if (t.done || !t.cur.a || t.cur.b) return; preview = snap(pl.svg, e); draw(); });
+  pl.svg.addEventListener('pointerleave', () => { if (preview) { preview = null; draw(); } });
+  pl.svg.addEventListener('pointerup', e => {
+    if (t.done) return;
+    const q = snap(pl.svg, e);
+    if (!t.cur.a) t.cur.a = q;
+    else if (!t.cur.b) { if (q.x === t.cur.a.x && q.y === t.cur.a.y) return; t.cur.b = q; preview = null; }
+    save(); draw();
+  });
+  btnReset.addEventListener('click', () => { t.cur = {a:null, b:null}; preview = null; save(); c.fb.textContent = ''; c.fb.className = 'fb'; draw(); });
+  btnCheck.addEventListener('click', () => {
+    if (t.done) return;
+    const a = t.cur.a, b = t.cur.b;
+    if (!a || !b) { setFb(c.fb, 'info', 'Поставь две точки, чтобы линия закрепилась.'); return; }
+    const vert = a.x === b.x, hor = a.y === b.y;
+    const right = L.axis === 'x' ? (vert && a.x === L.v) : (hor && a.y === L.v);
+    const full = L.axis === 'x'
+      ? (Math.min(a.y, b.y) === -R && Math.max(a.y, b.y) === R)
+      : (Math.min(a.x, b.x) === -R && Math.max(a.x, b.x) === R);
+    const ok = right && full;
+    attempt(L.id, 1, ok);
+    if (ok) { t.line = {a, b}; save(); draw(); return; }
+    let h;
+    if (right) h = 'Положение верное, но прямая бесконечная — продолжи её.';
+    else if ((L.axis === 'x' && hor && a.y === L.v) || (L.axis === 'y' && vert && a.x === L.v)) h = 'Похоже, перепутаны x и y. Подумай, какая координата одинаковая у всех точек этой прямой.';
+    else if ((L.axis === 'x' && vert && a.x === -L.v) || (L.axis === 'y' && hor && a.y === -L.v)) h = 'Проверь знак.';
+    else h = 'Подумай, какая координата должна быть одинаковой у всех точек этой прямой и чему она равна.';
+    setFb(c.fb, 'bad', 'Пока не получилось. ' + h + ' Нажми «Стереть» и попробуй ещё раз 💪');
+  });
+  draw();
+}
+function pickCard(q){
+  TASKS.push({id:q.id, block:'b1g', max:1});
+  const c = card(document.getElementById('b1c'), 'b1g', q.title, 1);
+  const t = T(q.id);
+  if (!t.order || t.order.length !== q.opts.length) { t.order = shuffle(q.opts.map((_, i) => i)); t.sel = []; save(); }
+  t.sel = t.sel || [];
+  const box = document.createElement('div'); box.className = 'picks'; c.body.appendChild(box);
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button>';
+  c.body.appendChild(row);
+  const btn = row.querySelector('button');
+  function render(){
+    box.innerHTML = '';
+    t.order.forEach(k => {
+      const on = t.sel.includes(k);
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'pick' + (on ? ' active' : '');
+      b.textContent = (q.single ? (on ? '◉ ' : '○ ') : (on ? '☑ ' : '☐ ')) + q.opts[k].t;
+      b.disabled = t.done;
+      b.addEventListener('click', () => { t.sel = q.single ? [k] : (on ? t.sel.filter(x => x !== k) : t.sel.concat(k)); save(); render(); });
+      box.appendChild(b);
+    });
+    if (t.done) { btn.disabled = true; c.el.classList.add('is-done'); setFb(c.fb, 'ok', t.msg); }
+  }
+  btn.addEventListener('click', () => {
+    if (t.done) return;
+    if (!t.sel.length) { setFb(c.fb, 'info', q.single ? 'Выбери один ответ.' : 'Отметь хотя бы одну точку.'); return; }
+    const wrongPick = q.opts.filter((o, k) => !o.ok && t.sel.includes(k));
+    const missed = q.opts.filter((o, k) => o.ok && !t.sel.includes(k));
+    const ok = !wrongPick.length && !missed.length;
+    attempt(q.id, 1, ok);
+    if (ok) { render(); return; }
+    setFb(c.fb, 'bad', 'Пока не получилось: ' + q.hint(wrongPick, missed) + '. Попробуй ещё раз 💪');
+  });
+  render();
+}
+function onLineHint(wrongPick, missed){
+  const h = [];
+  if (wrongPick.some(o => o.swap)) h.push('проверь, не перепутаны ли x и y');
+  else if (wrongPick.length) h.push('среди отмеченных есть лишняя точка');
+  if (missed.some(o => o.far)) h.push('прямая бесконечная — подумай и о точках, которые не поместились на рисунке');
+  if (missed.some(o => o.half)) h.push('прямая продолжается и по другую сторону оси');
+  if (missed.length && !missed.some(o => o.far || o.half)) h.push('отмечены не все точки');
+  return h.join('; ');
+}
+lineCard({id:'l1', axis:'x', v:5, color:'#7c3aed'});
+pickCard({id:'q1', title:'Какие из точек принадлежат прямой <b>x = 5</b>? Отметь все верные.', hint:onLineHint, opts:[
+  {t:'(5; 3)', ok:true}, {t:'(5; −4)', ok:true, half:true}, {t:'(3; 5)', ok:false, swap:true}, {t:'(5; 100)', ok:true, far:true}]});
+lineCard({id:'l2', axis:'y', v:-3, color:'#db2777'});
+pickCard({id:'q2', title:'Какие из точек принадлежат прямой <b>y = −3</b>? Отметь все верные.', hint:onLineHint, opts:[
+  {t:'(2; −3)', ok:true}, {t:'(−3; 2)', ok:false, swap:true}, {t:'(−80; −3)', ok:true, far:true}, {t:'(4; 3)', ok:false}]});
+lineCard({id:'l3', axis:'x', v:-2, color:'#0891b2'});
+pickCard({id:'c1', single:true, title:'Фигура <b>x = −2</b>, которую ты нарисовала, бесконечная или конечная (имеет конкретную длину)?',
+  hint:() => 'подумай: сетка — это только кусочек рисунка. Можно ли продолжить прямую дальше?',
+  opts:[{t:'Бесконечная', ok:true}, {t:'Конечная (имеет конкретную длину)', ok:false}]});
+lineCard({id:'l4', axis:'y', v:4, color:'#ea580c'});
+
+/* ================= БЛОК 2: ЧИСЛОВЫЕ ПРОМЕЖУТКИ ================= */
+function shuffle(a){ for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+
+/* --- задание 4: раскидай карточки --- */
+(function(){
+  const CARDS = [
+    ['Нестрогий знак (≥ или ≤)', 'f'], ['Квадратная скобка [ ]', 'f'], ['Точка входит в промежуток', 'f'],
+    ['Строгий знак (> или <)', 'o'], ['Круглая скобка ( )', 'o'], ['Точка не входит в промежуток', 'o']
+  ];
+  CARDS.forEach((_, i) => TASKS.push({id:'s' + i, block:'b2', max:1}));
+  const c = card(document.getElementById('b2a'), 'b2', 'Разложи карточки: что относится к закрашенной точке, а что — к выколотой? Нажми на карточку, потом на нужный ящик.', CARDS.length);
+  c.el.querySelector('.chip').textContent += ' · по 1 за карточку';
+  const store = T('srt');
+  if (!store.order || store.order.length !== CARDS.length) { store.order = shuffle(CARDS.map((_, i) => i)); save(); }
+  let sel = null;
+  const pool = document.createElement('div'); pool.className = 'sort-pool';
+  const boxes = document.createElement('div'); boxes.className = 'sort-boxes';
+  const mini = filled => '<svg viewBox="0 0 120 24" class="mini" aria-hidden="true"><line x1="10" y1="12" x2="110" y2="12" stroke="var(--violet)" stroke-width="5" stroke-linecap="round"/><circle cx="60" cy="12" r="8" fill="' + (filled ? 'var(--deep)' : 'var(--card)') + '" stroke="var(--deep)" stroke-width="3"/></svg>';
+  [['f', 'Закрашенная'], ['o', 'Выколотая']].forEach(([k, name]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sort-box'; b.dataset.k = k;
+    b.innerHTML = '<span class="sb-title">' + name + '</span>' + mini(k === 'f') + '<span class="sb-list"></span>';
+    b.addEventListener('click', () => place(k));
+    boxes.appendChild(b);
+  });
+  c.body.appendChild(pool); c.body.appendChild(boxes);
+  function render(){
+    pool.innerHTML = '';
+    boxes.querySelectorAll('.sb-list').forEach(l => l.innerHTML = '');
+    store.order.forEach(i => {
+      const t = T('s' + i);
+      if (t.done) {
+        const s = document.createElement('span'); s.className = 'scard in'; s.textContent = CARDS[i][0] + ' ✓';
+        boxes.querySelector('[data-k="' + CARDS[i][1] + '"] .sb-list').appendChild(s);
+      } else {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'scard' + (sel === i ? ' active' : '');
+        b.textContent = CARDS[i][0];
+        b.addEventListener('click', () => { sel = sel === i ? null : i; render(); });
+        pool.appendChild(b);
+      }
+    });
+    if (!pool.children.length) {
+      pool.hidden = true; c.el.classList.add('is-done');
+      if (!c.fb.textContent) setFb(c.fb, 'ok', 'Все карточки на своих местах! 🎉');
+    }
+  }
+  function place(k){
+    if (sel === null) { setFb(c.fb, 'info', 'Сначала нажми на карточку.'); return; }
+    const i = sel, ok = CARDS[i][1] === k;
+    const r = attempt('s' + i, 1, ok);
+    if (ok) { sel = null; setFb(c.fb, 'ok', '«' + CARDS[i][0] + '» — ' + r.msg); }
+    else setFb(c.fb, 'bad', '«' + CARDS[i][0] + '» сюда не подходит. Подумай ещё раз 💪');
+    render();
+  }
+  render();
+})();
+
+/* --- числовая прямая --- */
+const NL0 = 32, NLS = 28, NY = 30;
+const NX = v => NL0 + (v + 6) * NLS;
+function makeNL(interactive){
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 400 64');
+  svg.setAttribute('class', 'nline' + (interactive ? ' interactive' : ''));
+  let g = '<line class="ax" x1="12" y1="' + NY + '" x2="384" y2="' + NY + '"/><polygon class="arrow" points="394,' + NY + ' 383,' + (NY - 5) + ' 383,' + (NY + 5) + '"/><text class="axl" x="382" y="16">x</text>';
+  for (let v = -6; v <= 6; v++) g += '<line class="ax" x1="' + NX(v) + '" y1="' + (NY - 6) + '" x2="' + NX(v) + '" y2="' + (NY + 6) + '"/><text class="num" text-anchor="middle" x="' + NX(v) + '" y="' + (NY + 22) + '">' + fmt(v) + '</text>';
+  g += '<g class="dyn"></g>';
+  svg.innerHTML = g;
+  return {svg, dyn:svg.querySelector('.dyn')};
+}
+function nlShade(pts, ray, color){
+  const k = Object.keys(pts).map(Number).sort((a, b) => a - b);
+  let s = '';
+  const seg = (x1, x2) => '<line x1="' + x1 + '" y1="' + NY + '" x2="' + x2 + '" y2="' + NY + '" stroke="' + color + '" stroke-width="7" stroke-linecap="round" opacity=".85"/>';
+  if (k.length === 2) s += seg(NX(k[0]), NX(k[1]));
+  else if (k.length === 1 && ray) s += seg(NX(k[0]), ray === 'R' ? 378 : 14);
+  k.forEach(v => { s += '<circle cx="' + NX(v) + '" cy="' + NY + '" r="7" fill="' + (pts[v] === 'f' ? 'var(--deep)' : 'var(--card)') + '" stroke="var(--deep)" stroke-width="3"/>'; });
+  return s;
+}
+
+/* --- разбор записей --- */
+function normTxt(s){
+  return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/[−–—]/g, '-').replace(/х/g, 'x')
+    .replace(/>=/g, '≥').replace(/<=/g, '≤').replace(/\+?(∞|inf|беск[а-я]*)/g, '∞');
+}
+function parseIv(s){
+  const m = normTxt(s).replace(/,/g, ';').match(/^([\[(])(-?\d+|-∞);(-?\d+|∞)([\])])$/);
+  return m ? {lb:m[1], a:m[2], b:m[3], rb:m[4]} : null;
+}
+const FLIP = {'<':'>', '>':'<', '≤':'≥', '≥':'≤'};
+function parseIneq(s){
+  const t = normTxt(s);
+  let m = t.match(/^x(<|>|≤|≥)(-?\d+)$/); if (m) return {op:m[1], v:+m[2]};
+  m = t.match(/^(-?\d+)(<|>|≤|≥)x$/); if (m) return {op:FLIP[m[2]], v:+m[1]};
+  m = t.match(/^(-?\d+)(<|≤)x(<|≤)(-?\d+)$/); if (m) return {a:+m[1], op1:m[2], op2:m[3], b:+m[4]};
+  return null;
+}
+const strict = op => op === '<' || op === '>';
+
+/* --- задания 5–6: нарисуй и запиши --- */
+function drawTask(cfg){
+  TASKS.push({id:cfg.id + 'd', block:'b2', max:1}, {id:cfg.id + 'w', block:'b2', max:1});
+  const c = card(document.getElementById('b2b'), 'b2', cfg.cond, 2);
+  c.el.querySelector('.chip').textContent += ' · рисунок и запись';
+  const D = T(cfg.id + 'd'), Wt = T(cfg.id + 'w');
+  D.v = D.v || {pts:{}, ray:null};
+
+  const sb = document.createElement('button'); sb.type = 'button'; sb.className = 'btn ghost sample-btn'; sb.textContent = '💡 Посмотреть образец';
+  const sample = document.createElement('div'); sample.className = 'sample'; sample.hidden = true;
+  sample.innerHTML = '<b>Образец (числа другие!)</b><p>' + cfg.sample.text + '</p>';
+  const snl = makeNL(false); snl.dyn.innerHTML = nlShade(cfg.sample.pts, cfg.sample.ray, 'var(--pink)');
+  sample.appendChild(snl.svg);
+  sb.addEventListener('click', () => { sample.hidden = !sample.hidden; sb.textContent = sample.hidden ? '💡 Посмотреть образец' : 'Скрыть образец'; });
+  c.body.appendChild(sb); c.body.appendChild(sample);
+
+  const h1 = document.createElement('p'); h1.className = 'part'; h1.textContent = 'а) Изобрази на числовой прямой';
+  const h1b = document.createElement('p'); h1b.className = 'hint'; h1b.textContent = 'Нажимай на число: 1 раз — закрашенная точка, 2 раза — выколотая, 3 раза — убрать. Для луча нажми кнопку со стрелкой.';
+  c.body.appendChild(h1); c.body.appendChild(h1b);
+  const nl = makeNL(true); c.body.appendChild(nl.svg);
+  const tools = document.createElement('div'); tools.className = 'row';
+  tools.innerHTML = '<button class="btn ghost" type="button">← Луч влево</button><button class="btn ghost" type="button">Луч вправо →</button><button class="btn ghost" type="button">Очистить</button>';
+  c.body.appendChild(tools);
+  const [bL, bR, bC] = tools.querySelectorAll('button');
+  const rowD = document.createElement('div'); rowD.className = 'row';
+  rowD.innerHTML = '<button class="btn" type="button">Проверить рисунок</button>';
+  c.body.appendChild(rowD);
+  const btnD = rowD.querySelector('button');
+  const fbD = document.createElement('div'); fbD.className = 'fb'; fbD.setAttribute('role', 'status'); c.body.appendChild(fbD);
+
+  const h2 = document.createElement('p'); h2.className = 'part'; h2.textContent = 'б) ' + cfg.write.label;
+  c.body.appendChild(h2);
+  const inp = document.createElement('input'); inp.className = 'wr'; inp.id = cfg.id + 'in'; inp.autocomplete = 'off'; inp.setAttribute('aria-label', cfg.write.label);
+  if (Wt.val != null) inp.value = Wt.val;
+  inp.addEventListener('input', () => { Wt.val = inp.value; save(); });
+  c.body.appendChild(inp);
+  const kbd = document.createElement('div'); kbd.className = 'kbd';
+  cfg.write.keys.forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = k;
+    b.addEventListener('click', () => {
+      if (inp.disabled) return;
+      const s0 = inp.selectionStart != null ? inp.selectionStart : inp.value.length;
+      const s1 = inp.selectionEnd != null ? inp.selectionEnd : inp.value.length;
+      inp.setRangeText(k, s0, s1, 'end'); inp.focus(); Wt.val = inp.value; save();
+    });
+    kbd.appendChild(b);
+  });
+  c.body.appendChild(kbd);
+  const rowW = document.createElement('div'); rowW.className = 'row';
+  rowW.innerHTML = '<button class="btn" type="button">Проверить запись</button>';
+  c.body.appendChild(rowW);
+  const btnW = rowW.querySelector('button');
+  const fbW = document.createElement('div'); fbW.className = 'fb'; fbW.setAttribute('role', 'status'); c.body.appendChild(fbW);
+
+  function render(){
+    nl.dyn.innerHTML = nlShade(D.v.pts, Object.keys(D.v.pts).length === 1 ? D.v.ray : null, 'var(--violet)');
+    [bL, bR].forEach(b => b.classList.remove('on'));
+    if (D.v.ray === 'L') bL.classList.add('on');
+    if (D.v.ray === 'R') bR.classList.add('on');
+    if (D.done) { nl.svg.classList.remove('interactive'); tools.hidden = true; btnD.disabled = true; setFb(fbD, 'ok', D.msg); }
+    if (Wt.done) { inp.disabled = true; kbd.hidden = true; btnW.disabled = true; setFb(fbW, 'ok', Wt.msg); }
+    if (D.done && Wt.done) c.el.classList.add('is-done');
+  }
+  nl.svg.addEventListener('pointerup', e => {
+    if (D.done) return;
+    const p = nl.svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+    const q = p.matrixTransform(nl.svg.getScreenCTM().inverse());
+    const v = Math.max(-6, Math.min(6, Math.round((q.x - NL0) / NLS - 6)));
+    const cur = D.v.pts[v];
+    if (!cur && Object.keys(D.v.pts).length >= 2) { setFb(fbD, 'info', 'Можно отметить не больше двух точек.'); return; }
+    if (!cur) D.v.pts[v] = 'f'; else if (cur === 'f') D.v.pts[v] = 'o'; else delete D.v.pts[v];
+    save(); render();
+  });
+  bL.addEventListener('click', () => { if (Object.keys(D.v.pts).length !== 1) { setFb(fbD, 'info', 'Луч рисуется от одной точки. Сначала оставь на прямой одну точку.'); return; } D.v.ray = D.v.ray === 'L' ? null : 'L'; save(); render(); });
+  bR.addEventListener('click', () => { if (Object.keys(D.v.pts).length !== 1) { setFb(fbD, 'info', 'Луч рисуется от одной точки. Сначала оставь на прямой одну точку.'); return; } D.v.ray = D.v.ray === 'R' ? null : 'R'; save(); render(); });
+  bC.addEventListener('click', () => { D.v = {pts:{}, ray:null}; save(); fbD.textContent = ''; render(); });
+
+  btnD.addEventListener('click', () => {
+    if (D.done) return;
+    const tg = cfg.target, v = D.v;
+    const k = Object.keys(v.pts).map(Number).sort((a, b) => a - b);
+    const tk = Object.keys(tg.pts).map(Number).sort((a, b) => a - b);
+    if (!k.length) { setFb(fbD, 'info', 'Отметь точки на прямой.'); return; }
+    const samePos = k.length === tk.length && k.every((x, i) => x === tk[i]);
+    const sameFill = samePos && k.every(x => v.pts[x] === tg.pts[x]);
+    const rayOk = tg.ray ? (k.length === 1 && v.ray === tg.ray) : true;
+    const ok = samePos && sameFill && rayOk;
+    const r = attempt(cfg.id + 'd', 1, ok);
+    if (ok) { render(); return; }
+    let h;
+    if (!samePos) h = 'проверь, какие числа отмечены';
+    else if (!sameFill) h = 'проверь, какие точки закрашены, а какие выколоты — смотри на знаки и скобки в условии';
+    else h = v.ray ? 'проверь направление луча' : 'здесь нужен луч — в какую сторону он идёт?';
+    setFb(fbD, 'bad', 'Пока не получилось: ' + h + '. Попробуй ещё раз 💪');
+  });
+
+  btnW.addEventListener('click', () => {
+    if (Wt.done) return;
+    const res = cfg.write.check(inp.value);
+    if (res === null) { setFb(fbW, 'info', cfg.write.format); return; }
+    const r = attempt(cfg.id + 'w', 1, res === true);
+    if (res === true) { render(); return; }
+    setFb(fbW, 'bad', 'Пока не получилось: ' + res + '. Попробуй ещё раз 💪');
+  });
+  render();
+}
+
+drawTask({
+  id:'n1',
+  cond:'Дано неравенство: <b>−3 &lt; x ≤ 4</b>',
+  target:{pts:{'-3':'o', '4':'f'}, ray:null},
+  sample:{text:'Неравенство 1 ≤ x &lt; 5. Рисунок — ниже. Промежуток: [1; 5).', pts:{'1':'f', '5':'o'}, ray:null},
+  write:{
+    label:'Запиши в виде промежутка',
+    keys:['(', ')', '[', ']', ';', '−', '∞'],
+    format:'Запиши промежуток так: скобка, число, точка с запятой, число, скобка.',
+    check:s => {
+      const m = parseIv(s); if (!m) return null;
+      const numsOk = m.a === '-3' && m.b === '4', brOk = m.lb === '(' && m.rb === ']';
+      if (numsOk && brOk) return true;
+      if (!numsOk) return 'проверь числа на концах';
+      return 'проверь скобки: какая точка закрашена, а какая выколота?';
+    }
+  }
+});
+drawTask({
+  id:'n2',
+  cond:'Дан промежуток: <b>[−1; +∞)</b>',
+  target:{pts:{'-1':'f'}, ray:'R'},
+  sample:{text:'Промежуток (2; +∞). Рисунок — ниже. Неравенство: x &gt; 2.', pts:{'2':'o'}, ray:'R'},
+  write:{
+    label:'Запиши в виде неравенства',
+    keys:['x', '<', '>', '≤', '≥', '−'],
+    format:'Запиши неравенство так: x, знак, число.',
+    check:s => {
+      const m = parseIneq(s); if (!m || m.op === undefined) return m ? 'здесь неравенство с одним знаком' : null;
+      if (m.op === '≥' && m.v === -1) return true;
+      if (m.v !== -1) return 'проверь число';
+      if (strict(m.op)) return 'проверь знак: строгий он или нестрогий? Посмотри на скобку у −1';
+      return 'проверь, в какую сторону смотрит знак';
+    }
+  }
+});
+
+/* ================= БЛОК 3: ГЕОМЕТРИЯ ================= */
+function arcP(cx, cy, r, a1, a2){
+  const p = a => [cx + r * Math.cos(a * Math.PI / 180), cy - r * Math.sin(a * Math.PI / 180)];
+  const [x1, y1] = p(a1), [x2, y2] = p(a2);
+  return '<path d="M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' A' + r + ' ' + r + ' 0 ' + ((a2 - a1) > 180 ? 1 : 0) + ' 0 ' + x2.toFixed(1) + ' ' + y2.toFixed(1) + '" fill="none" stroke="var(--ink)" stroke-width="1.6"/>';
+}
+function arcN(cx, cy, r, a1, a2, n){ let s = ''; for (let k = 0; k < n; k++) s += arcP(cx, cy, r + k * 5, a1, a2); return s; }
+function rayL(cx, cy, len, a){
+  return '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + len * Math.cos(a * Math.PI / 180)).toFixed(1) + '" y2="' + (cy - len * Math.sin(a * Math.PI / 180)).toFixed(1) + '" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/>';
+}
+function lblAt(cx, cy, r, a, text, cls){
+  return '<text class="' + (cls || 'glbl') + '" text-anchor="middle" x="' + (cx + r * Math.cos(a * Math.PI / 180)).toFixed(1) + '" y="' + (cy - r * Math.sin(a * Math.PI / 180) + 6).toFixed(1) + '">' + text + '</text>';
+}
+const G1SVG = (function(){
+  const O = [200, 135];
+  return '<svg viewBox="0 0 330 160" class="geo" role="img" aria-label="Развёрнутый угол, два луча, угол 130 градусов и два равных угла, один из них x">' +
+    '<line x1="12" y1="135" x2="318" y2="135" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round"/>' +
+    rayL(O[0], O[1], 125, 108) + rayL(O[0], O[1], 180, 146) +
+    arcN(O[0], O[1], 22, 0, 108, 1) +
+    arcN(O[0], O[1], 36, 108, 146, 2) + arcN(O[0], O[1], 78, 146, 180, 2) +
+    lblAt(O[0], O[1], 46, 50, '130°') + lblAt(O[0], O[1], 108, 166, 'x', 'glbl it') + '</svg>';
+})();
+const G2SVG = (function(){
+  const O = [160, 95];
+  return '<svg viewBox="0 0 320 190" class="geo" role="img" aria-label="Две пересекающиеся прямые, угол 145 градусов, углы x и y">' +
+    rayL(O[0], O[1], 125, 25) + rayL(O[0], O[1], 125, 205) + rayL(O[0], O[1], 125, 140) + rayL(O[0], O[1], 125, 320) +
+    arcN(O[0], O[1], 34, 205, 320, 1) + arcN(O[0], O[1], 34, 25, 140, 1) + arcN(O[0], O[1], 26, -40, 25, 2) +
+    lblAt(O[0], O[1], 58, 262, '145°') + lblAt(O[0], O[1], 54, 82, 'x', 'glbl it') + lblAt(O[0], O[1], 54, -8, 'y', 'glbl it') + '</svg>';
+})();
+function parseNum(s){
+  const t = String(s || '').replace(/[°\s]/g, '').replace(/[−–—]/g, '-');
+  return /^-?\d+$/.test(t) ? parseInt(t, 10) : null;
+}
+function numTask(cfg){
+  cfg.fields.forEach(f => TASKS.push({id:f.id, block:'b3', max:f.max}));
+  const total = cfg.fields.reduce((s, f) => s + f.max, 0);
+  const c = card(document.getElementById('b3a'), 'b3', cfg.title, total);
+  if (cfg.fields.length > 1) c.el.querySelector('.chip').textContent += ' · по ' + fmt(cfg.fields[0].max) + ' за ответ';
+  if (cfg.svg) { const d = document.createElement('div'); d.className = 'geo-wrap'; d.innerHTML = cfg.svg + '<span class="note">Рисунок не в масштабе</span>'; c.body.appendChild(d); }
+  const box = document.createElement('div'); box.className = 'coords';
+  cfg.fields.forEach(f => {
+    const row = document.createElement('div'); row.className = 'coord-row';
+    row.innerHTML = '<span>' + f.label + '</span><input id="' + f.id + 'in" class="wide" autocomplete="off" aria-label="' + f.label + '"><span>°</span>';
+    box.appendChild(row);
+  });
+  c.body.appendChild(box);
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button>';
+  c.body.appendChild(row);
+  const btn = row.querySelector('button');
+  cfg.fields.forEach(f => {
+    const inp = document.getElementById(f.id + 'in'), t = T(f.id);
+    if (t.val != null) inp.value = t.val;
+    inp.addEventListener('input', () => { t.val = inp.value; save(); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  });
+  function render(){
+    cfg.fields.forEach(f => { document.getElementById(f.id + 'in').disabled = T(f.id).done; });
+    if (cfg.fields.every(f => T(f.id).done)) {
+      c.el.classList.add('is-done'); btn.disabled = true;
+      setFb(c.fb, 'ok', cfg.fields.map(f => T(f.id).msg).join(' '));
+    }
+  }
+  function check(){
+    const pend = cfg.fields.filter(f => !T(f.id).done);
+    if (!pend.length) return;
+    const vals = {};
+    for (const f of pend) {
+      const v = parseNum(document.getElementById(f.id + 'in').value);
+      if (v === null) { setFb(c.fb, 'info', 'Впиши ответ целым числом.'); return; }
+      vals[f.id] = v;
+    }
+    const msgs = [];
+    pend.forEach(f => {
+      const ok = vals[f.id] === f.ans;
+      const r = attempt(f.id, f.max, ok);
+      const pre = cfg.fields.length > 1 ? f.label.replace(' =', '') + ': ' : '';
+      if (ok) { r.msg = pre + r.msg; save(); msgs.push(r.msg); }
+      else msgs.push(pre + (pre ? 'пока не так. ' : 'Пока не так. ') + (f.alt && vals[f.id] === f.alt.v ? f.alt.msg : f.hint));
+    });
+    if (cfg.fields.every(f => T(f.id).done)) render();
+    else { setFb(c.fb, 'bad', msgs.join(' ') + ' Попробуй ещё раз 💪'); render(); }
+  }
+  btn.addEventListener('click', check);
+  render();
+}
+numTask({title:'Найди x.', svg:G1SVG, fields:[
+  {id:'g1', label:'x =', ans:25, max:2, hint:'Одинаковые дужки означают равные углы. Посмотри, из каких углов складывается развёрнутый угол.'}]});
+numTask({title:'Две прямые пересекаются. Найди x и y.', svg:G2SVG, fields:[
+  {id:'g2x', label:'x =', ans:145, max:1, hint:'Вспомни, какие углы называются вертикальными.'},
+  {id:'g2y', label:'y =', ans:35, max:1, hint:'Вспомни, какие углы называются смежными.'}]});
+numTask({title:'Один из двух смежных углов на 40° меньше другого. Найди величину <b>большего</b> из них.', fields:[
+  {id:'g3', label:'Ответ:', ans:110, max:2, hint:'Обозначь меньший угол буквой и составь уравнение: сумма смежных углов 180°.', alt:{v:70, msg:'Это меньший угол, а спрашивают больший 😉'}}]});
+numTask({title:'Один из двух смежных углов в 4 раза больше другого. Найди величину <b>меньшего</b> из них.', fields:[
+  {id:'g4', label:'Ответ:', ans:36, max:2, hint:'Обозначь меньший угол буквой и составь уравнение: сумма смежных углов 180°.', alt:{v:144, msg:'Это больший угол, а спрашивают меньший 😉'}}]});
+
+/* --- задание с двумя случаями: по 3 балла за каждый ответ --- */
+(function(){
+  const ANS = [{id:'g5a', v:100}, {id:'g5b', v:30}];
+  ANS.forEach(a => TASKS.push({id:a.id, block:'b3', max:3}));
+  const c = card(document.getElementById('b3a'), 'b3', 'Два угла, величины которых 35° и 65°, имеют общую сторону. Угол какой величины, меньшей 180°, могут образовывать две другие их стороны? Найди все варианты.', 6);
+  c.el.querySelector('.chip').textContent += ' · по 3 за ответ';
+  const st5 = T('g5'); st5.val = st5.val || ['', ''];
+  const box = document.createElement('div'); box.className = 'coords';
+  box.innerHTML = '<div class="coord-row"><span>1-й ответ:</span><input id="g5i0" class="wide" autocomplete="off" aria-label="Первый ответ"><span>°</span></div><div class="coord-row"><span>2-й ответ:</span><input id="g5i1" class="wide" autocomplete="off" aria-label="Второй ответ"><span>°</span></div>';
+  c.body.appendChild(box);
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button>';
+  c.body.appendChild(row);
+  const btn = row.querySelector('button');
+  const ins = [document.getElementById('g5i0'), document.getElementById('g5i1')];
+  ins.forEach((inp, i) => { inp.value = st5.val[i] || ''; inp.addEventListener('input', () => { st5.val[i] = inp.value; save(); }); });
+  const allDone = () => ANS.every(a => T(a.id).done);
+  function render(){
+    ANS.forEach(a => { const t = T(a.id); if (t.done && t.inp != null) ins[t.inp].disabled = true; });
+    if (allDone()) { ins.forEach(i => i.disabled = true); btn.disabled = true; c.el.classList.add('is-done'); setFb(c.fb, 'ok', ANS.map(a => T(a.id).msg).join(' ')); }
+  }
+  btn.addEventListener('click', () => {
+    if (allDone()) return;
+    const v = ins.map(i => parseNum(i.value));
+    const open = [0, 1].filter(i => !ins[i].disabled);
+    if (open.some(i => v[i] === null)) { setFb(c.fb, 'info', 'Впиши ответ целым числом.'); return; }
+    const used = [];
+    const msgs = [];
+    ANS.filter(a => !T(a.id).done).forEach(a => {
+      const i = open.find(k => v[k] === a.v && !used.includes(k));
+      const ok = i !== undefined;
+      const r = attempt(a.id, 3, ok);
+      if (ok) { used.push(i); r.inp = i; r.msg = (i === 0 ? '1-й' : '2-й') + ' ответ: ' + r.msg; save(); msgs.push(r.msg); }
+    });
+    if (allDone()) { render(); return; }
+    render();
+    const found = ANS.filter(a => T(a.id).done).length;
+    const h = found === 1
+      ? 'Один случай найден. Есть ещё один — нарисуй, как ещё могут лежать углы относительно общей стороны.'
+      : 'Нарисуй общую сторону и попробуй расположить углы по-разному: по разные стороны от неё и по одну сторону.';
+    setFb(c.fb, 'bad', (msgs.length ? msgs.join(' ') + ' ' : '') + 'Пока не всё. ' + h + ' Попробуй ещё раз 💪');
+  });
+  render();
+})();
+
+/* --- практикум по обозначениям: выбор из списка, всё перемешано --- */
+(function(){
+  const SYM = [['∥', 'параллельно'], ['⊥', 'перпендикулярно'], ['∩', 'пересечение'], ['∪', 'объединение'], ['∈', 'принадлежит'], ['∉', 'не принадлежит'], ['∠', 'угол']];
+  SYM.forEach((_, i) => TASKS.push({id:'sy' + i, block:'b4', max:1}));
+  const c = card(document.getElementById('b3b'), 'b4', 'Что означает каждый знак? Выбери из списка.', SYM.length);
+  c.el.querySelector('.chip').textContent += ' · по 1 за знак';
+  const store = T('sym');
+  if (!store.rows || store.rows.length !== SYM.length) {
+    store.rows = shuffle(SYM.map((_, i) => i));
+    store.opts = SYM.map(() => shuffle(SYM.map((_, i) => i)));
+    store.sel = {}; save();
+  }
+  const list = document.createElement('div'); list.className = 'sym-list';
+  store.rows.forEach(i => {
+    const r = document.createElement('label'); r.className = 'sym-row';
+    let o = '<option value="">— выбери —</option>';
+    store.opts[i].forEach(k => { o += '<option value="' + k + '">' + SYM[k][1] + '</option>'; });
+    r.innerHTML = '<span class="sym">' + SYM[i][0] + '</span><select id="sym' + i + '" aria-label="Значение знака ' + SYM[i][0] + '">' + o + '</select>';
+    list.appendChild(r);
+  });
+  c.body.appendChild(list);
+  SYM.forEach((_, i) => {
+    const s = document.getElementById('sym' + i);
+    if (store.sel[i] != null) s.value = store.sel[i];
+    s.addEventListener('change', () => { store.sel[i] = s.value; save(); });
+  });
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = '<button class="btn" type="button">Проверить</button>';
+  c.body.appendChild(row);
+  const btn = row.querySelector('button');
+  const allDone = () => SYM.every((_, i) => T('sy' + i).done);
+  function render(){
+    SYM.forEach((_, i) => { const d = T('sy' + i).done; const s = document.getElementById('sym' + i); s.disabled = d; s.parentElement.classList.toggle('ok', d); });
+    if (allDone()) { btn.disabled = true; c.el.classList.add('is-done'); const got = SYM.reduce((a, _, i) => a + T('sy' + i).pts, 0); setFb(c.fb, 'ok', 'Все знаки разобраны! +' + fmt(got) + ' ' + ptsWord(got) + ' за практикум 🎉'); }
+  }
+  btn.addEventListener('click', () => {
+    const pend = SYM.map((_, i) => i).filter(i => !T('sy' + i).done);
+    if (!pend.length) return;
+    if (pend.some(i => document.getElementById('sym' + i).value === '')) { setFb(c.fb, 'info', 'Выбери значение для каждого знака.'); return; }
+    let wrong = 0;
+    pend.forEach(i => { const ok = +document.getElementById('sym' + i).value === i; attempt('sy' + i, 1, ok); if (!ok) wrong++; });
+    render();
+    if (!allDone()) setFb(c.fb, 'bad', 'Верные ответы отмечены зелёным. Неверных: ' + wrong + '. Исправь их и проверь ещё раз 💪');
+  });
+  render();
+})();
+
+document.getElementById('resetBtn').addEventListener('click', () => { document.getElementById('resetAsk').hidden = false; document.getElementById('resetBtn').hidden = true; });
+document.getElementById('resetNo').addEventListener('click', () => { document.getElementById('resetAsk').hidden = true; document.getElementById('resetBtn').hidden = false; });
+document.getElementById('resetYes').addEventListener('click', () => { try { localStorage.removeItem(KEY); } catch(e) {} location.reload(); });
+showTab(BLOCKS.some(b => b.id === st.tab) ? st.tab : 'b1');
+updateProgress();
+})();
+</script>
+
+</body>
+</html>
