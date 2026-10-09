@@ -64,7 +64,7 @@ button{font-family:var(--f-display);font-weight:700;cursor:pointer;border:0;bord
 .go:hover{filter:brightness(1.08)}
 button:focus-visible{outline:3px solid var(--azure-deep);outline-offset:2px}
 .keys{display:flex;flex-wrap:wrap;gap:6px}
-.keys button{background:var(--azure-soft);color:var(--ink);font-family:var(--f-math);font-size:1.05rem;min-width:42px;padding:6px 10px}
+.keys button{touch-action:manipulation;user-select:none;-webkit-user-select:none;background:var(--azure-soft);color:var(--ink);font-family:var(--f-math);font-size:1.05rem;min-width:42px;padding:6px 10px}
 .fb{border-radius:12px;padding:10px 12px;font-weight:700}
 .fb.ok{background:var(--ok-soft);color:var(--ok)}
 .fb.no{background:var(--bad-soft);color:var(--bad)}
@@ -87,7 +87,7 @@ button:focus-visible{outline:3px solid var(--azure-deep);outline-offset:2px}
   <h1>🌊 Неравенства</h1>
   <p class="sub">Домашнее задание · от простого к сложному</p>
   <div class="bar"><i id="barFill"></i></div>
-  <div class="score"><span id="pts">0 из 40 баллов</span><span id="pct">0%</span></div>
+  <div class="score"><span id="pts">0 из 37 баллов</span><span id="pct">0%</span></div>
 </header>
 
 <div class="rules">
@@ -106,7 +106,7 @@ button:focus-visible{outline:3px solid var(--azure-deep);outline-offset:2px}
 <script>
 (function(){
 function M(t){return '\\(\\displaystyle '+t+'\\)'}
-var W=[1,2,2,2,3,3,3,3,3,3,4,4,3,4];
+var W=[1,2,2,2,3,3,3,3,3,3,4,4,2,2];
 var T=[
  M('5-3x\\ge 2x-10'),
  M('\\begin{cases}3x-7<2x+1\\\\ 5-2x\\le 11\\\\ 4(x+1)>3x+2\\end{cases}'),
@@ -197,7 +197,7 @@ function S(i){return st[i]||(st[i]={a:0,done:false,pts:0,val:'',fb:null})}
 function bw(n){return n===1?'балл':(n<5?'балла':'баллов')}
 function fmt(n){return String(n).replace('.',',')}
 var box=document.getElementById('tasks');
-var KEYS=['(',')','[',']','{','}',';','∪','−∞','+∞','−','/'];
+var KEYS=['1','2','3','4','5','6','7','8','9','0',',','/','−','(',')','[',']','{','}',';','∪','−∞','+∞'];
 T.forEach(function(t,i){
   var c=document.createElement('div'); c.className='card'; c.id='t'+i;
   c.innerHTML='<div class="top"><span class="num">'+(i+1)+'</span><span class="kind">'+W[i]+' '+bw(W[i])+'</span><span class="check" hidden>✔</span></div>'+
@@ -211,13 +211,20 @@ T.forEach(function(t,i){
   inp.addEventListener('input',function(){S(i).val=inp.value;save()});
   inp.addEventListener('keydown',function(e){if(e.key==='Enter')check(i)});
   c.querySelector('.go').addEventListener('click',function(){check(i)});
-  c.querySelector('.keys').addEventListener('click',function(e){
-    var b=e.target.closest('button'); if(!b||inp.disabled) return;
+  var kb=c.querySelector('.keys');
+  // нажатие кнопки не забирает фокус у поля: клавиатура телефона остаётся открытой
+  function press(e){ var b=e.target.closest('button'); if(!b) return; e.preventDefault(); key(b); }
+  kb.addEventListener('touchstart',press,{passive:false});
+  kb.addEventListener('mousedown',press);
+  kb.addEventListener('click',function(e){ if(e.detail===0){var b=e.target.closest('button'); if(b) key(b);} });
+  function key(b){
+    if(inp.disabled) return;
+    var had=document.activeElement===inp;
     var k=b.dataset.k, a=inp.selectionStart==null?inp.value.length:inp.selectionStart, z=inp.selectionEnd==null?a:inp.selectionEnd;
     if(k==='DEL'){ if(a===z&&a>0)a--; inp.value=inp.value.slice(0,a)+inp.value.slice(z); z=a; }
     else { if(k==='∪')k=' ∪ '; if(k===';')k='; '; inp.value=inp.value.slice(0,a)+k+inp.value.slice(z); a=z=a+k.length; }
-    inp.setSelectionRange(a,a); S(i).val=inp.value; save();
-  });
+    try{inp.setSelectionRange(a,a)}catch(e){} if(had) inp.focus(); S(i).val=inp.value; save();
+  }
   draw(i);
 });
 
