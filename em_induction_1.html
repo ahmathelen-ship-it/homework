@@ -69,6 +69,26 @@ select.sym{font-style:italic}
 .lbl{font-size:14px;color:var(--muted);font-weight:600}
 .katex{font-size:1.12em}
 .qtext .katex-display,.qtext .big .katex{font-size:1.45em}
+.train{display:flex;align-items:flex-end;flex-wrap:nowrap;margin-top:4px}
+.train .slot{flex:0 0 auto}.train .coupler{flex:0 0 12px}
+.loco,.slot{position:relative;margin-bottom:14px}
+.loco{background-color:#0b6fc2;color:#fff;border-radius:14px 14px 6px 6px;padding:10px 12px;font-weight:700;font-size:15px;flex:1 1 auto;min-width:0;line-height:1.2;hyphens:auto;overflow:visible}
+.loco::before,.loco::after,.slot::before,.slot::after{content:'';position:absolute;bottom:-9px;width:12px;height:12px;border-radius:50%;background:#12324d;border:2px solid #fff}
+.loco::before,.slot::before{left:8px}.loco::after,.slot::after{right:8px}
+.coupler{width:14px;height:4px;background:#12324d;margin:0 0 22px}
+.slot{min-width:66px;min-height:48px;border:2.5px dashed #7cc4f2;border-radius:10px 10px 6px 6px;background-color:#f3faff;display:flex;align-items:center;justify-content:center;font-size:18px;padding:4px 8px;color:var(--muted)}
+.slot.off{opacity:.45}
+.slot.filled{border-style:solid;border-color:var(--ok);background-color:var(--okbg);color:#14532d}
+.slot.hot{background-color:var(--soft);border-color:var(--pri)}
+.slot.flash{animation:shake .45s;border-color:var(--bad);background-color:var(--badbg)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pool{position:sticky;bottom:0;z-index:6;background:#fff;border-top:3px solid var(--soft);box-shadow:0 -4px 12px rgba(11,79,134,.12);padding:8px 12px 10px;margin:12px -14px 0;border-radius:14px 14px 0 0}
+.pool .lbl{margin:2px 0}
+.prow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.tk{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff6cc;border:2px solid #f2c94c;border-radius:9px;padding:4px 10px;font-size:17px;cursor:grab;min-width:40px;text-align:center}
+.tk.sel{outline:3px solid var(--pri);background:#e0f2ff}
+.ghost{position:fixed;pointer-events:none;z-index:100;transform:translate(-50%,-60%) scale(1.12);box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.how{background:#fff6cc;border-radius:10px;padding:8px 11px;margin-top:8px;color:#6b5200;font-size:15px}
 .reset{display:block;margin:20px auto 0;background:#fff;border:2px solid #f3a6a6;color:#b91c1c;border-radius:12px;padding:9px 16px;font-size:15px;cursor:pointer}
 </style>
 </head>
@@ -82,7 +102,7 @@ select.sym{font-style:italic}
 <main id="main"></main>
 
 <script>
-const KEY = 'em_induction_1_v2';
+const KEY = 'em_induction_1_v3';
 function mathEl(el){if(window.renderMathInElement)renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});}
 function mathAll(){const m=document.getElementById('main');if(m)mathEl(m);}
 
@@ -126,7 +146,7 @@ const UNITS=['Тл','Вб','м²','В','Гн','А','Дж','м/с','м','Н','В�
 
 const BLOCKS=[
 {id:'b1',tab:'📏 Величины',title:'Блок 1. Величины и единицы',
- intro:'Для каждой величины выбери обозначение и единицу измерения в СИ, потом нажми «Проверить». Балл — когда верны оба выбора.',
+ intro:'Собери паровозик: к каждой величине прицепи два вагончика — сначала её обозначение, потом единицу измерения в СИ.',how:'👆 Как играть: перетащи карточку из нижней панели в пустой вагончик. Можно и проще: нажми на карточку, потом на вагончик. Неверная карточка вернётся на место. Каждая карточка нужна только один раз, а несколько карточек — лишние.',
  tasks:[
   {id:'q_B',type:'pair',name:'Магнитная индукция',sym:'B',unit:'Тл',hint:'Единица названа в честь Николы Теслы. Обозначение — та же буква, что у вектора поля на рисунках.'},
   {id:'q_F',type:'pair',name:'Магнитный поток',sym:'\\Phi',unit:'Вб',hint:'Греческая буква «фи». Единица — в честь Вильгельма Вебера: 1 … = 1 Тл·м², ведь $\\Phi=BS\\sin\\alpha$.'},
@@ -207,6 +227,12 @@ const BLOCKS=[
    hint:'Вспомни закон $\\mathcal{E}_i=-\\dfrac{\\Delta\\Phi}{\\Delta t}$. Чему равно $\\Delta\\Phi$, если поток не меняется?'},
  ]},
 ];
+/* карточки-вагончики для блока 1 */
+const CARDS=[];
+BLOCKS[0].tasks.forEach((t,i)=>{CARDS.push({id:'s'+i,g:'s',v:t.sym});CARDS.push({id:'u'+i,g:'u',v:t.unit});});
+['Н','Вт','Кл'].forEach((v,i)=>CARDS.push({id:'ux'+i,g:'u',v}));
+const CARD=Object.fromEntries(CARDS.map(c=>[c.id,c]));
+const tkHTML=c=>c.g==='s'?`$${c.v}$`:c.v;
 const CATS=[{k:'coil',t:'🌀 Катушка'},{k:'frame',t:'🔲 Рамка с потоком'},{k:'rod',t:'➡️ Движущийся проводник'},{k:'all',t:'✨ Подходит ко всем'}];
 
 /* ---------- Состояние ---------- */
@@ -219,14 +245,14 @@ function fresh(){
     b.tasks.forEach(t=>{
       s.t[t.id]={att:0,solved:false,pts:0,wrong:[]};
       if(t.type==='choice') s.opt[t.id]=shuffle(t.opts.map((_,i)=>i));
-      if(t.type==='pair'){s.opt[t.id]={sym:shuffle(SYMS),unit:shuffle(UNITS)};}
     });
   });
+  s.opt.pool={s:shuffle(CARDS.filter(c=>c.g==='s').map(c=>c.id)),u:shuffle(CARDS.filter(c=>c.g==='u').map(c=>c.id))};
   return s;
 }
 function load(){
   try{const r=JSON.parse(localStorage.getItem(KEY));
-    if(r&&r.t&&BLOCKS.every(b=>b.tasks.every(t=>r.t[t.id]&&r.opt&&(t.type==='cat'||r.opt[t.id])))) return r;}catch(e){}
+    if(r&&r.t&&r.opt&&r.opt.pool&&BLOCKS.every(b=>b.tasks.every(t=>r.t[t.id]&&r.opt&&(t.type!=='choice'||r.opt[t.id])))) return r;}catch(e){}
   return fresh();
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -263,7 +289,7 @@ function render(){
   renderMenu();updBar();
   const b=BLOCKS.find(x=>x.id===S.tab)||BLOCKS[0];
   const main=document.getElementById('main');
-  let h=`<div class="intro"><h2>${b.title}</h2><p>${b.intro}</p></div>`;
+  let h=`<div class="intro"><h2>${b.title}</h2><p>${b.intro}</p>${b.how?`<div class="how">${b.how}</div>`:''}</div>`;
   if(b.pics) h+=`<div class="pics">
     <div class="pic">${PIC_COIL}<b>🌀 Катушка с током</b></div>
     <div class="pic">${PIC_FRAME}<b>🔲 Рамку пронизывает магнитный поток</b></div>
@@ -271,10 +297,12 @@ function render(){
   const allDone=b.tasks.every(t=>S.t[t.id].solved);
   h+=`<div class="done-msg" style="display:${allDone?'block':'none'}">🌟 Блок пройден! Переходи к следующему.</div>`;
   h+=S.order[b.id].map((id,i)=>`<div class="card" id="c_${id}"></div>`).join('');
+  if(b.id==='b1'&&!allDone) h+=`<div class="pool" id="pool"></div>`;
   h+=`<button class="reset" id="resetBtn">🔄 Сбросить прогресс</button>`;
   main.innerHTML=h;
   S.order[b.id].forEach((id,i)=>renderTask(id,i+1));
   mathEl(main.querySelector('.intro'));
+  if(b.id==='b1'){renderPool();if(flashSlot){const f=document.querySelector(flashSlot);if(f)f.classList.add('flash');flashSlot=null;}}
   document.getElementById('resetBtn').onclick=()=>{
     if(confirm('Сбросить все ответы и баллы? Это нельзя отменить.')){S=fresh();save();render();window.scrollTo(0,0);}
   };
@@ -286,12 +314,10 @@ function renderTask(id,num){
   el.className='card'+(st.solved?' done':'');
   let h=head(num,st);
   if(t.type==='pair'){
-    const o=S.opt[id];
-    const cs=st.solved?t.sym:st.selSym, cu=st.solved?t.unit:st.selUnit;
-    h+=`<div class="qtext">${t.name}</div>
-      <div class="lbl">Обозначение</div><div class="chips">${o.sym.map(v=>`<button class="chip ${cs===v?'sel':''}" data-g="s" data-v="${v}" ${st.solved?'disabled':''}>$${v}$</button>`).join('')}</div>
-      <div class="lbl">Единица измерения</div><div class="chips">${o.unit.map(v=>`<button class="chip ${cu===v?'sel':''}" data-g="u" data-v="${v}" ${st.solved?'disabled':''}>${v}</button>`).join('')}</div>
-      <button class="check" ${st.solved?'disabled':''}>Проверить</button>`;
+    const sc=st.symCard?CARD[st.symCard]:null, uc=st.unitCard?CARD[st.unitCard]:null;
+    h+=`<div class="train"><div class="loco">🚂 ${t.name}</div><div class="coupler"></div>
+      <div class="slot ${sc?'filled':''}" data-row="${id}" data-slot="s">${sc?tkHTML(sc):'обозн.'}</div><div class="coupler"></div>
+      <div class="slot ${uc?'filled':sc?'':'off'}" data-row="${id}" data-slot="u">${uc?tkHTML(uc):'единица'}</div></div>`;
   } else if(t.type==='cat'){
     h+=`<div class="qtext"><span class="big">${t.f}</span></div><div class="opts">${CATS.map(c=>{
       const cls=st.solved&&c.k===t.ans?'right':st.wrong.includes(c.k)?'wrong':'';
@@ -306,19 +332,11 @@ function renderTask(id,num){
   const fb=el.querySelector('.fb');
   const show=(ok,txt)=>{fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=txt;};
   if(st.solved) show(true,st.msg||'Верно! ✅');
+  else if(st.lastOk&&st.symCard) show(true,'Обозначение верное ✔ Теперь прицепи единицу измерения.');
   else if(st.att>0) show(false,'Пока не так. 💡 Подсказка: '+(st.lastHint||t.hint));
 
   if(t.type==='pair'){
-    el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
-      if(c.dataset.g==='s')st.selSym=c.dataset.v;else st.selUnit=c.dataset.v;
-      el.querySelectorAll(`.chip[data-g="${c.dataset.g}"]`).forEach(x=>x.classList.toggle('sel',x===c));save();});
-    el.querySelector('.check').onclick=()=>{
-      if(!st.selSym||!st.selUnit){show(false,'Выбери и обозначение, и единицу 🙂');return;}
-      const a=st.selSym===t.sym,b=st.selUnit===t.unit;
-      if(a&&b){award(st);st.msg=okText(st);}
-      else{st.att++;st.lastHint=(a?'обозначение верное, а единицу проверь. ':b?'единица верная, а обозначение проверь. ':'')+t.hint;}
-      save();renderTask(id,num);updBar();checkBlock();
-    };
+    el.querySelectorAll('.slot').forEach(sl=>sl.onclick=()=>{if(selected){const c=selected;selected=null;drop(c,id,sl.dataset.slot);}});
   } else {
     el.querySelectorAll('.opt').forEach(btn=>btn.onclick=()=>{
       const k=t.type==='cat'?btn.dataset.k:Number(btn.dataset.k);
@@ -328,6 +346,53 @@ function renderTask(id,num){
     });
   }
   mathEl(el);
+}
+/* ---------- Перетаскивание ---------- */
+let selected=null, drag=null, flashSlot=null;
+function usedCards(){const u=new Set();BLOCKS[0].tasks.forEach(t=>{const st=S.t[t.id];if(st.symCard)u.add(st.symCard);if(st.unitCard)u.add(st.unitCard);});return u;}
+function renderPool(){
+  const p=document.getElementById('pool');if(!p)return;const u=usedCards();
+  const row=g=>S.opt.pool[g].filter(c=>!u.has(c)).map(c=>`<span class="tk ${selected===c?'sel':''}" data-c="${c}">${tkHTML(CARD[c])}</span>`).join('');
+  p.innerHTML=`<div class="lbl">Обозначения</div><div class="prow">${row('s')}</div><div class="lbl">Единицы измерения</div><div class="prow">${row('u')}</div>`;
+  mathEl(p);
+  p.querySelectorAll('.tk').forEach(tk=>tk.addEventListener('pointerdown',e=>{e.preventDefault();drag={c:tk.dataset.c,el:tk,x:e.clientX,y:e.clientY,moved:false,ghost:null};}));
+}
+function slotAt(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.slot'):null;}
+document.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6){
+    drag.moved=true;drag.ghost=drag.el.cloneNode(true);drag.ghost.classList.add('ghost');document.body.appendChild(drag.ghost);drag.el.style.opacity=.35;}
+  if(drag.moved){drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+    document.querySelectorAll('.slot.hot').forEach(x=>x.classList.remove('hot'));
+    const sl=slotAt(e.clientX,e.clientY);if(sl&&!sl.classList.contains('filled'))sl.classList.add('hot');}
+});
+function endDrag(e){
+  if(!drag)return;const d=drag;drag=null;
+  if(d.moved){d.ghost.remove();d.el.style.opacity='';
+    document.querySelectorAll('.slot.hot').forEach(x=>x.classList.remove('hot'));
+    const sl=e?slotAt(e.clientX,e.clientY):null;
+    if(sl)drop(d.c,sl.dataset.row,sl.dataset.slot);
+  } else {selected=selected===d.c?null:d.c;renderPool();}
+}
+document.addEventListener('pointerup',endDrag);
+document.addEventListener('pointercancel',()=>endDrag(null));
+function drop(cid,rid,slot){
+  const t=TASK[rid],st=S.t[rid],c=CARD[cid];
+  if(st.solved)return;
+  const el=document.getElementById('c_'+rid),fb=el.querySelector('.fb');
+  const say=(txt)=>{fb.className='fb show no';fb.innerHTML=txt;};
+  if(slot==='s'&&st.symCard)return;
+  if(slot==='u'&&!st.symCard){say('Сначала прицепи первый вагончик — обозначение 🙂');return;}
+  const ok=slot==='s'?(c.g==='s'&&c.v===t.sym):(c.g==='u'&&c.v===t.unit);
+  if(ok){
+    if(slot==='s')st.symCard=cid;else{st.unitCard=cid;award(st);st.msg=okText(st);}
+    st.lastOk=true;
+  } else {
+    st.att++;st.lastOk=false;
+    st.lastHint=(slot==='s'&&c.g==='u')?'в первый вагончик ставится обозначение (буква), а единица — во второй.':(slot==='u'&&c.g==='s')?'во второй вагончик ставится единица измерения, а не буква.':t.hint;
+    flashSlot=`.slot[data-row="${rid}"][data-slot="${slot}"]`;
+  }
+  save();render();
 }
 function checkBlock(){
   const b=BLOCKS.find(x=>x.id===S.tab);
