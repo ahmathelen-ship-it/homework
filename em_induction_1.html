@@ -11,7 +11,7 @@
 <style>
 :root{
   --bg:#e8f6ff; --card:#ffffff; --pri:#1597e5; --deep:#0b4f86; --soft:#cfeaff;
-  --acc:#00bcd4; --ok:#16a34a; --okbg:#dcfce7; --bad:#dc2626; --badbg:#fee2e2;
+  --ok:#16a34a; --okbg:#dcfce7; --bad:#dc2626; --badbg:#fee2e2;
   --txt:#12324d; --muted:#5b7a93;
 }
 *{box-sizing:border-box}
@@ -22,74 +22,73 @@ h1{font-size:19px;margin:0 0 8px}
 .bar>div{height:100%;width:0;background:linear-gradient(90deg,#fff59d,#b9f6ca);border-radius:10px;transition:width .5s}
 .barinfo{display:flex;justify-content:space-between;font-size:14px;margin-top:5px;font-weight:600}
 nav{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px 4px;max-width:900px;margin:0 auto}
-nav button{border:2px solid var(--pri);background:#fff;color:var(--deep);border-radius:20px;padding:7px 13px;font-size:15px;font-weight:600;cursor:pointer}
+nav button{border:2px solid var(--pri);background:#fff;color:var(--deep);border-radius:20px;padding:7px 12px;font-size:15px;font-weight:600;cursor:pointer}
 nav button.on{background:var(--pri);color:#fff}
 nav button .ck{color:var(--ok)} nav button.on .ck{color:#d9ffe3}
 main{max-width:900px;margin:0 auto;padding:6px 14px 40px}
 .intro{background:#fff;border-radius:14px;padding:12px 14px;margin:8px 0 14px;border:2px solid var(--soft)}
 .intro h2{margin:0 0 4px;font-size:20px;color:var(--deep)}
 .intro p{margin:4px 0;color:var(--muted)}
+.how{background:#fff6cc;border-radius:10px;padding:8px 11px;margin-top:8px;color:#6b5200;font-size:15px}
 .card{background:var(--card);border-radius:14px;padding:12px 14px;margin:0 0 12px;box-shadow:0 2px 8px rgba(21,151,229,.12);border:2px solid transparent}
 .card.done{border-color:#86efac}
 .qhead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .qnum{font-size:13px;color:var(--muted);font-weight:600}
 .badge{font-size:22px;line-height:1}
-.qtext{font-size:17px;font-weight:600;margin:4px 0 10px}
+.qtext{font-size:17px;font-weight:600;margin:4px 0 10px;line-height:1.45}
 .opts{display:flex;flex-wrap:wrap;gap:8px}
 .opt{border:2px solid #9fd3f7;background:#f3faff;color:var(--txt);border-radius:12px;padding:9px 12px;font-size:16px;cursor:pointer;text-align:left}
 .opt:hover:not(:disabled){background:var(--soft)}
 .opt.wrong{border-color:#fca5a5;background:var(--badbg);color:#991b1b;text-decoration:line-through}
 .opt.right{border-color:var(--ok);background:var(--okbg);color:#14532d;font-weight:700}
+.opt.sel{border-color:var(--pri);background:var(--pri);color:#fff}
 .opt:disabled{cursor:default}
-.fb{margin-top:10px;padding:8px 11px;border-radius:10px;font-size:15px;display:none}
-.fb.show{display:block}
+.seg{min-width:48px;text-align:center;font-weight:700}
+.fb{margin-top:10px;padding:8px 11px;border-radius:10px;font-size:15px}
 .fb.ok{background:var(--okbg);color:#14532d}
 .fb.no{background:#fff7e6;color:#7a4b00;border:1px solid #ffd58a}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.row label{font-size:14px;color:var(--muted)}
-select{font-size:18px;padding:6px 8px;border-radius:10px;border:2px solid #9fd3f7;background:#f3faff;min-width:110px;font-family:"Times New Roman",Georgia,serif}
-select.sym{font-style:italic}
-.check{background:var(--pri);color:#fff;border:none;border-radius:12px;padding:9px 16px;font-size:16px;font-weight:700;cursor:pointer}
-.check:disabled{background:#9cc9e8}
-.f{font-family:"Times New Roman",Georgia,serif;font-size:22px;font-style:italic;display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}
-.f .n{font-style:normal}
-.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:19px}
-.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
-.fr span:last-child{padding:0 3px}
-.pics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}
-.pic{background:#fff;border-radius:14px;padding:8px;text-align:center;border:2px solid var(--soft)}
-.pic svg{width:100%;height:auto;display:block}
-.pic b{font-size:14px;color:var(--deep)}
-@media (max-width:560px){.pics{grid-template-columns:1fr}.pic svg{max-width:300px;margin:0 auto}}
-.done-msg{background:linear-gradient(90deg,#dcfce7,#d1f4ff);border-radius:14px;padding:12px 14px;font-weight:700;color:#14532d;margin:6px 0 14px;display:none}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
-.chip{border:2px solid #9fd3f7;background:#f3faff;border-radius:10px;padding:5px 10px;font-size:17px;cursor:pointer;min-width:42px}
-.chip.sel{background:var(--pri);border-color:var(--pri);color:#fff}
-.chip:disabled{cursor:default}
-.lbl{font-size:14px;color:var(--muted);font-weight:600}
-.katex{font-size:1.12em}
-.qtext .katex-display,.qtext .big .katex{font-size:1.45em}
+.check{background:var(--pri);color:#fff;border:none;border-radius:12px;padding:9px 16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px}
+.done-msg{background:linear-gradient(90deg,#dcfce7,#d1f4ff);border-radius:14px;padding:12px 14px;font-weight:700;color:#14532d;margin:6px 0 14px}
+.reset{display:block;margin:20px auto 0;background:#fff;border:2px solid #f3a6a6;color:#b91c1c;border-radius:12px;padding:9px 16px;font-size:15px;cursor:pointer}
+.katex{font-size:1.1em}
+/* gap */
+.gap{display:inline-block;min-width:110px;border-bottom:2.5px dashed var(--pri);color:var(--pri);padding:0 6px;cursor:pointer;text-align:center;background:#eef8ff;border-radius:6px 6px 0 0}
+.gap.filled{border-bottom:2.5px solid var(--ok);color:#14532d;background:var(--okbg);cursor:default}
+.menu{display:flex;flex-direction:column;gap:6px;margin-top:6px;background:#f7fbff;border:2px solid var(--soft);border-radius:12px;padding:8px}
+.menu .opt{width:100%}
+/* trains */
 .train{display:flex;align-items:flex-end;flex-wrap:nowrap;margin-top:4px}
 .train .slot{flex:0 0 auto}.train .coupler{flex:0 0 12px}
 .loco,.slot{position:relative;margin-bottom:14px}
-.loco{background-color:#0b6fc2;color:#fff;border-radius:14px 14px 6px 6px;padding:10px 12px;font-weight:700;font-size:15px;flex:1 1 auto;min-width:0;line-height:1.2;hyphens:auto;overflow:visible}
+.loco{background:#0b6fc2;color:#fff;border-radius:14px 14px 6px 6px;padding:10px 12px;font-weight:700;font-size:15px;flex:1 1 auto;min-width:0;line-height:1.2}
 .loco::before,.loco::after,.slot::before,.slot::after{content:'';position:absolute;bottom:-9px;width:12px;height:12px;border-radius:50%;background:#12324d;border:2px solid #fff}
 .loco::before,.slot::before{left:8px}.loco::after,.slot::after{right:8px}
-.coupler{width:14px;height:4px;background:#12324d;margin:0 0 22px}
-.slot{min-width:66px;min-height:48px;border:2.5px dashed #7cc4f2;border-radius:10px 10px 6px 6px;background-color:#f3faff;display:flex;align-items:center;justify-content:center;font-size:18px;padding:4px 8px;color:var(--muted)}
+.coupler{width:12px;height:4px;background:#12324d;margin:0 0 22px}
+.slot{min-width:66px;min-height:48px;border:2.5px dashed #7cc4f2;border-radius:10px 10px 6px 6px;background:#f3faff;display:flex;align-items:center;justify-content:center;font-size:18px;padding:4px 8px;color:var(--muted)}
 .slot.off{opacity:.45}
-.slot.filled{border-style:solid;border-color:var(--ok);background-color:var(--okbg);color:#14532d}
-.slot.hot{background-color:var(--soft);border-color:var(--pri)}
-.slot.flash{animation:shake .45s;border-color:var(--bad);background-color:var(--badbg)}
+.slot.filled{border-style:solid;border-color:var(--ok);background:var(--okbg);color:#14532d}
+.hot{background:var(--soft)!important;border-color:var(--pri)!important}
+.flash{animation:shake .45s;border-color:var(--bad)!important;background:var(--badbg)!important}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* pool */
 .pool{position:sticky;bottom:0;z-index:6;background:#fff;border-top:3px solid var(--soft);box-shadow:0 -4px 12px rgba(11,79,134,.12);padding:8px 12px 10px;margin:12px -14px 0;border-radius:14px 14px 0 0}
-.pool .lbl{margin:2px 0}
+.lbl{font-size:14px;color:var(--muted);font-weight:600;margin:2px 0}
 .prow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
 .tk{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff6cc;border:2px solid #f2c94c;border-radius:9px;padding:4px 10px;font-size:17px;cursor:grab;min-width:40px;text-align:center}
 .tk.sel{outline:3px solid var(--pri);background:#e0f2ff}
-.ghost{position:fixed;pointer-events:none;z-index:100;transform:translate(-50%,-60%) scale(1.12);box-shadow:0 6px 16px rgba(0,0,0,.25)}
-.how{background:#fff6cc;border-radius:10px;padding:8px 11px;margin-top:8px;color:#6b5200;font-size:15px}
-.reset{display:block;margin:20px auto 0;background:#fff;border:2px solid #f3a6a6;color:#b91c1c;border-radius:12px;padding:9px 16px;font-size:15px;cursor:pointer}
+.ghost{position:fixed;pointer-events:none;z-index:100;transform:translate(-50%,-60%) scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,.25)}
+/* zones (block 2) */
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.zone{border:2.5px dashed #7cc4f2;border-radius:12px;background:#fff;min-height:200px;padding:6px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.zone svg{width:100%;height:auto;pointer-events:none}
+.zone.all{grid-column:1/-1;min-height:64px;flex-direction:row;flex-wrap:wrap;justify-content:center}
+.zone.all .zt{width:100%;text-align:center;font-weight:700;color:var(--deep)}
+.placed{background:var(--okbg);border:2px solid #86efac;border-radius:8px;padding:3px 6px;font-size:14px;max-width:100%;overflow-x:auto}
+.pool .tk.f{font-size:15px;padding:4px 8px}
+/* pictures */
+.pic{background:#fff;border-radius:14px;padding:8px;border:2px solid var(--soft);margin-bottom:12px}
+.pic svg{width:100%;height:auto;display:block;max-width:560px;margin:0 auto}
+.lock{color:var(--muted);font-size:15px;text-align:center;padding:6px}
 </style>
 </head>
 <body>
@@ -100,108 +99,169 @@ select.sym{font-style:italic}
 </header>
 <nav id="menu"></nav>
 <main id="main"></main>
-
 <script>
-const KEY = 'em_induction_1_v3';
-function mathEl(el){if(window.renderMathInElement)renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});}
-function mathAll(){const m=document.getElementById('main');if(m)mathEl(m);}
+const KEY='em_induction_1_v4';
+function mathEl(el){if(el&&window.renderMathInElement)renderMathInElement(el,{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});}
 
-/* ---------- SVG-рисунки для блока «Формулы» ---------- */
-const PIC_COIL = `<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+/* ================= Рисунки ================= */
+const PIC_COIL=`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
   <line x1="20" y1="100" x2="45" y2="100" stroke="#12324d" stroke-width="2.5"/>
-  ${[0,1,2,3,4,5].map(i=>`<ellipse cx="${55+i*20}" cy="65" rx="10" ry="35" fill="none" stroke="#b45309" stroke-width="3"/>`).join('')}
+  ${[0,1,2,3,4,5].map(i=>`<ellipse cx="${55+i*20}" cy="62" rx="10" ry="35" fill="none" stroke="#b45309" stroke-width="3"/>`).join('')}
   <line x1="155" y1="100" x2="180" y2="100" stroke="#12324d" stroke-width="2.5"/>
-  <line x1="45" y1="100" x2="45" y2="92" stroke="#12324d" stroke-width="2.5"/>
-  <line x1="155" y1="100" x2="155" y2="92" stroke="#12324d" stroke-width="2.5"/>
+  <line x1="45" y1="100" x2="45" y2="90" stroke="#12324d" stroke-width="2.5"/>
+  <line x1="155" y1="100" x2="155" y2="90" stroke="#12324d" stroke-width="2.5"/>
   <line x1="22" y1="118" x2="58" y2="118" stroke="#16a34a" stroke-width="3"/>
   <polygon points="58,112 70,118 58,124" fill="#16a34a"/>
-  <text x="78" y="124" font-size="16" font-style="italic" fill="#16a34a" font-family="Times New Roman">I</text>
-  <text x="102" y="20" font-size="18" font-style="italic" fill="#12324d" font-family="Times New Roman">L</text>
 </svg>`;
-const PIC_FRAME = `<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="ab" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1597e5"/></marker></defs>
+const PIC_FRAME=`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="mab" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1597e5"/></marker></defs>
   <polygon points="85,22 125,40 125,118 85,100" fill="rgba(0,188,212,.18)" stroke="#12324d" stroke-width="3"/>
-  ${[30,50,70,90,110].map(y=>`<line x1="10" y1="${y}" x2="188" y2="${y}" stroke="#1597e5" stroke-width="2" marker-end="url(#ab)"/>`).join('')}
-  <text x="168" y="22" font-size="18" font-weight="bold" font-style="italic" fill="#1597e5" font-family="Times New Roman">B</text>
-  <text x="97" y="76" font-size="18" font-style="italic" fill="#12324d" font-family="Times New Roman">S</text>
+  ${[30,50,70,90,110].map(y=>`<line x1="10" y1="${y}" x2="188" y2="${y}" stroke="#1597e5" stroke-width="2" marker-end="url(#mab)"/>`).join('')}
 </svg>`;
-const PIC_ROD = `<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="av" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker></defs>
+const PIC_ROD=`<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="mav" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker></defs>
   ${[35,65,95].flatMap(y=>[20,45,70,166,189].map(x=>`<g stroke="#1597e5" stroke-width="2"><line x1="${x-5}" y1="${y-5}" x2="${x+5}" y2="${y+5}"/><line x1="${x-5}" y1="${y+5}" x2="${x+5}" y2="${y-5}"/></g>`)).join('')}
   <line x1="5" y1="15" x2="195" y2="15" stroke="#12324d" stroke-width="3"/>
   <line x1="5" y1="115" x2="195" y2="115" stroke="#12324d" stroke-width="3"/>
   <rect x="108" y="10" width="10" height="110" rx="3" fill="#b45309"/>
-  <line x1="122" y1="65" x2="150" y2="65" stroke="#ea580c" stroke-width="3.5" marker-end="url(#av)"/>
-  <text x="131" y="55" font-size="18" font-style="italic" fill="#ea580c" font-family="Times New Roman">v</text>
-  <text x="93" y="70" font-size="18" font-style="italic" fill="#12324d" font-family="Times New Roman">l</text>
-  <text x="10" y="128" font-size="15" font-style="italic" font-weight="bold" fill="#1597e5" font-family="Times New Roman">B</text>
+  <line x1="122" y1="65" x2="150" y2="65" stroke="#ea580c" stroke-width="3.5" marker-end="url(#mav)"/>
 </svg>`;
 
-/* ---------- Данные ---------- */
-const fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
-const E=(s)=>`ℰ<sub>${s}</sub>`;
+const ARR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="${c}"/></marker>`;
+const T=(x,y,txt,c,sz=16,extra='')=>`<text x="${x}" y="${y}" font-size="${sz}" fill="${c}" font-family="Times New Roman,serif" font-style="italic" ${extra}>${txt}</text>`;
 
-const SYMS=['B','\\Phi','S','\\mathcal{E}_i','\\mathcal{E}_{si}','L','I','W_{\\text{м}}','v','l'];
-const UNITS=['Тл','Вб','м²','В','Гн','А','Дж','м/с','м','Н','Вт','Кл'];
+/* Кольцо и магнит: n — сколько шагов алгоритма уже пройдено */
+function PIC_RING(n){
+  return `<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg">
+  <defs>${ARR('rb','#1597e5')}${ARR('rv','#ea580c')}${ARR('ri','#7c3aed')}${ARR('rg','#16a34a')}</defs>
+  <rect x="20" y="82" width="70" height="40" fill="#dc2626" rx="3"/>
+  <rect x="90" y="82" width="70" height="40" fill="#2563eb" rx="3"/>
+  <text x="48" y="109" font-size="20" font-weight="bold" fill="#fff" font-family="Arial">S</text>
+  <text x="117" y="109" font-size="20" font-weight="bold" fill="#fff" font-family="Arial">N</text>
+  <line x1="60" y1="66" x2="128" y2="66" stroke="#ea580c" stroke-width="3.5" marker-end="url(#rv)"/>
+  ${T(82,58,'v⃗','#ea580c',18)}
+  ${n>=1?`<g>${[86,102,118].map(y=>`<line x1="166" y1="${y}" x2="350" y2="${y}" stroke="#1597e5" stroke-width="2.2" ${y===102?'stroke-dasharray="0"':''} marker-end="url(#rb)"/>`).join('')}${T(352,84,'B⃗','#1597e5',19,'font-weight="bold"')}</g>`:''}
+  <path d="M262,40 A24,62 0 0,0 262,164" fill="none" stroke="#b45309" stroke-width="7" opacity=".55"/>
+  ${n>=3?`<g><line x1="300" y1="140" x2="222" y2="140" stroke="#7c3aed" stroke-width="3.5" stroke-dasharray="7 4" marker-end="url(#ri)"/>${T(304,146,'B⃗<tspan font-size="12" dy="4">инд</tspan>','#7c3aed',18)}</g>`:''}
+  <path d="M262,40 A24,62 0 0,1 262,164" fill="none" stroke="#b45309" stroke-width="7"/>
+  ${n>=2?`<g><rect x="186" y="12" width="150" height="24" rx="8" fill="#fff6cc"/><text x="195" y="29" font-size="15" fill="#6b5200" font-family="Arial">Φ растёт ↑</text></g>`:''}
+  ${n>=4?`<g><line x1="287" y1="122" x2="287" y2="80" stroke="#16a34a" stroke-width="3.5" marker-end="url(#rg)"/>${T(294,108,'I','#16a34a',20,'font-weight="bold"')}
+     <line x1="238" y1="80" x2="238" y2="122" stroke="#16a34a" stroke-width="3" opacity=".6" marker-end="url(#rg)"/></g>`:''}
+  </svg>`;
+}
 
+/* Рельсы и перемычка */
+function PIC_RAILS(n){
+  const cross=(x,y)=>`<g stroke="#1597e5" stroke-width="2.2"><line x1="${x-6}" y1="${y-6}" x2="${x+6}" y2="${y+6}"/><line x1="${x-6}" y1="${y+6}" x2="${x+6}" y2="${y-6}"/></g>`;
+  const dot=(x,y)=>`<g><circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#7c3aed" stroke-width="2.5"/><circle cx="${x}" cy="${y}" r="3" fill="#7c3aed"/></g>`;
+  return `<svg viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>${ARR('pv','#ea580c')}${ARR('pg','#16a34a')}</defs>
+  ${n>=2?`<rect x="40" y="40" width="200" height="140" fill="rgba(255,214,0,.18)"/>`:''}
+  ${[70,105,140].flatMap(y=>[70,110,150,190,290,330].map(x=>cross(x,y))).join('')}
+  ${T(345,32,'B⃗','#1597e5',19,'font-weight="bold"')}
+  <line x1="40" y1="40" x2="360" y2="40" stroke="#12324d" stroke-width="4"/>
+  <line x1="40" y1="180" x2="360" y2="180" stroke="#12324d" stroke-width="4"/>
+  <line x1="40" y1="40" x2="40" y2="88" stroke="#12324d" stroke-width="4"/>
+  <line x1="40" y1="132" x2="40" y2="180" stroke="#12324d" stroke-width="4"/>
+  <rect x="30" y="88" width="20" height="44" fill="#fff" stroke="#12324d" stroke-width="3"/>
+  <text x="8" y="115" font-size="15" fill="#12324d" font-family="Times New Roman" font-style="italic">R</text>
+  <rect x="234" y="30" width="12" height="160" rx="3" fill="#b45309"/>
+  <line x1="252" y1="200" x2="300" y2="200" stroke="#ea580c" stroke-width="3.5" marker-end="url(#pv)"/>
+  ${T(270,196,'v⃗','#ea580c',18)}
+  ${n>=1?`<g><rect x="250" y="6" width="88" height="22" rx="7" fill="#e0f2ff"/><text x="257" y="22" font-size="14" fill="#0b4f86" font-family="Arial">⊗ от нас</text></g>`:''}
+  ${n>=2?`<g><rect x="60" y="6" width="150" height="22" rx="7" fill="#fff6cc"/><text x="68" y="22" font-size="14" fill="#6b5200" font-family="Arial">S растёт → Φ растёт</text></g>`:''}
+  ${n>=3?`<g>${dot(90,88)}${dot(170,88)}${dot(90,122)}${dot(170,122)}${T(116,127,'B⃗<tspan font-size="12" dy="4">инд</tspan>','#7c3aed',18)}</g>`:''}
+  ${n>=4?`<g stroke="#16a34a" stroke-width="3.5"><line x1="226" y1="140" x2="226" y2="80" marker-end="url(#pg)"/><line x1="180" y1="52" x2="110" y2="52" marker-end="url(#pg)"/><line x1="57" y1="66" x2="57" y2="154" marker-end="url(#pg)"/><line x1="110" y1="168" x2="180" y2="168" marker-end="url(#pg)"/></g>${T(208,118,'I','#16a34a',20,'font-weight="bold"')}`:''}
+  </svg>`;
+}
+
+/* Графики */
+function GRAPH(o){
+  const x0=48,x1=362,y0=24,y1=214,sx=(x1-x0)/o.tmax,sy=(y1-y0)/(o.ymax-o.ymin);
+  const X=t=>x0+t*sx, Y=v=>y1-(v-o.ymin)*sy;
+  let g='';
+  for(let t=0;t<=o.tmax;t++)g+=`<line x1="${X(t)}" y1="${y0}" x2="${X(t)}" y2="${y1}" stroke="#d6e9f8" stroke-width="1"/><text x="${X(t)}" y="${y1+16}" font-size="12" text-anchor="middle" fill="#5b7a93" font-family="Arial">${t}</text>`;
+  for(let v=o.ymin;v<=o.ymax;v++)g+=`<line x1="${x0}" y1="${Y(v)}" x2="${x1}" y2="${Y(v)}" stroke="#d6e9f8" stroke-width="1"/><text x="${x0-7}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="#5b7a93" font-family="Arial">${v}</text>`;
+  g+=`<line x1="${x0}" y1="${Y(0)}" x2="${x1+8}" y2="${Y(0)}" stroke="#12324d" stroke-width="1.8"/><line x1="${x0}" y1="${y1}" x2="${x0}" y2="${y0-10}" stroke="#12324d" stroke-width="1.8"/>`;
+  g+=`<text x="${x1+6}" y="${Y(0)-6}" font-size="14" fill="#12324d" font-family="Times New Roman" font-style="italic">t, с</text>`;
+  g+=`<text x="${x0+6}" y="${y0-8}" font-size="14" fill="#12324d" font-family="Times New Roman" font-style="italic">${o.ylab}</text>`;
+  g+=`<polyline points="${o.pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="${o.color}" stroke-width="3.5" stroke-linejoin="round"/>`;
+  for(let i=0;i<o.pts.length-1;i++){
+    const a=o.pts[i],b=o.pts[i+1],mx=(X(a[0])+X(b[0]))/2,my=(Y(a[1])+Y(b[1]))/2;
+    const dy=o.lab&&o.lab[i]==='d'?18:-17;
+    g+=`<circle cx="${mx}" cy="${my+dy}" r="10" fill="#fff" stroke="${o.color}" stroke-width="2"/><text x="${mx}" y="${my+dy+5}" font-size="13" font-weight="bold" text-anchor="middle" fill="#12324d" font-family="Arial">${i+1}</text>`;
+  }
+  return `<svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+}
+const G_B=GRAPH({pts:[[0,0],[2,4],[3,4],[4,-2],[6,-2],[8,0]],tmax:8,ymin:-3,ymax:5,ylab:'B, мТл',color:'#1597e5',lab:['u','u','u','d','u']});
+const G_I=GRAPH({pts:[[0,0],[1,3],[3,3],[7,-1],[8,-1],[9,1]],tmax:9,ymin:-2,ymax:4,ylab:'I, А',color:'#16a34a',lab:['u','u','u','d','d']});
+
+/* ================= Данные ================= */
+const SEG=[1,2,3,4,5];
 const BLOCKS=[
-{id:'b1',tab:'📏 Величины',title:'Блок 1. Величины и единицы',
- intro:'Собери паровозик: к каждой величине прицепи два вагончика — сначала её обозначение, потом единицу измерения в СИ.',how:'👆 Как играть: перетащи карточку из нижней панели в пустой вагончик. Можно и проще: нажми на карточку, потом на вагончик. Неверная карточка вернётся на место. Каждая карточка нужна только один раз, а несколько карточек — лишние.',
+{id:'b1',tab:'📏 Величины',kind:'train',title:'Блок 1. Величины и единицы',
+ intro:'Собери паровозик: к каждой величине прицепи два вагончика — сначала её обозначение, потом единицу измерения в СИ.',
+ how:'👆 Как играть: перетащи карточку из нижней панели в пустой вагончик. Можно и проще: нажми на карточку, потом на вагончик. Неверная карточка вернётся на место. Каждая карточка нужна только один раз, а несколько карточек — лишние.',
  tasks:[
-  {id:'q_B',type:'pair',name:'Магнитная индукция',sym:'B',unit:'Тл',hint:'Единица названа в честь Николы Теслы. Обозначение — та же буква, что у вектора поля на рисунках.'},
-  {id:'q_F',type:'pair',name:'Магнитный поток',sym:'\\Phi',unit:'Вб',hint:'Греческая буква «фи». Единица — в честь Вильгельма Вебера: 1 … = 1 Тл·м², ведь $\\Phi=BS\\sin\\alpha$.'},
-  {id:'q_S',type:'pair',name:'Площадь контура',sym:'S',unit:'м²',hint:'Площадь в СИ измеряется в квадратных метрах.'},
-  {id:'q_Ei',type:'pair',name:'ЭДС индукции',sym:'\\mathcal{E}_i',unit:'В',hint:'ЭДС измеряется в тех же единицах, что и напряжение. Индекс i — от слова induction.'},
-  {id:'q_Esi',type:'pair',name:'ЭДС самоиндукции',sym:'\\mathcal{E}_{si}',unit:'В',hint:'Индекс si — self-induction. Единица — как у напряжения.'},
-  {id:'q_L',type:'pair',name:'Индуктивность',sym:'L',unit:'Гн',hint:'Единица названа в честь Джозефа Генри. Из $L=\\Phi/I$: 1 Вб/А.'},
-  {id:'q_I',type:'pair',name:'Сила тока',sym:'I',unit:'А',hint:'Единица — в честь Андре-Мари Ампера.'},
-  {id:'q_W',type:'pair',name:'Энергия магнитного поля катушки',sym:'W_{\\text{м}}',unit:'Дж',hint:'Любая энергия в СИ измеряется в джоулях. Индекс «м» — магнитная.'},
-  {id:'q_v',type:'pair',name:'Скорость проводника',sym:'v',unit:'м/с',hint:'Скорость — путь, делённый на время.'},
-  {id:'q_l',type:'pair',name:'Длина проводника',sym:'l',unit:'м',hint:'Длина обозначается маленькой латинской «эль».'},
+  {id:'q_B',type:'train',name:'Магнитная индукция',sym:'B',unit:'Тл',hint:'Единица названа в честь Николы Теслы. Обозначение — та же буква, что у вектора поля на рисунках.'},
+  {id:'q_F',type:'train',name:'Магнитный поток',sym:'\\Phi',unit:'Вб',hint:'Греческая буква «фи». Единица — в честь Вильгельма Вебера: 1 … = 1 Тл·м², ведь $\\Phi=BS\\sin\\alpha$.'},
+  {id:'q_S',type:'train',name:'Площадь контура',sym:'S',unit:'м²',hint:'Площадь в СИ измеряется в квадратных метрах.'},
+  {id:'q_Ei',type:'train',name:'ЭДС индукции',sym:'\\mathcal{E}_i',unit:'В',hint:'ЭДС измеряется в тех же единицах, что и напряжение. Индекс i — от слова induction.'},
+  {id:'q_Esi',type:'train',name:'ЭДС самоиндукции',sym:'\\mathcal{E}_{si}',unit:'В',hint:'Индекс si — self-induction. Единица — как у напряжения.'},
+  {id:'q_L',type:'train',name:'Индуктивность',sym:'L',unit:'Гн',hint:'Единица названа в честь Джозефа Генри. Из $L=\\Phi/I$: 1 Вб/А.'},
+  {id:'q_I',type:'train',name:'Сила тока',sym:'I',unit:'А',hint:'Единица — в честь Андре-Мари Ампера.'},
+  {id:'q_W',type:'train',name:'Энергия магнитного поля катушки',sym:'W_{\\text{м}}',unit:'Дж',hint:'Любая энергия в СИ измеряется в джоулях. Индекс «м» — магнитная.'},
+  {id:'q_v',type:'train',name:'Скорость проводника',sym:'v',unit:'м/с',hint:'Скорость — путь, делённый на время.'},
+  {id:'q_l',type:'train',name:'Длина проводника',sym:'l',unit:'м',hint:'Длина обозначается маленькой латинской «эль».'},
  ]},
-{id:'b2',tab:'🧩 Формулы',title:'Блок 2. Формулы по сценариям',
- intro:'Посмотри на три ситуации и определи, к какой относится каждая формула. Если формула работает во всех трёх — выбирай «Подходит ко всем». $\\alpha$ в формуле потока — угол между вектором $\\vec B$ и плоскостью рамки.',
- pics:true,
+{id:'b2',tab:'🧩 Формулы',kind:'zones',title:'Блок 2. Формулы по рисункам',
+ intro:'Перетащи каждую формулу к рисунку, к которому она относится. Если формула работает во всех трёх случаях — в нижнюю зону. $\\alpha$ в формуле потока — угол между вектором $\\vec B$ и плоскостью рамки.',
+ how:'👆 Перетащи формулу из нижней панели на рисунок — или нажми на формулу, потом на рисунок.',
  tasks:[
-  {id:'f1',type:'cat',f:String.raw`$L=\dfrac{\Phi}{I}$`,ans:'coil',hint:'Здесь отношение потока к силе тока в самой катушке.'},
-  {id:'f2',type:'cat',f:String.raw`$W_{\text{м}}=\dfrac{LI^2}{2}$`,ans:'coil',hint:'В формуле есть индуктивность L — она есть только у одного из трёх рисунков.'},
-  {id:'f3',type:'cat',f:String.raw`$\mathcal{E}_{si}=-L\dfrac{\Delta I}{\Delta t}$`,ans:'coil',hint:'Самоиндукция возникает, когда меняется ток в самом контуре. Где у нас ток I и индуктивность L?'},
-  {id:'f4',type:'cat',f:String.raw`$\Phi=BS\sin\alpha$`,ans:'frame',hint:'Поток считают через площадь S, которую пронизывают линии B. Где на рисунках есть площадь S?'},
-  {id:'f5',type:'cat',f:String.raw`$\mathcal{E}_i=Bvl\sin\alpha$`,ans:'rod',hint:'В формуле есть скорость v и длина l. На каком рисунке что-то движется?'},
-  {id:'f6',type:'cat',f:String.raw`$|\mathcal{E}_i|=\dfrac{\Delta B\cdot S}{\Delta t}$`,ans:'frame',hint:'Меняется индукция B, а площадь S постоянна. Где есть площадь, через которую идёт поток?'},
-  {id:'f7',type:'cat',f:String.raw`$|\mathcal{E}_i|=\dfrac{B\cdot\Delta S}{\Delta t}$`,ans:'frame',hint:'Меняется площадь S контура, через который проходит поток, — это всё ещё поток через рамку.'},
-  {id:'f8',type:'cat',f:String.raw`$\mathcal{E}_i=-\dfrac{\Delta\Phi}{\Delta t}$`,ans:'all',hint:'Это закон электромагнитной индукции. В каждом из трёх случаев меняется магнитный поток.'},
-  {id:'f9',type:'cat',f:String.raw`$I_i=\dfrac{\mathcal{E}_i}{R}$`,ans:'all',hint:'Это закон Ома для индукционного тока. Сопротивление R есть у любого контура.'},
+  {id:'f1',type:'fcat',f:'L=\\dfrac{\\Phi}{I}',ans:'coil',hint:'Здесь отношение потока к силе тока в самом проводнике. Где течёт ток, создающий собственное поле?'},
+  {id:'f2',type:'fcat',f:'W_{\\text{м}}=\\dfrac{LI^2}{2}',ans:'coil',hint:'В формуле есть индуктивность $L$. Какой элемент цепи ею обладает?'},
+  {id:'f3',type:'fcat',f:'\\mathcal{E}_{si}=-L\\dfrac{\\Delta I}{\\Delta t}',ans:'coil',hint:'Самоиндукция возникает, когда меняется ток в самом элементе. Где у нас свой ток?'},
+  {id:'f4',type:'fcat',f:'\\Phi=BS\\sin\\alpha',ans:'frame',hint:'Поток считают через площадь, которую пронизывают линии поля. На каком рисунке линии проходят сквозь площадку?'},
+  {id:'f5',type:'fcat',f:'\\mathcal{E}_i=Bvl\\sin\\alpha',ans:'rod',hint:'В формуле есть скорость $v$. На каком рисунке что-то движется?'},
+  {id:'f6',type:'fcat',f:'|\\mathcal{E}_i|=\\dfrac{\\Delta B\\cdot S}{\\Delta t}',ans:'frame',hint:'Меняется индукция $B$, а площадь $S$ постоянна. Где есть площадка, через которую идёт поток?'},
+  {id:'f7',type:'fcat',f:'|\\mathcal{E}_i|=\\dfrac{B\\cdot\\Delta S}{\\Delta t}',ans:'frame',hint:'Меняется площадь $S$, через которую проходит поток, — это всё ещё поток через рамку.'},
+  {id:'f8',type:'fcat',f:'\\mathcal{E}_i=-\\dfrac{\\Delta\\Phi}{\\Delta t}',ans:'all',hint:'Это закон электромагнитной индукции. В каждом из трёх случаев меняется магнитный поток.'},
+  {id:'f9',type:'fcat',f:'I_i=\\dfrac{\\mathcal{E}_i}{R}',ans:'all',hint:'Это закон Ома для индукционного тока. Сопротивление $R$ есть у любого проводника.'},
  ]},
-{id:'b3',tab:'📖 Определения',title:'Блок 3. Определения',
- intro:'Прочитай определение и выбери, о чём оно.',
+{id:'b3',tab:'📖 Определения',kind:'cards',title:'Блок 3. Определения',
+ intro:'Нажми на пропуск и выбери из списка подходящее слово.',
  tasks:[
-  {id:'d1',type:'choice',q:'Величина, численно равная магнитному потоку через катушку при силе тока в ней 1 А, — это…',
-   opts:['индуктивность','магнитный поток','магнитная индукция','ЭДС самоиндукции','энергия магнитного поля','сила тока'],ans:0,
+  {id:'d1',type:'gap',q:'Величина, численно равная магнитному потоку через катушку при силе тока в ней 1 А, называется ___.',
+   opts:['индуктивностью','магнитным потоком','магнитной индукцией','ЭДС самоиндукции','энергией магнитного поля','электроёмкостью'],ans:0,
    hint:'Вспомни формулу $L=\\dfrac{\\Phi}{I}$ и подставь $I=1$ А.'},
-  {id:'d2',type:'choice',q:'Величина, пропорциональная числу линий магнитной индукции, пронизывающих контур, — это…',
-   opts:['магнитный поток','магнитная индукция','индуктивность','ЭДС индукции','площадь контура','вихревое поле'],ans:0,
-   hint:'Речь о линиях, которые проходят сквозь площадь контура. Какая величина зависит и от B, и от S?'},
-  {id:'d3',type:'choice',q:'Энергия, запасённая в магнитном поле катушки с током, — это…',
-   opts:['энергия магнитного поля','индуктивность','ЭДС самоиндукции','работа силы Ампера','кинетическая энергия электронов','магнитный поток'],ans:0,
-   hint:'Её считают по формуле $\\dfrac{LI^2}{2}$.'},
-  {id:'d4',type:'choice',q:'ЭДС, возникающая в катушке при изменении силы тока, проходящего через неё саму, — это…',
-   opts:['ЭДС самоиндукции','ЭДС индукции в движущемся проводнике','напряжение источника','индуктивность','магнитный поток','сила Ампера'],ans:0,
-   hint:'Ток меняется в самой катушке — значит, катушка «индуцирует» ЭДС сама в себе.'},
-  {id:'d5',type:'choice',q:'Явление возникновения тока в замкнутом контуре при изменении магнитного потока через него — это…',
-   opts:['электромагнитная индукция','самоиндукция','электризация','намагничивание','сверхпроводимость','электролиз'],ans:0,
-   hint:'Самоиндукция — лишь частный случай. Как называется общее явление, открытое Фарадеем?'},
-  {id:'d6',type:'choice',q:'Направление индукционного тока определяют по…',
+  {id:'d2',type:'gap',q:'Величина, пропорциональная числу линий магнитной индукции, пронизывающих контур, называется ___.',
+   opts:['магнитным потоком','магнитной индукцией','электромагнитной индукцией','индуктивностью','ЭДС индукции','напряжённостью поля'],ans:0,
+   hint:'Речь о линиях, которые проходят сквозь площадь контура. Какая величина зависит и от $B$, и от $S$?',
+   oh:{1:'Магнитная индукция $B$ показывает силу поля в точке, а площадь контура в ней не участвует.',2:'Электромагнитная индукция — это явление, а не величина.'}},
+  {id:'d3',type:'gap',q:'Энергия, запасённая в катушке с током, — это ___.',
+   opts:['энергия магнитного поля','энергия электрического поля','энергия гравитационного поля','кинетическая энергия электронов','внутренняя энергия провода','энергия упругой деформации витков'],ans:0,
+   hint:'Её считают по формуле $W=\\dfrac{LI^2}{2}$. Какое поле создаёт ток в катушке?',
+   oh:{1:'Электрическое поле запасает конденсатор. А ток в катушке создаёт другое поле.',3:'Электроны движутся очень медленно, их кинетическая энергия ничтожна. Энергия хранится в поле.'}},
+  {id:'d4',type:'gap',q:'ЭДС, возникающая в катушке при изменении силы тока в ней самой, называется ___.',
+   opts:['ЭДС самоиндукции','ЭДС индукции в движущемся проводнике','ЭДС батарейки','напряжением источника','индуктивностью','магнитной индукцией'],ans:0,
+   hint:'Ток меняется в самой катушке — значит, катушка создаёт ЭДС сама в себе.',
+   oh:{2:'ЭДС батарейки создаётся химическими процессами внутри источника, а не изменением тока в катушке.',5:'Магнитная индукция $B$ — это характеристика поля в теслах, а не ЭДС.'}},
+  {id:'d5',type:'gap',q:'Явление возникновения тока в замкнутом контуре при изменении магнитного потока через него называется ___.',
+   opts:['электромагнитной индукцией','магнитной индукцией','самоиндукцией','электризацией','намагничиванием','индуктивностью'],ans:0,
+   hint:'Самоиндукция — лишь частный случай. Как называется общее явление, открытое Фарадеем?',
+   oh:{1:'Осторожно! Магнитная индукция $B$ — это величина (характеристика поля, в теслах), а не явление. Не путай с электромагнитной индукцией.',5:'Индуктивность — это величина, а здесь спрашивают про явление.'}},
+  {id:'d6',type:'gap',q:'Направление индукционного тока определяют по ___.',
    opts:['правилу Ленца','правилу буравчика','правилу левой руки','закону Ома','закону Кулона','закону Фарадея'],ans:0,
    hint:'Буравчик даёт направление поля тока, левая рука — направление силы. Нужно правило именно для индукционного тока.'},
-  {id:'d7',type:'choice',q:'Суть правила Ленца: индукционный ток своим магнитным полем…',
+  {id:'d7',type:'gap',q:'Индукционный ток своим магнитным полем ___.',
    opts:['противодействует изменению магнитного потока, которым он вызван','всегда направлен против внешнего магнитного поля','всегда совпадает по направлению с внешним полем','усиливает изменение магнитного потока','уничтожает внешнее магнитное поле','всегда течёт по часовой стрелке'],ans:0,
    hint:'Ток «мешает» не самому полю, а его изменению. Если поток растёт — ток его ослабляет, если убывает — поддерживает.'},
-  {id:'d8',type:'choice',q:'Возникновение ЭДС в катушке из-за изменения тока в ней самой называется…',
-   opts:['самоиндукция','взаимная индукция','электромагнитная индукция в движущемся проводнике','сила Лоренца','индуктивность','резонанс'],ans:0,
-   hint:'Вопрос о явлении, а не о величине. Приставка «само-» подсказывает, где меняется ток.'},
+  {id:'d8',type:'gap',q:'Возникновение ЭДС в катушке из-за изменения силы тока в ней самой называется ___.',
+   opts:['самоиндукцией','взаимной индукцией','магнитной индукцией','ЭДС батарейки','индуктивностью','электризацией','сверхпроводимостью'],ans:0,
+   hint:'Вопрос о явлении, а не о величине. Приставка «само-» подсказывает, где меняется ток.',
+   oh:{2:'Магнитная индукция $B$ — это характеристика поля, а не явление.',3:'ЭДС батарейки возникает из-за химических реакций, а не из-за изменения тока в катушке.'}},
  ]},
-{id:'b4',tab:'🔗 Причины',title:'Блок 4. Что чем вызвано',
+{id:'b4',tab:'🔗 Причины',kind:'cards',title:'Блок 4. Что чем вызвано',
  intro:'Выбери, что продолжает утверждение. Варианты похожи — читай внимательно!',
  tasks:[
   {id:'c1',type:'choice',q:'Индукционный ток в замкнутом контуре возникает благодаря…',
@@ -226,182 +286,278 @@ const BLOCKS=[
    opts:['не возникает','максимален','направлен против поля','равен Φ/R','течёт по часовой стрелке','быстро нарастает'],ans:0,
    hint:'Вспомни закон $\\mathcal{E}_i=-\\dfrac{\\Delta\\Phi}{\\Delta t}$. Чему равно $\\Delta\\Phi$, если поток не меняется?'},
  ]},
+{id:'b5',tab:'🧲 Ленц: кольцо',kind:'steps',pic:PIC_RING,title:'Блок 5. Правило Ленца: магнит и кольцо',
+ intro:'Магнит вдвигают северным полюсом в металлическое кольцо. Определи направление индукционного тока по алгоритму — шаг за шагом. Рисунок будет дополняться после каждого верного шага.',
+ tasks:[
+  {id:'r1',type:'step',q:'Шаг 1. Куда направлены линии магнитного поля магнита внутри кольца?',
+   opts:['→ вправо, от магнита','← влево, к магниту','↑ вверх','↓ вниз'],ans:0,
+   hint:'Линии магнитного поля выходят из северного полюса (N, синий) и входят в южный (S, красный).'},
+  {id:'r2',type:'step',q:'Шаг 2. Магнит приближается. Как меняется магнитный поток через кольцо?',
+   opts:['увеличивается','уменьшается','не меняется'],ans:0,
+   hint:'Чем ближе магнит, тем сильнее его поле внутри кольца.'},
+  {id:'r3',type:'step',q:'Шаг 3. Куда направлено магнитное поле индукционного тока внутри кольца?',
+   opts:['← влево, против поля магнита','→ вправо, как поле магнита','↑ вверх','↓ вниз'],ans:0,
+   hint:'Правило Ленца: поток растёт — поле индукционного тока направлено против внешнего поля, чтобы помешать росту.'},
+  {id:'r4',type:'step',q:'Шаг 4. По правилу правой руки определи, как течёт ток в кольце, если смотреть со стороны магнита.',
+   opts:['против часовой стрелки','по часовой стрелке','тока нет'],ans:0,
+   hint:'Направь большой палец правой руки по $\\vec B_{\\text{инд}}$ — к магниту, то есть на себя, если ты смотришь со стороны магнита. Куда загибаются остальные пальцы?'},
+ ]},
+{id:'b6',tab:'🛤️ Ленц: перемычка',kind:'steps',pic:PIC_RAILS,title:'Блок 6. Правило Ленца: перемычка на рельсах',
+ intro:'Перемычка скользит по рельсам вправо в однородном магнитном поле. Слева рельсы замкнуты через резистор. Определи направление индукционного тока по тем же шагам.',
+ tasks:[
+  {id:'p1',type:'step',q:'Шаг 1. Как направлено внешнее магнитное поле?',
+   opts:['от нас, перпендикулярно рисунку ⊗','к нам, перпендикулярно рисунку ⊙','вправо, вдоль рельсов','вверх, вдоль перемычки'],ans:0,
+   hint:'Крестик ⊗ — это «хвост» стрелы, улетающей от нас. Точка ⊙ — её наконечник, летящий на нас.'},
+  {id:'p2',type:'step',q:'Шаг 2. Перемычка едет вправо. Как меняется магнитный поток через контур (резистор — рельсы — перемычка)?',
+   opts:['увеличивается','уменьшается','не меняется'],ans:0,
+   hint:'Поле не меняется, но посмотри на площадь контура, когда перемычка уезжает от резистора.'},
+  {id:'p3',type:'step',q:'Шаг 3. Как направлено магнитное поле индукционного тока внутри контура?',
+   opts:['к нам ⊙, против внешнего поля','от нас ⊗, как внешнее поле','вправо','влево'],ans:0,
+   hint:'Поток растёт — значит, поле индукционного тока направлено против внешнего.'},
+  {id:'p4',type:'step',q:'Шаг 4. Куда течёт индукционный ток по движущейся перемычке (на рисунке)?',
+   opts:['вверх','вниз','тока нет'],ans:0,
+   hint:'Большой палец правой руки — к нам (⊙). Пальцы обходят контур против часовой стрелки. Перемычка — правая сторона контура: как по ней идёт обход против часовой?'},
+ ]},
+{id:'b7',tab:'📈 График B(t)',kind:'graph',pic:()=>G_B,title:'Блок 7. График магнитной индукции',
+ intro:'Неподвижный контур находится в магнитном поле, линии которого перпендикулярны плоскости контура. Площадь контура не меняется. На графике — зависимость индукции поля от времени.',
+ tasks:[
+  {id:'g1',type:'multi',q:'На каких участках в контуре идёт индукционный ток? Отметь все такие участки.',ans:[1,3,5],
+   hintExtra:'На горизонтальном участке $B$ не меняется — значит, не меняется и поток, и ЭДС индукции равна нулю.',
+   hintMiss:'Ток идёт везде, где $B$ меняется, — даже если значения $B$ отрицательные или график пересекает ось.'},
+  {id:'g2',type:'seg',q:'На каком участке индукционный ток максимален?',ans:3,
+   hint:'Ток пропорционален скорости изменения $B$: $\\mathcal{E}_i=\\dfrac{\\Delta B\\cdot S}{\\Delta t}$. Ищи самый крутой наклон, а не самое большое значение $B$.'},
+  {id:'g3',type:'multi',q:'На каких участках индукционный ток минимален? Отметь все такие участки.',ans:[2,4],
+   hintExtra:'Где график наклонён, ток уже не минимальный: минимум — когда $B$ совсем не меняется.',
+   hintMiss:'Ток минимален (равен нулю), где $B$ не меняется. Таких участков на графике несколько — проверь и отрицательную часть.'},
+ ]},
+{id:'b8',tab:'🌀 Катушка',kind:'graph',pic:()=>`<div style="max-width:220px;margin:0 auto 6px">${PIC_COIL}</div>${G_I}`,title:'Блок 8. Ток в катушке и ЭДС самоиндукции',
+ intro:'Через катушку течёт ток, сила которого меняется так, как показано на графике.',
+ tasks:[
+  {id:'k1',type:'seg',q:'На каком участке ЭДС самоиндукции в катушке максимальна по модулю?',ans:1,
+   hint:'$\\mathcal{E}_{si}=-L\\dfrac{\\Delta I}{\\Delta t}$: важна скорость изменения тока, а не сам ток. Ищи самый крутой участок.'},
+  {id:'k2',type:'multi',q:'На каких участках ЭДС самоиндукции минимальна? Отметь все такие участки.',ans:[2,4],
+   hintExtra:'Если ток меняется — даже медленно, — ЭДС самоиндукции не нулевая. Минимум — где ток постоянен.',
+   hintMiss:'ЭДС самоиндукции равна нулю, где ток не меняется, даже если сам ток большой или отрицательный. Таких участков несколько.'},
+ ]},
 ];
-/* карточки-вагончики для блока 1 */
+const ZONES=[{k:'coil',pic:PIC_COIL},{k:'frame',pic:PIC_FRAME},{k:'rod',pic:PIC_ROD}];
+
+/* вагончики */
 const CARDS=[];
 BLOCKS[0].tasks.forEach((t,i)=>{CARDS.push({id:'s'+i,g:'s',v:t.sym});CARDS.push({id:'u'+i,g:'u',v:t.unit});});
 ['Н','Вт','Кл'].forEach((v,i)=>CARDS.push({id:'ux'+i,g:'u',v}));
 const CARD=Object.fromEntries(CARDS.map(c=>[c.id,c]));
 const tkHTML=c=>c.g==='s'?`$${c.v}$`:c.v;
-const CATS=[{k:'coil',t:'🌀 Катушка'},{k:'frame',t:'🔲 Рамка с потоком'},{k:'rod',t:'➡️ Движущийся проводник'},{k:'all',t:'✨ Подходит ко всем'}];
-
-/* ---------- Состояние ---------- */
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-let S;
-function fresh(){
-  const s={tab:'b1',order:{},opt:{},t:{}};
-  BLOCKS.forEach(b=>{
-    s.order[b.id]=shuffle(b.tasks.map(t=>t.id));
-    b.tasks.forEach(t=>{
-      s.t[t.id]={att:0,solved:false,pts:0,wrong:[]};
-      if(t.type==='choice') s.opt[t.id]=shuffle(t.opts.map((_,i)=>i));
-    });
-  });
-  s.opt.pool={s:shuffle(CARDS.filter(c=>c.g==='s').map(c=>c.id)),u:shuffle(CARDS.filter(c=>c.g==='u').map(c=>c.id))};
-  return s;
-}
-function load(){
-  try{const r=JSON.parse(localStorage.getItem(KEY));
-    if(r&&r.t&&r.opt&&r.opt.pool&&BLOCKS.every(b=>b.tasks.every(t=>r.t[t.id]&&r.opt&&(t.type!=='choice'||r.opt[t.id])))) return r;}catch(e){}
-  return fresh();
-}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-S=load();
 
 const ALL=BLOCKS.flatMap(b=>b.tasks);
 const TASK=Object.fromEntries(ALL.map(t=>[t.id,t]));
 const MAXP=ALL.length;
 const fmt=x=>String(x).replace('.',',');
 
-function award(st){st.solved=true;st.pts=st.att===0?1:st.att===1?0.5:0;}
-function okText(st){return st.att===0?'Верно! +1 балл 🎉':st.att===1?'Верно! +0,5 балла 👍':'Верно! Теперь ты это точно запомнишь 💪';}
+/* ================= Состояние ================= */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function fresh(){
+  const s={tab:'b1',order:{},opt:{},t:{}};
+  BLOCKS.forEach(b=>{
+    s.order[b.id]=(b.kind==='steps'||b.kind==='graph')?b.tasks.map(t=>t.id):shuffle(b.tasks.map(t=>t.id));
+    b.tasks.forEach(t=>{
+      s.t[t.id]={att:0,solved:false,pts:0,wrong:[],sel:[]};
+      if(t.opts) s.opt[t.id]=shuffle(t.opts.map((_,i)=>i));
+    });
+  });
+  s.opt.pool={s:shuffle(CARDS.filter(c=>c.g==='s').map(c=>c.id)),u:shuffle(CARDS.filter(c=>c.g==='u').map(c=>c.id))};
+  s.opt.fpool=shuffle(BLOCKS[1].tasks.map(t=>t.id));
+  return s;
+}
+function load(){
+  try{const r=JSON.parse(localStorage.getItem(KEY));
+    if(r&&r.t&&r.opt&&r.opt.pool&&r.opt.fpool&&ALL.every(t=>r.t[t.id]&&(!t.opts||r.opt[t.id]))) return r;}catch(e){}
+  return fresh();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+let S=load();
 
-/* ---------- Отрисовка ---------- */
+function award(st){st.solved=true;st.pts=st.att===0?1:st.att===1?0.5:0;st.msg=st.att===0?'Верно! +1 балл 🎉':st.att===1?'Верно! +0,5 балла 👍':'Верно! Теперь ты это точно запомнишь 💪';}
+
+/* ================= Отрисовка ================= */
+let openGap=null, note=null, flashSel=null, selected=null, b2msg=null;
+
 function updBar(){
-  const p=ALL.reduce((s,t)=>s+S.t[t.id].pts,0);
-  const pct=Math.round(p/MAXP*100);
+  const p=ALL.reduce((s,t)=>s+S.t[t.id].pts,0), pct=Math.round(p/MAXP*100);
   document.getElementById('barFill').style.width=pct+'%';
   document.getElementById('ptsTxt').textContent=`${fmt(p)} из ${MAXP} баллов`;
   document.getElementById('pctTxt').textContent=pct+'%';
 }
 function renderMenu(){
-  const m=document.getElementById('menu');m.innerHTML='';
-  BLOCKS.forEach(b=>{
+  document.getElementById('menu').innerHTML=BLOCKS.map(b=>{
     const done=b.tasks.every(t=>S.t[t.id].solved);
-    const bt=document.createElement('button');
-    bt.className=S.tab===b.id?'on':'';
-    bt.innerHTML=b.tab+(done?' <span class="ck">✔</span>':'');
-    bt.onclick=()=>{S.tab=b.id;save();render();window.scrollTo(0,0);};
-    m.appendChild(bt);
-  });
+    return `<button data-act="tab" data-b="${b.id}" class="${S.tab===b.id?'on':''}">${b.tab}${done?' <span class="ck">✔</span>':''}</button>`;}).join('');
 }
+const fbHTML=(ok,txt)=>`<div class="fb ${ok?'ok':'no'}">${txt}</div>`;
+
+function taskHTML(id,num){
+  const t=TASK[id],st=S.t[id];
+  let h=`<div class="card ${st.solved?'done':''}" id="c_${id}"><div class="qhead"><span class="qnum">${t.type==='step'?'':'Задание '+num}</span><span class="badge">${st.solved?'✅':''}</span></div>`;
+  if(t.type==='train'){
+    const sc=st.symCard?CARD[st.symCard]:null, uc=st.unitCard?CARD[st.unitCard]:null;
+    h+=`<div class="train"><div class="loco">🚂 ${t.name}</div><div class="coupler"></div>
+      <div class="slot ${sc?'filled':''}" data-drop="1" data-row="${id}" data-slot="s">${sc?tkHTML(sc):'обозн.'}</div><div class="coupler"></div>
+      <div class="slot ${uc?'filled':sc?'':'off'}" data-drop="1" data-row="${id}" data-slot="u">${uc?tkHTML(uc):'единица'}</div></div>`;
+  } else if(t.type==='gap'){
+    const filled=st.solved?`<span class="gap filled">${t.opts[t.ans]}</span>`:`<span class="gap" data-act="gap" data-id="${id}">выбери ▾</span>`;
+    h+=`<div class="qtext">${t.q.replace('___',filled)}</div>`;
+    if(!st.solved&&openGap===id) h+=`<div class="menu">${S.opt[id].map(i=>`<button class="opt ${st.wrong.includes(i)?'wrong':''}" data-act="opt" data-id="${id}" data-k="${i}" ${st.wrong.includes(i)?'disabled':''}>${t.opts[i]}</button>`).join('')}</div>`;
+  } else if(t.type==='choice'||t.type==='step'){
+    h+=`<div class="qtext">${t.q}</div><div class="opts">${S.opt[id].map(i=>{
+      const cls=st.solved&&i===t.ans?'right':st.wrong.includes(i)?'wrong':'';
+      return `<button class="opt ${cls}" data-act="opt" data-id="${id}" data-k="${i}" ${st.solved||st.wrong.includes(i)?'disabled':''}>${t.opts[i]}</button>`;}).join('')}</div>`;
+  } else if(t.type==='seg'){
+    h+=`<div class="qtext">${t.q}</div><div class="opts">${SEG.map(k=>{
+      const cls=st.solved&&k===t.ans?'right':st.wrong.includes(k)?'wrong':'';
+      return `<button class="opt seg ${cls}" data-act="opt" data-id="${id}" data-k="${k}" ${st.solved||st.wrong.includes(k)?'disabled':''}>${k}</button>`;}).join('')}</div>`;
+  } else if(t.type==='multi'){
+    const on=st.solved?t.ans:st.sel;
+    h+=`<div class="qtext">${t.q}</div><div class="opts">${SEG.map(k=>`<button class="opt seg ${on.includes(k)?(st.solved?'right':'sel'):''}" data-act="tog" data-id="${id}" data-k="${k}" ${st.solved?'disabled':''}>${k}</button>`).join('')}</div>`;
+    if(!st.solved) h+=`<button class="check" data-act="mcheck" data-id="${id}">Проверить</button>`;
+  }
+  if(note&&note.id===id) h+=fbHTML(false,note.text);
+  else if(st.solved) h+=fbHTML(true,st.msg);
+  else if(st.lastOk&&st.symCard) h+=fbHTML(true,'Обозначение верное ✔ Теперь прицепи единицу измерения.');
+  else if(st.att>0) h+=fbHTML(false,'Пока не так. 💡 Подсказка: '+st.lastHint);
+  return h+'</div>';
+}
+
 function render(){
   renderMenu();updBar();
   const b=BLOCKS.find(x=>x.id===S.tab)||BLOCKS[0];
-  const main=document.getElementById('main');
-  let h=`<div class="intro"><h2>${b.title}</h2><p>${b.intro}</p>${b.how?`<div class="how">${b.how}</div>`:''}</div>`;
-  if(b.pics) h+=`<div class="pics">
-    <div class="pic">${PIC_COIL}<b>🌀 Катушка с током</b></div>
-    <div class="pic">${PIC_FRAME}<b>🔲 Рамку пронизывает магнитный поток</b></div>
-    <div class="pic">${PIC_ROD}<b>➡️ Проводник движется в магнитном поле</b></div></div>`;
   const allDone=b.tasks.every(t=>S.t[t.id].solved);
-  h+=`<div class="done-msg" style="display:${allDone?'block':'none'}">🌟 Блок пройден! Переходи к следующему.</div>`;
-  h+=S.order[b.id].map((id,i)=>`<div class="card" id="c_${id}"></div>`).join('');
-  if(b.id==='b1'&&!allDone) h+=`<div class="pool" id="pool"></div>`;
-  h+=`<button class="reset" id="resetBtn">🔄 Сбросить прогресс</button>`;
+  let h=`<div class="intro"><h2>${b.title}</h2><p>${b.intro}</p>${b.how?`<div class="how">${b.how}</div>`:''}</div>`;
+  if(allDone) h+=`<div class="done-msg">🌟 Блок пройден! Переходи к следующему.</div>`;
+  if(b.kind==='zones'){
+    const placed=k=>b.tasks.filter(t=>S.t[t.id].solved&&S.t[t.id].zone===k).map(t=>`<div class="placed">$${t.f}$</div>`).join('');
+    h+=`<div class="zones">${ZONES.map(z=>`<div class="zone" data-drop="1" data-zone="${z.k}">${z.pic}${placed(z.k)}</div>`).join('')}
+      <div class="zone all" data-drop="1" data-zone="all"><div class="zt">✨ Подходит ко всем трём</div>${placed('all')}</div></div>`;
+    if(b2msg) h+=fbHTML(b2msg.ok,b2msg.text);
+  } else if(b.kind==='steps'){
+    const n=b.tasks.filter(t=>S.t[t.id].solved).length;
+    h+=`<div class="pic">${b.pic(n)}</div>`;
+    for(let i=0;i<b.tasks.length;i++){
+      h+=taskHTML(b.tasks[i].id,i+1);
+      if(!S.t[b.tasks[i].id].solved){ if(i<b.tasks.length-1) h+=`<div class="lock">🔒 Следующий шаг откроется после этого</div>`; break; }
+    }
+  } else {
+    if(b.kind==='graph') h+=`<div class="pic">${b.pic()}</div>`;
+    h+=S.order[b.id].map((id,i)=>taskHTML(id,i+1)).join('');
+  }
+  if((b.kind==='train'||b.kind==='zones')&&!allDone) h+=`<div class="pool" id="pool"></div>`;
+  h+=`<button class="reset" data-act="reset">🔄 Сбросить прогресс</button>`;
+  const main=document.getElementById('main');
   main.innerHTML=h;
-  S.order[b.id].forEach((id,i)=>renderTask(id,i+1));
-  mathEl(main.querySelector('.intro'));
-  if(b.id==='b1'){renderPool();if(flashSlot){const f=document.querySelector(flashSlot);if(f)f.classList.add('flash');flashSlot=null;}}
-  document.getElementById('resetBtn').onclick=()=>{
-    if(confirm('Сбросить все ответы и баллы? Это нельзя отменить.')){S=fresh();save();render();window.scrollTo(0,0);}
-  };
+  renderPool();
+  mathEl(main);
+  if(flashSel){const f=document.querySelector(flashSel);if(f)f.classList.add('flash');flashSel=null;}
+  note=null;
 }
-function head(num,st){return `<div class="qhead"><span class="qnum">Задание ${num}</span><span class="badge">${st.solved?'✅':''}</span></div>`;}
 
-function renderTask(id,num){
-  const t=TASK[id],st=S.t[id],el=document.getElementById('c_'+id);
-  el.className='card'+(st.solved?' done':'');
-  let h=head(num,st);
-  if(t.type==='pair'){
-    const sc=st.symCard?CARD[st.symCard]:null, uc=st.unitCard?CARD[st.unitCard]:null;
-    h+=`<div class="train"><div class="loco">🚂 ${t.name}</div><div class="coupler"></div>
-      <div class="slot ${sc?'filled':''}" data-row="${id}" data-slot="s">${sc?tkHTML(sc):'обозн.'}</div><div class="coupler"></div>
-      <div class="slot ${uc?'filled':sc?'':'off'}" data-row="${id}" data-slot="u">${uc?tkHTML(uc):'единица'}</div></div>`;
-  } else if(t.type==='cat'){
-    h+=`<div class="qtext"><span class="big">${t.f}</span></div><div class="opts">${CATS.map(c=>{
-      const cls=st.solved&&c.k===t.ans?'right':st.wrong.includes(c.k)?'wrong':'';
-      return `<button class="opt ${cls}" data-k="${c.k}" ${st.solved||st.wrong.includes(c.k)?'disabled':''}>${c.t}</button>`;}).join('')}</div>`;
-  } else {
-    h+=`<div class="qtext">${t.q}</div><div class="opts">${S.opt[id].map(i=>{
-      const cls=st.solved&&i===t.ans?'right':st.wrong.includes(i)?'wrong':'';
-      return `<button class="opt ${cls}" data-k="${i}" ${st.solved||st.wrong.includes(i)?'disabled':''}>${t.opts[i]}</button>`;}).join('')}</div>`;
-  }
-  h+=`<div class="fb"></div>`;
-  el.innerHTML=h;
-  const fb=el.querySelector('.fb');
-  const show=(ok,txt)=>{fb.className='fb show '+(ok?'ok':'no');fb.innerHTML=txt;};
-  if(st.solved) show(true,st.msg||'Верно! ✅');
-  else if(st.lastOk&&st.symCard) show(true,'Обозначение верное ✔ Теперь прицепи единицу измерения.');
-  else if(st.att>0) show(false,'Пока не так. 💡 Подсказка: '+(st.lastHint||t.hint));
-
-  if(t.type==='pair'){
-    el.querySelectorAll('.slot').forEach(sl=>sl.onclick=()=>{if(selected){const c=selected;selected=null;drop(c,id,sl.dataset.slot);}});
-  } else {
-    el.querySelectorAll('.opt').forEach(btn=>btn.onclick=()=>{
-      const k=t.type==='cat'?btn.dataset.k:Number(btn.dataset.k);
-      if(k===t.ans){award(st);st.msg=okText(st);}
-      else{st.att++;st.wrong.push(k);st.lastHint=t.hint;}
-      save();renderTask(id,num);updBar();checkBlock();
-    });
-  }
-  mathEl(el);
-}
-/* ---------- Перетаскивание ---------- */
-let selected=null, drag=null, flashSlot=null;
-function usedCards(){const u=new Set();BLOCKS[0].tasks.forEach(t=>{const st=S.t[t.id];if(st.symCard)u.add(st.symCard);if(st.unitCard)u.add(st.unitCard);});return u;}
 function renderPool(){
-  const p=document.getElementById('pool');if(!p)return;const u=usedCards();
-  const row=g=>S.opt.pool[g].filter(c=>!u.has(c)).map(c=>`<span class="tk ${selected===c?'sel':''}" data-c="${c}">${tkHTML(CARD[c])}</span>`).join('');
-  p.innerHTML=`<div class="lbl">Обозначения</div><div class="prow">${row('s')}</div><div class="lbl">Единицы измерения</div><div class="prow">${row('u')}</div>`;
+  const p=document.getElementById('pool');if(!p)return;
+  if(S.tab==='b1'){
+    const u=new Set();BLOCKS[0].tasks.forEach(t=>{const st=S.t[t.id];if(st.symCard)u.add(st.symCard);if(st.unitCard)u.add(st.unitCard);});
+    const row=g=>S.opt.pool[g].filter(c=>!u.has(c)).map(c=>`<span class="tk ${selected===c?'sel':''}" data-c="${c}">${tkHTML(CARD[c])}</span>`).join('');
+    p.innerHTML=`<div class="lbl">Обозначения</div><div class="prow">${row('s')}</div><div class="lbl">Единицы измерения</div><div class="prow">${row('u')}</div>`;
+  } else {
+    p.innerHTML=`<div class="lbl">Формулы</div><div class="prow">${S.opt.fpool.filter(id=>!S.t[id].solved).map(id=>`<span class="tk f ${selected===id?'sel':''}" data-c="${id}">$${TASK[id].f}$</span>`).join('')}</div>`;
+  }
   mathEl(p);
-  p.querySelectorAll('.tk').forEach(tk=>tk.addEventListener('pointerdown',e=>{e.preventDefault();drag={c:tk.dataset.c,el:tk,x:e.clientX,y:e.clientY,moved:false,ghost:null};}));
 }
-function slotAt(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('.slot'):null;}
+
+/* ================= Ответы ================= */
+function answer(id,k){
+  const t=TASK[id],st=S.t[id];if(st.solved)return;
+  if(k===t.ans){award(st);openGap=null;}
+  else{st.att++;st.wrong.push(k);st.lastHint=(t.oh&&t.oh[k])||t.hint;}
+  save();render();
+}
+function mcheck(id){
+  const t=TASK[id],st=S.t[id];if(st.solved)return;
+  if(!st.sel.length){note={id,text:'Отметь хотя бы один участок 🙂'};render();return;}
+  const extra=st.sel.some(k=>!t.ans.includes(k)), miss=t.ans.some(k=>!st.sel.includes(k));
+  if(!extra&&!miss)award(st);
+  else{st.att++;st.lastHint=extra?t.hintExtra:t.hintMiss;}
+  save();render();
+}
+function dropTrain(cid,rid,slot){
+  const t=TASK[rid],st=S.t[rid],c=CARD[cid];
+  if(!t||st.solved)return;
+  if(slot==='s'&&st.symCard)return;
+  if(slot==='u'&&!st.symCard){note={id:rid,text:'Сначала прицепи первый вагончик — обозначение 🙂'};render();return;}
+  const ok=slot==='s'?(c.g==='s'&&c.v===t.sym):(c.g==='u'&&c.v===t.unit);
+  if(ok){if(slot==='s')st.symCard=cid;else{st.unitCard=cid;award(st);}st.lastOk=true;}
+  else{
+    st.att++;st.lastOk=false;
+    st.lastHint=(slot==='s'&&c.g==='u')?'в первый вагончик ставится обозначение (буква), а единица — во второй.':(slot==='u'&&c.g==='s')?'во второй вагончик ставится единица измерения, а не буква.':t.hint;
+    flashSel=`.slot[data-row="${rid}"][data-slot="${slot}"]`;
+  }
+  save();render();
+}
+function dropFormula(fid,zone){
+  const t=TASK[fid],st=S.t[fid];if(!t||st.solved)return;
+  if(zone===t.ans){award(st);st.zone=zone;b2msg={ok:true,text:st.msg};}
+  else{st.att++;st.lastHint=t.hint;b2msg={ok:false,text:'Не сюда. 💡 Подсказка: '+t.hint};flashSel=`.zone[data-zone="${zone}"]`;}
+  save();render();
+}
+function drop(cid,tgt){
+  selected=null;
+  if(S.tab==='b1'&&tgt.dataset.row)dropTrain(cid,tgt.dataset.row,tgt.dataset.slot);
+  else if(S.tab==='b2'&&tgt.dataset.zone)dropFormula(cid,tgt.dataset.zone);
+  else render();
+}
+
+/* ================= События ================= */
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-act]');
+  if(a){
+    const act=a.dataset.act,id=a.dataset.id;
+    if(act==='tab'){S.tab=a.dataset.b;selected=null;b2msg=null;openGap=null;save();render();window.scrollTo(0,0);}
+    else if(act==='gap'){openGap=openGap===id?null:id;render();}
+    else if(act==='opt'){const t=TASK[id];answer(id,(t.type==='seg')?Number(a.dataset.k):Number(a.dataset.k));}
+    else if(act==='tog'){const st=S.t[id],k=Number(a.dataset.k);st.sel=st.sel.includes(k)?st.sel.filter(x=>x!==k):[...st.sel,k];save();render();}
+    else if(act==='mcheck')mcheck(id);
+    else if(act==='reset'){if(confirm('Сбросить все ответы и баллы? Это нельзя отменить.')){S=fresh();selected=null;b2msg=null;openGap=null;save();render();window.scrollTo(0,0);}}
+    return;
+  }
+  const tg=e.target.closest('[data-drop]');
+  if(tg&&selected)drop(selected,tg);
+});
+let drag=null;
+document.addEventListener('pointerdown',e=>{
+  const tk=e.target.closest('.tk');if(!tk)return;
+  e.preventDefault();drag={c:tk.dataset.c,el:tk,x:e.clientX,y:e.clientY,moved:false,ghost:null};
+});
+function tgtAt(x,y){const el=document.elementFromPoint(x,y);return el?el.closest('[data-drop]'):null;}
 document.addEventListener('pointermove',e=>{
   if(!drag)return;
   if(!drag.moved&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6){
     drag.moved=true;drag.ghost=drag.el.cloneNode(true);drag.ghost.classList.add('ghost');document.body.appendChild(drag.ghost);drag.el.style.opacity=.35;}
-  if(drag.moved){drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
-    document.querySelectorAll('.slot.hot').forEach(x=>x.classList.remove('hot'));
-    const sl=slotAt(e.clientX,e.clientY);if(sl&&!sl.classList.contains('filled'))sl.classList.add('hot');}
+  if(drag.moved){
+    drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+    document.querySelectorAll('.hot').forEach(x=>x.classList.remove('hot'));
+    const t=tgtAt(e.clientX,e.clientY);if(t&&!t.classList.contains('filled'))t.classList.add('hot');
+  }
 });
 function endDrag(e){
   if(!drag)return;const d=drag;drag=null;
-  if(d.moved){d.ghost.remove();d.el.style.opacity='';
-    document.querySelectorAll('.slot.hot').forEach(x=>x.classList.remove('hot'));
-    const sl=e?slotAt(e.clientX,e.clientY):null;
-    if(sl)drop(d.c,sl.dataset.row,sl.dataset.slot);
+  if(d.moved){
+    d.ghost.remove();d.el.style.opacity='';
+    document.querySelectorAll('.hot').forEach(x=>x.classList.remove('hot'));
+    const t=e?tgtAt(e.clientX,e.clientY):null;
+    if(t)drop(d.c,t);
   } else {selected=selected===d.c?null:d.c;renderPool();}
 }
 document.addEventListener('pointerup',endDrag);
 document.addEventListener('pointercancel',()=>endDrag(null));
-function drop(cid,rid,slot){
-  const t=TASK[rid],st=S.t[rid],c=CARD[cid];
-  if(st.solved)return;
-  const el=document.getElementById('c_'+rid),fb=el.querySelector('.fb');
-  const say=(txt)=>{fb.className='fb show no';fb.innerHTML=txt;};
-  if(slot==='s'&&st.symCard)return;
-  if(slot==='u'&&!st.symCard){say('Сначала прицепи первый вагончик — обозначение 🙂');return;}
-  const ok=slot==='s'?(c.g==='s'&&c.v===t.sym):(c.g==='u'&&c.v===t.unit);
-  if(ok){
-    if(slot==='s')st.symCard=cid;else{st.unitCard=cid;award(st);st.msg=okText(st);}
-    st.lastOk=true;
-  } else {
-    st.att++;st.lastOk=false;
-    st.lastHint=(slot==='s'&&c.g==='u')?'в первый вагончик ставится обозначение (буква), а единица — во второй.':(slot==='u'&&c.g==='s')?'во второй вагончик ставится единица измерения, а не буква.':t.hint;
-    flashSlot=`.slot[data-row="${rid}"][data-slot="${slot}"]`;
-  }
-  save();render();
-}
-function checkBlock(){
-  const b=BLOCKS.find(x=>x.id===S.tab);
-  const done=b.tasks.every(t=>S.t[t.id].solved);
-  document.querySelector('.done-msg').style.display=done?'block':'none';
-  renderMenu();
-}
+
 render();
-mathAll();
 </script>
 </body>
 </html>
